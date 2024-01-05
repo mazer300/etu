@@ -12,7 +12,7 @@ void function_number_2(char* text[], int count_sentences);
 void function_number_3(char* text[], int count_sentences);
 void function_number_4(char* text[], int count_sentences);
 void reference();
-void function_number_9(char* text[], int count_sentences);
+void function_number_9(char* text[], int count_sentences, char* word_9);
 
 int main(){
 	printf("Course work for option 4.2, created by Vladimir Tukalkin.\n");
@@ -22,6 +22,23 @@ int main(){
 		error_writer(0);
 	}
 	if(command_number=='5') reference();
+
+	char* word_9=malloc(sizeof(char));                   //func_9
+	int flag=0;
+	if(command_number=='9'){
+		int len=0;
+		char symb=getchar();
+		while(flag==0 && strchr(" \t\n",(int)symb)!=NULL){
+			symb=getchar();
+		}
+		while(strchr("\n",(int)symb)==NULL){
+			symb=getchar();
+			if(strchr(word_9,(int)symb)==NULL){
+				word_9[len++]=symb;
+				word_9=realloc(word_9,sizeof(char)*(len+1));
+			}
+		}
+	}                                                     //func_9
 
 	if(strchr("012349",command_number)){
 		char **text=malloc(sizeof(char*));
@@ -156,13 +173,14 @@ int main(){
 					function_number_4(text, count_sentences);
 					break;
 				case '9':
-					function_number_9(text, count_sentences);
+					function_number_9(text, count_sentences, word_9);
 					break;
 			}
 		}
 
 		for(int i=0;i<count_sentences;i++) free(text[i]);     //clean memory
 		free(text);
+		free(word_9);  //func_9
 
 	}
 }
@@ -248,23 +266,14 @@ void reference(){
 	printf("Reference:\n0-text output after the initial mandatory processing\n1-convert sentences so that each word in it starts with a capital letter, and the remaining characters of the word are lowercase\n2-Delete all offers that contain the number 2018\n3-sort the sentences by increasing the sum of the digits found in the sentence. If there are no digits in the sentence, then the sum of the digits of this sentence is infinity\n4-display all sentences in which all numbers occur at least once\n");
 }
 
-int comp_str(char* str1, char* str2){
-	int k=0;
-	for(int i=0;i<strlen(str1);i++){
-		if(tolower(str1[i])==tolower(str2[i])) k++;
-	}
-	if(k==strlen(str1)) return 1;
-	return 0;
-}
-
-void function_number_9(char* text[], int count_sentences){
+void function_number_9(char* text[], int count_sentences, char* word_9){
 	char*** text1=malloc(sizeof(char**));
 	int len_text=0;
 	int len_sentences[count_sentences];
 	for(int i=0;i<count_sentences;i++){
 		char** sentence=malloc(sizeof(char*));
 		int len_sentence=0;
-		char* word=strtok(text[i]," ,");
+		char* word=strtok(text[1]," ,");
 		while(word!=NULL){
 			sentence[len_sentence++]=word;
 			sentence=realloc(sentence,sizeof(char*)*(len_sentence+1));
@@ -274,49 +283,15 @@ void function_number_9(char* text[], int count_sentences){
 		text1[len_text++]=sentence;
 		text1=realloc(text1,sizeof(char**)*(len_text+1));
 	}
-
-	char*** text2=malloc(sizeof(char**));
-	int len_text2=0;
-	int len_sentences2[count_sentences];
-	for(int i=0;i<count_sentences;i++) len_sentences2[i]=0;
-	for(int num_str1=0;num_str1<count_sentences;num_str1++){
-		char** sentence=malloc(sizeof(char*));
-		int len_sentence=0;
-		for(int index1=0;index1<len_sentences[num_str1];index1++){
-			int k=0;
-			for(int num_str2=0;num_str2<count_sentences;num_str2++){
-				if(num_str1!=num_str2){
-					for(int index2=0;index2<len_sentences[num_str2];index2++){
-						if(strlen(text1[num_str1][index1])==strlen(text1[num_str2][index2])){
-							if(comp_str(text1[num_str1][index1],text1[num_str2][index2])){
-								k=1;
-							}
-						}
-					}
+	for(int i=0;i<count_sentences;i++){
+		for(int j=0;j<len_sentences[i];j++){
+			int count=0;
+			for(int len=0;len<strlen(text1[i][j]);len++){
+				for(int len_w=0;len_w<strlen(word_9);len_w++){
+					if(tolower(text1[i][j][len])==tolower(word_9[len_w])) count++;
 				}
 			}
-			if(k==0){
-				len_sentences2[num_str1]++;
-				sentence[len_sentence++]=text1[num_str1][index1];
-				sentence=realloc(sentence,sizeof(char*)*(len_sentence+1));
-			}
-		}
-		text2[len_text2++]=sentence;
-		text2=realloc(text2,sizeof(char**)*(len_text2+1));
-	}
-
-	for(int i=0;i<len_text2;i++){
-		for(int j=0;j<len_sentences2[i];j++){
-			if(j<len_sentences2[i]-1){
-				printf("%s ",text2[i][j]);
-			}else{
-				printf("%s.\n",text2[i][j]);
-			}
+			if(count>=strlen(text1[i][j])) printf("%s\n",text1[i][j]);
 		}
 	}
-
-	for(int i=0;i<len_text2;i++) free(text2[i]);
-	free(text2);
-	for(int i=0;i<count_sentences;i++) free(text1[i]);
-	free(text1);
 }
