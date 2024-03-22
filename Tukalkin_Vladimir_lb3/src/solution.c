@@ -32,7 +32,7 @@ int RecursionSolution(const char* path, const char* operation){
 					}
 				fclose(file);
 			}else{                 //Если папка
-				long long int num=RecursionSolution(NewPath,d->d_name);;
+				long long int num=RecursionSolution(NewPath,d->d_name);
 				if(operation){
 					if(strcmp(operation,"add")==0){
 						answer+=num;
