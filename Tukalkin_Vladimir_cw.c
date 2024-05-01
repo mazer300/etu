@@ -3,7 +3,9 @@
 #include <ctype.h>
 #include <string.h>
 #include <getopt.h>
+#include <math.h>
 #include <png.h>
+
 #define RED "\033[1;31m"
 #define RESET "\033[0m"
 #define GREEN "\e[0;32m"
@@ -32,8 +34,72 @@ void draw_circle(Png* image, int color[3], int radius, int x0, int y0);
 void function_ornament(Png* image, int pattern, int color[3], int thickness, int count);
 
 void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
+	switch(angle){
+		case 90:
+			for(int y=left_up[1];y<right_down[1]+1;y++){
+				for(int x=left_up[0];x<right_down[0]/4;x++){
+					int xx = right_down[0] - x-1;
+					int yy = right_down[1] - y-1;
+				}
+			}
+			break;
+		case 180:
+			for(int y=left_up[1];y<right_down[1]+1;y++){
+				for(int x=left_up[0];x<right_down[0]/2;x++){
+					int xx = right_down[0] - x-1;
+					int yy = right_down[1] - y-1;
+			
+					int color1[3]={0,0,0};
+					int color2[3]={0,0,0};
+					if(xx >= left_up[0] && xx <= right_down[0] && yy >= left_up[1] && yy <= right_down[1]){
+						color1[0]=image->row_pointers[yy][xx*3];
+						color1[1]=image->row_pointers[yy][xx*3+1];
+						color1[2]=image->row_pointers[yy][xx*3+2];
 
+						color2[0]=image->row_pointers[y][x*3];
+						color2[1]=image->row_pointers[y][x*3+1];
+						color2[2]=image->row_pointers[y][x*3+2];
+					}
+					set_pixel(image,xx,yy,color2);
+					set_pixel(image,x,y,color1);
+				}
+			}
+			break;
+		case 270:
+			return;
+	}	
+	
 }
+/*
+BMP rotate1(BMP image, double degree) {
+	BMP newImage = image;
+	unsigned char *pixels = new unsigned char[image.size_padded];
+
+	double radians = (degree * 3.141592653589793238462643383279) / 180;
+	int sinf = (int) sin(radians);
+	int cosf = (int) cos(radians);
+
+	double x0 = 0.5 * (image.width - 1);     // point to rotate about
+	double y0 = 0.5 * (image.height - 1);     // center of image
+
+	// rotation
+	for (int x = 0; x < image.height; x++) {
+		for (int y = 0; y < image.width * 3; y += 3) {
+			long double a = x - x0;
+			long double b = y - y0;
+			int xx = (int) (+a * cosf - b * sinf + x0);
+			int yy = (int) (+a * sinf + b * cosf + y0);
+
+			if (xx >= 0 && xx < image.width && yy >= 0 && yy < image.height) {
+				pixels[(y * image.width + x) * 3 + 0] = image.pixels[(yy * image.width + xx) * 3 + 0];
+				pixels[(y * image.width + x) * 3 + 1] = image.pixels[(yy * image.width + xx) * 3 + 1];
+				pixels[(y * image.width + x) * 3 + 2] = image.pixels[(yy * image.width + xx) * 3 + 2];
+			}
+		}
+	}
+	newImage.pixels = pixels;
+	return newImage;
+}*/
 
 int main(int argc, char* argv[]){
 	printf("Course work for option 4.15, created by Vladimir Tukalkin.\n");
