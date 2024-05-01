@@ -34,33 +34,73 @@ void draw_circle(Png* image, int color[3], int radius, int x0, int y0);
 void function_ornament(Png* image, int pattern, int color[3], int thickness, int count);
 
 void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
+	if((left_up[0]>right_down[0]) || (left_up[1]>right_down[1])){
+		int k1=left_up[0], k2=left_up[1];
+		left_up[0]=right_down[0];
+		left_up[1]=right_down[1];
+		right_down[0]=k1;
+		right_down[1]=k2;
+	}
 	switch(angle){
 		case 90:
-			for(int y=left_up[1];y<right_down[1]+1;y++){
-				for(int x=left_up[0];x<right_down[0]/4;x++){
-					int xx = right_down[0] - x-1;
-					int yy = right_down[1] - y-1;
+			int max=right_down[1]-left_up[1];
+			if(max<right_down[0]-left_up[0]) max=right_down[0]-left_up[0];
+			for(int y=left_up[1];y<right_down[1]/2;y++){
+				for(int x=left_up[0];x<right_down[0]/2;x++){
+					int x2 = abs(left_up[1] -x);
+					int y2 = abs(right_down[0] -y-1);
+					int x3 = right_down[0] - x-1;
+					int y3 = right_down[1] - y-1;
+					int x4 = abs(left_up[1] - x3);
+					int y4 = abs(right_down[0] - y3-1);
+					
+					int color1[3]={0,0,0};
+					int color2[3]={0,0,0};
+					int color3[3]={0,0,0};
+					int color4[3]={0,0,0};
+					
+					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
+						color1[0]=image->row_pointers[y4][x4*3];
+						color1[1]=image->row_pointers[y4][x4*3+1];
+						color1[2]=image->row_pointers[y4][x4*3+2];
+
+						color2[0]=image->row_pointers[y3][x3*3];
+						color2[1]=image->row_pointers[y3][x3*3+1];
+						color2[2]=image->row_pointers[y3][x3*3+2];
+
+						color3[0]=image->row_pointers[y2][x2*3];
+						color3[1]=image->row_pointers[y2][x2*3+1];
+						color3[2]=image->row_pointers[y2][x2*3+2];
+
+						color4[0]=image->row_pointers[y][x*3];
+						color4[1]=image->row_pointers[y][x*3+1];
+						color4[2]=image->row_pointers[y][x*3+2];
+					}
+					set_pixel(image,x,y,color1);      //left_up
+					set_pixel(image,x2,y2,color2);  //left_down
+					set_pixel(image,x3,y3,color3);    //right_down
+					set_pixel(image,x4,y4,color4);    //right_up
 				}
 			}
 			break;
 		case 180:
 			for(int y=left_up[1];y<right_down[1]+1;y++){
 				for(int x=left_up[0];x<right_down[0]/2;x++){
-					int xx = right_down[0] - x-1;
-					int yy = right_down[1] - y-1;
+					int x3 = right_down[0] - x-1;
+					int y3 = right_down[1] - y-1;
 			
 					int color1[3]={0,0,0};
 					int color2[3]={0,0,0};
-					if(xx >= left_up[0] && xx <= right_down[0] && yy >= left_up[1] && yy <= right_down[1]){
-						color1[0]=image->row_pointers[yy][xx*3];
-						color1[1]=image->row_pointers[yy][xx*3+1];
-						color1[2]=image->row_pointers[yy][xx*3+2];
+					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
+						color1[0]=image->row_pointers[y3][x3*3];
+						color1[1]=image->row_pointers[y3][x3*3+1];
+						color1[2]=image->row_pointers[y3][x3*3+2];
 
 						color2[0]=image->row_pointers[y][x*3];
 						color2[1]=image->row_pointers[y][x*3+1];
 						color2[2]=image->row_pointers[y][x*3+2];
 					}
-					set_pixel(image,xx,yy,color2);
+					set_pixel(image,x3,y3,color2);
 					set_pixel(image,x,y,color1);
 				}
 			}
