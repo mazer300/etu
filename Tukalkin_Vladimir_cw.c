@@ -43,8 +43,23 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 	}
 	switch(angle){
 		case 90:
+			int flag=0;
+			if((right_down[1]-left_up[1])!=(right_down[0]-left_up[0])){
+				if(right_down[1]>right_down[0]){
+					right_down[1]=right_down[0]-left_up[0]+left_up[1];
+ 					flag=1;
+				}
+				if(right_down[1]<right_down[0]){
+					right_down[0]=right_down[1]-left_up[0]+left_up[1];
+					flag=2;
+				}
+			}
+
 			int max=right_down[1]-left_up[1];
+			int min=right_down[0]-left_up[0];
 			if(max<right_down[0]-left_up[0]) max=right_down[0]-left_up[0];
+			if(min<right_down[1]-left_up[1]) min=right_down[1]-left_up[1];
+			
 			for(int y=left_up[1];y<right_down[1]/2;y++){
 				for(int x=left_up[0];x<right_down[0]/2;x++){
 					int x2 = abs(left_up[1] -x);
@@ -53,45 +68,48 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 					int y3 = right_down[1] - y-1;
 					int x4 = abs(left_up[1] - x3);
 					int y4 = abs(right_down[0] - y3-1);
-					
+
 					int color1[3]={0,0,0};
 					int color2[3]={0,0,0};
 					int color3[3]={0,0,0};
 					int color4[3]={0,0,0};
-					
-					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
+
+					if(x4 >= left_up[0] && x4 <= right_down[0] && y4 >= left_up[1] && y4 <= right_down[1]){
 						color1[0]=image->row_pointers[y4][x4*3];
 						color1[1]=image->row_pointers[y4][x4*3+1];
 						color1[2]=image->row_pointers[y4][x4*3+2];
-
+					}
+					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
 						color2[0]=image->row_pointers[y3][x3*3];
 						color2[1]=image->row_pointers[y3][x3*3+1];
 						color2[2]=image->row_pointers[y3][x3*3+2];
-
+					}
+					if(x2 >= left_up[0] && x2 <= right_down[0] && y2 >= left_up[1] && y2 <= right_down[1]){
 						color3[0]=image->row_pointers[y2][x2*3];
 						color3[1]=image->row_pointers[y2][x2*3+1];
 						color3[2]=image->row_pointers[y2][x2*3+2];
-
+					}
+					if(x >= left_up[0] && x <= right_down[0] && y >= left_up[1] && y <= right_down[1]){
 						color4[0]=image->row_pointers[y][x*3];
 						color4[1]=image->row_pointers[y][x*3+1];
 						color4[2]=image->row_pointers[y][x*3+2];
 					}
 					set_pixel(image,x,y,color1);      //left_up
-					set_pixel(image,x2,y2,color2);  //left_down
+					set_pixel(image,x2,y2,color2);    //left_down
 					set_pixel(image,x3,y3,color3);    //right_down
 					set_pixel(image,x4,y4,color4);    //right_up
 				}
 			}
 			break;
 		case 180:
-			for(int y=left_up[1];y<right_down[1]+1;y++){
+			for(int y=left_up[1];y<right_down[1];y++){
 				for(int x=left_up[0];x<right_down[0]/2;x++){
 					int x3 = right_down[0] - x-1;
 					int y3 = right_down[1] - y-1;
-			
+
 					int color1[3]={0,0,0};
 					int color2[3]={0,0,0};
-					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
+					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1] && x >= left_up[0] && x <= right_down[0] && y >= left_up[1] && y <= right_down[1]){
 						color1[0]=image->row_pointers[y3][x3*3];
 						color1[1]=image->row_pointers[y3][x3*3+1];
 						color1[2]=image->row_pointers[y3][x3*3+2];
@@ -106,40 +124,12 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 			}
 			break;
 		case 270:
-			return;
-	}	
-	
-}
-/*
-BMP rotate1(BMP image, double degree) {
-	BMP newImage = image;
-	unsigned char *pixels = new unsigned char[image.size_padded];
-
-	double radians = (degree * 3.141592653589793238462643383279) / 180;
-	int sinf = (int) sin(radians);
-	int cosf = (int) cos(radians);
-
-	double x0 = 0.5 * (image.width - 1);     // point to rotate about
-	double y0 = 0.5 * (image.height - 1);     // center of image
-
-	// rotation
-	for (int x = 0; x < image.height; x++) {
-		for (int y = 0; y < image.width * 3; y += 3) {
-			long double a = x - x0;
-			long double b = y - y0;
-			int xx = (int) (+a * cosf - b * sinf + x0);
-			int yy = (int) (+a * sinf + b * cosf + y0);
-
-			if (xx >= 0 && xx < image.width && yy >= 0 && yy < image.height) {
-				pixels[(y * image.width + x) * 3 + 0] = image.pixels[(yy * image.width + xx) * 3 + 0];
-				pixels[(y * image.width + x) * 3 + 1] = image.pixels[(yy * image.width + xx) * 3 + 1];
-				pixels[(y * image.width + x) * 3 + 2] = image.pixels[(yy * image.width + xx) * 3 + 2];
-			}
-		}
+			function_rotate(image,left_up,right_down,90);
+			function_rotate(image,left_up,right_down,180);
+			break;
 	}
-	newImage.pixels = pixels;
-	return newImage;
-}*/
+
+}
 
 int main(int argc, char* argv[]){
 	printf("Course work for option 4.15, created by Vladimir Tukalkin.\n");
