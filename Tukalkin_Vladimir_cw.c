@@ -17,8 +17,9 @@ typedef struct{
 	png_structp png_ptr;
 	png_infop info_ptr;
 	int number_of_passes;
-	png_bytep *row_pointers;
+	png_bytep *row_pointers; //{png_bytep = unsigned char *}
 } Png;
+
 
 int is_number(char* number);
 int check_color_coordinates(char* string, int number_dot);
@@ -41,94 +42,43 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 		right_down[0]=k1;
 		right_down[1]=k2;
 	}
+	int x0=right_down[0]-left_up[0];
+	int y0=right_down[1]-left_up[1];
 	switch(angle){
 		case 90:
-			int flag=0;
-			if((right_down[1]-left_up[1])!=(right_down[0]-left_up[0])){
-				if(right_down[1]>right_down[0]){
-					right_down[1]=right_down[0]-left_up[0]+left_up[1];
- 					flag=1;
-				}
-				if(right_down[1]<right_down[0]){
-					right_down[0]=right_down[1]-left_up[0]+left_up[1];
-					flag=2;
-				}
-			}
 
-			int max=right_down[1]-left_up[1];
-			int min=right_down[0]-left_up[0];
-			if(max<right_down[0]-left_up[0]) max=right_down[0]-left_up[0];
-			if(min<right_down[1]-left_up[1]) min=right_down[1]-left_up[1];
-			
-			for(int y=left_up[1];y<right_down[1]/2;y++){
-				for(int x=left_up[0];x<right_down[0]/2;x++){
-					int x2 = abs(left_up[1] -x);
-					int y2 = abs(right_down[0] -y-1);
-					int x3 = right_down[0] - x-1;
-					int y3 = right_down[1] - y-1;
-					int x4 = abs(left_up[1] - x3);
-					int y4 = abs(right_down[0] - y3-1);
-
-					int color1[3]={0,0,0};
-					int color2[3]={0,0,0};
-					int color3[3]={0,0,0};
-					int color4[3]={0,0,0};
-
-					if(x4 >= left_up[0] && x4 <= right_down[0] && y4 >= left_up[1] && y4 <= right_down[1]){
-						color1[0]=image->row_pointers[y4][x4*3];
-						color1[1]=image->row_pointers[y4][x4*3+1];
-						color1[2]=image->row_pointers[y4][x4*3+2];
-					}
-					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1]){
-						color2[0]=image->row_pointers[y3][x3*3];
-						color2[1]=image->row_pointers[y3][x3*3+1];
-						color2[2]=image->row_pointers[y3][x3*3+2];
-					}
-					if(x2 >= left_up[0] && x2 <= right_down[0] && y2 >= left_up[1] && y2 <= right_down[1]){
-						color3[0]=image->row_pointers[y2][x2*3];
-						color3[1]=image->row_pointers[y2][x2*3+1];
-						color3[2]=image->row_pointers[y2][x2*3+2];
-					}
-					if(x >= left_up[0] && x <= right_down[0] && y >= left_up[1] && y <= right_down[1]){
-						color4[0]=image->row_pointers[y][x*3];
-						color4[1]=image->row_pointers[y][x*3+1];
-						color4[2]=image->row_pointers[y][x*3+2];
-					}
-					set_pixel(image,x,y,color1);      //left_up
-					set_pixel(image,x2,y2,color2);    //left_down
-					set_pixel(image,x3,y3,color3);    //right_down
-					set_pixel(image,x4,y4,color4);    //right_up
-				}
-			}
 			break;
 		case 180:
+			int flag=0;
+			if((right_down[0]-left_up[0])%2==1) flag=1;
+
 			for(int y=left_up[1];y<right_down[1];y++){
 				for(int x=left_up[0];x<right_down[0]/2;x++){
-					int x3 = right_down[0] - x-1;
-					int y3 = right_down[1] - y-1;
+					int yy=right_down[1]+left_up[1]-y-1;
+					int xx=right_down[0]-x-1-flag;
 
 					int color1[3]={0,0,0};
 					int color2[3]={0,0,0};
-					if(x3 >= left_up[0] && x3 <= right_down[0] && y3 >= left_up[1] && y3 <= right_down[1] && x >= left_up[0] && x <= right_down[0] && y >= left_up[1] && y <= right_down[1]){
-						color1[0]=image->row_pointers[y3][x3*3];
-						color1[1]=image->row_pointers[y3][x3*3+1];
-						color1[2]=image->row_pointers[y3][x3*3+2];
-
-						color2[0]=image->row_pointers[y][x*3];
-						color2[1]=image->row_pointers[y][x*3+1];
-						color2[2]=image->row_pointers[y][x*3+2];
+					if(x>=left_up[0] && x<right_down[0] && y>=left_up[1] && y<right_down[1]){
+						color1[0]=image->row_pointers[y][x*3+0];
+						color1[1]=image->row_pointers[y][x*3+1];
+						color1[2]=image->row_pointers[y][x*3+2];
 					}
-					set_pixel(image,x3,y3,color2);
-					set_pixel(image,x,y,color1);
+					if(xx>=left_up[0] && xx<right_down[0] && yy>=left_up[1] && yy<right_down[1]){
+						color2[0]=image->row_pointers[yy][xx*3+0];
+						color2[1]=image->row_pointers[yy][xx*3+1];
+						color2[2]=image->row_pointers[yy][xx*3+2];
+					}
+					set_pixel(image,x,y,color2);
+					set_pixel(image,xx,yy,color1);
 				}
 			}
 			break;
-		case 270:
+		/*case 270:
 			function_rotate(image,left_up,right_down,90);
 			function_rotate(image,left_up,right_down,180);
-			break;
+			break;*/
 	}
-
 }
 
 int main(int argc, char* argv[]){
@@ -303,6 +253,10 @@ int main(int argc, char* argv[]){
 		opt=getopt_long(argc,argv,optstring,long_options,&option_index);
 	}
 
+	if(strlen(output_filename)==0){
+		printf("%sMissing output filename.\n%s",RED,RESET);
+	}
+
 	if(flag_input_filename==0) strcpy(input_filename,argv[argc-1]);
 	read_png_file(input_filename, &img);
 
@@ -355,8 +309,6 @@ int main(int argc, char* argv[]){
 
 	if(strlen(output_filename)!=0){
 		write_png_file(output_filename,&img);
-	}else{
-		write_png_file(input_filename,&img);
 	}
 	printf("%sDONE%s\n",GREEN,RESET);
 	return 0;
