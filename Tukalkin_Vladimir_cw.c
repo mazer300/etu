@@ -42,6 +42,10 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 		right_down[0]=k1;
 		right_down[1]=k2;
 	}
+	if(right_down[0]>image->width || right_down[1]>image->height){
+		printf("%sInvalid size image.%s\n",RED,RESET);
+		exit(41);
+	}
 	int x0=right_down[0]-left_up[0];
 	int y0=right_down[1]-left_up[1];
 	switch(angle){
@@ -51,20 +55,19 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 		case 180:
 			int flag=0;
 			if((right_down[0]-left_up[0])%2==1) flag=1;
-
 			for(int y=left_up[1];y<right_down[1];y++){
-				for(int x=left_up[0];x<right_down[0]/2;x++){
+				for(int x=left_up[0];x<(right_down[0]+left_up[0])/2;x++){
 					int yy=right_down[1]+left_up[1]-y-1;
-					int xx=right_down[0]-x-1-flag;
+					int xx=right_down[0]+left_up[0]-x-1-flag;
 
 					int color1[3]={0,0,0};
 					int color2[3]={0,0,0};
-					if(x>=left_up[0] && x<right_down[0] && y>=left_up[1] && y<right_down[1]){
+					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[0] && y>=left_up[1] && y<right_down[1]){
 						color1[0]=image->row_pointers[y][x*3+0];
 						color1[1]=image->row_pointers[y][x*3+1];
 						color1[2]=image->row_pointers[y][x*3+2];
 					}
-					if(xx>=left_up[0] && xx<right_down[0] && yy>=left_up[1] && yy<right_down[1]){
+					if(xx>=0 && yy>=0 && xx>=left_up[0] && xx<right_down[0] && yy>=left_up[1] && yy<right_down[1]){
 						color2[0]=image->row_pointers[yy][xx*3+0];
 						color2[1]=image->row_pointers[yy][xx*3+1];
 						color2[2]=image->row_pointers[yy][xx*3+2];
