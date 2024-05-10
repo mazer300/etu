@@ -12,17 +12,17 @@
 
 typedef struct{
 	int width, height;
-	png_byte color_type;
-	png_byte bit_depth;
-	png_structp png_ptr;
-	png_infop info_ptr;
+	png_byte color_type;     //{aka int}
+	png_byte bit_depth;      //{aka int}
+	png_structp png_ptr;     //{aka struct png_struct_def *}
+	png_infop info_ptr;      //{aka struct png_info_def *}
 	int number_of_passes;
-	png_bytep *row_pointers; //{png_bytep = unsigned char *}
+	png_bytep *row_pointers; //{aka unsigned char *}
 } Png;
 
 
 int is_number(char* number);
-int check_color_coordinates(char* string, int number_dot);
+int check_color_and_coordinates(char* string, int number_dot);
 void print_info(Png* image);
 void print_help();
 void read_png_file(char* file_name, Png* image);
@@ -49,47 +49,32 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 	int x0=right_down[0]-left_up[0];
 	int y0=right_down[1]-left_up[1];
 	int flag=0;
+
+	int arr[right_down[1]-left_up[1]][(right_down[0]-left_up[0])*3];
+	for(int y=left_up[1];y<right_down[1];y++){
+		for(int x=left_up[0];x<right_down[0];x++){
+			if(x>=0 && x<image->width && y>=0 && y<image->height){
+				arr[y][x*3+0]=image->row_pointers[y][x*3+0];
+				arr[y][x*3+1]=image->row_pointers[y][x*3+1];
+				arr[y][x*3+2]=image->row_pointers[y][x*3+2];
+			}else{
+				arr[y][x*3+0]=0;
+				arr[y][x*3+1]=0;
+				arr[y][x*3+2]=0;
+			}
+		}
+	}
+
 	switch(angle){
 		case 90:
 			if((right_down[1]-left_up[1])%2!=0 || (right_down[0]-left_up[0])%2!=0) flag=1;
-			for(int y=left_up[1];y<(right_down[1]+left_up[1])/2+flag;y++){
-				for(int x=left_up[0];x<(right_down[0]+left_up[0])/2;x++){
-					int x2=right_down[0]+left_up[0]-y-1;
-					int y2=x;
-					int x3=right_down[0]+left_up[0]-x-1;
-					int y3=right_down[1]+left_up[1]-y-1;
-					int x4=right_down[0]+left_up[0]-y3-1;
-					int y4=x3;
+			for(int y=left_up[1];y<(right_down[0]+left_up[0])+flag;y++){
+				for(int x=left_up[0];x<(right_down[1]+left_up[1]);x++){
 
-					int color1[3]={0,0,0};
-					int color2[3]={0,0,0};
-					int color3[3]={0,0,0};
-					int color4[3]={0,0,0};
-
-					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[0] && y>=left_up[1] && y<right_down[1]){
-						color1[0]=image->row_pointers[y][x*3+0];
-						color1[1]=image->row_pointers[y][x*3+1];
-						color1[2]=image->row_pointers[y][x*3+2];
+					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[1] && y>=left_up[1] && y<right_down[0]){
+						int color1[3]={arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+0], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+1], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+2]};
+						set_pixel(image,x,y,color1);
 					}
-					if(x2>=0 && y2>=0 && x2>=left_up[0] && x2<right_down[0] && y2>=left_up[1] && y2<right_down[1]){
-						color2[0]=image->row_pointers[y2][x2*3+0];
-						color2[1]=image->row_pointers[y2][x2*3+1];
-						color2[2]=image->row_pointers[y2][x2*3+2];
-					}
-					if(x3>=0 && y3>=0 && x3>=left_up[0] && x3<right_down[0] && y3>=left_up[1] && y3<right_down[1]){
-						color3[0]=image->row_pointers[y3][x3*3+0];
-						color3[1]=image->row_pointers[y3][x3*3+1];
-						color3[2]=image->row_pointers[y3][x3*3+2];
-					}
-					if(x4>=0 && y4>=0 && x4>=left_up[0] && x4<right_down[0] && y4>=left_up[1] && y4<right_down[1]){
-						color4[0]=image->row_pointers[y4][x4*3+0];
-						color4[1]=image->row_pointers[y4][x4*3+1];
-						color4[2]=image->row_pointers[y4][x4*3+2];
-					}
-					set_pixel(image,x,y,color4);
-					set_pixel(image,x2,y2,color1);
-					set_pixel(image,x3,y3,color2);
-					set_pixel(image,x4,y4,color3);
 				}
 			}
 			break;
@@ -200,7 +185,7 @@ int main(int argc, char* argv[]){
 				number_function=3;       //function rotate
 				break;
 			case 'Q':
-				if(!check_color_coordinates(optarg,1)){
+				if(!check_color_and_coordinates(optarg,1)){
 					printf("%sParameter left_up is not a number.%s\n",RED,RESET);
 					return 41;
 				}
@@ -210,7 +195,7 @@ int main(int argc, char* argv[]){
 				flag_left_up=1;
 				break;
 			case 'W':
-				if(!check_color_coordinates(optarg,1)){
+				if(!check_color_and_coordinates(optarg,1)){
 					printf("%sParameter right_down is not a number.%s\n",RED,RESET);
 					return 41;
 				}
@@ -227,7 +212,7 @@ int main(int argc, char* argv[]){
 				thickness=atoi(optarg);
 				break;
 			case 'R':
-				if(!check_color_coordinates(optarg,2)){
+				if(!check_color_and_coordinates(optarg,2)){
 					printf("%sParameter color is not a number.%s\n",RED,RESET);
 					return 41;
 				}
@@ -243,7 +228,7 @@ int main(int argc, char* argv[]){
 				parameters_ornament+=1;
 				break;
 			case 'T':
-				if(!check_color_coordinates(optarg,2)){
+				if(!check_color_and_coordinates(optarg,2)){
 					printf("%sParameter fill_color is not a number.%s\n",RED,RESET);
 					return 41;
 				}
@@ -367,7 +352,7 @@ int is_number(char* number){
 	return 1;
 }
 
-int check_color_coordinates(char* string, int number_dot){
+int check_color_and_coordinates(char* string, int number_dot){
 	int count_dot=0;
 	int len=0;
 	for(size_t i=0;i<strlen(string);i++){
