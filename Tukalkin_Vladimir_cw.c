@@ -46,21 +46,21 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 		printf("%sInvalid size image.%s\n",RED,RESET);
 		exit(41);
 	}
-	int x0=right_down[0]-left_up[0];
-	int y0=right_down[1]-left_up[1];
-	int flag=0;
 
-	int arr[right_down[1]-left_up[1]][(right_down[0]-left_up[0])*3];
-	for(int y=left_up[1];y<right_down[1];y++){
-		for(int x=left_up[0];x<right_down[0];x++){
-			if(x>=0 && x<image->width && y>=0 && y<image->height){
-				arr[y][x*3+0]=image->row_pointers[y][x*3+0];
-				arr[y][x*3+1]=image->row_pointers[y][x*3+1];
-				arr[y][x*3+2]=image->row_pointers[y][x*3+2];
-			}else{
-				arr[y][x*3+0]=0;
-				arr[y][x*3+1]=0;
-				arr[y][x*3+2]=0;
+	int flag=0;
+	int arr[right_down[1]-left_up[1]+1][(right_down[0]-left_up[0]+1)*3];
+	if(angle==90 || angle==270){
+		for(int y=0;y<right_down[1]-left_up[1]+1;y++){
+			for(int x=0;x<right_down[0]-left_up[0]+1;x++){
+				if(x>=0 && x<image->width && y>=0 && y<image->height && (left_up[0]+x)==abs(left_up[0]+x) && (left_up[1]+y)==abs(left_up[1]+y)){
+					arr[y][x*3+0]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+0];
+					arr[y][x*3+1]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+1];
+					arr[y][x*3+2]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+2];
+				}else{
+					arr[y][x*3+0]=0;
+					arr[y][x*3+1]=0;
+					arr[y][x*3+2]=0;
+				}
 			}
 		}
 	}
@@ -70,16 +70,16 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 			if((right_down[1]-left_up[1])%2!=0 || (right_down[0]-left_up[0])%2!=0) flag=1;
 			for(int y=left_up[1];y<(right_down[0]+left_up[0])+flag;y++){
 				for(int x=left_up[0];x<(right_down[1]+left_up[1]);x++){
-
+					int xx=right_down[0]-right_down[1]+x-1;
+					int yy=right_down[0]-left_up[1]-y-1;
 					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[1] && y>=left_up[1] && y<right_down[0]){
 						int color1[3]={arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+0], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+1], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+2]};
-						set_pixel(image,x,y,color1);
+						set_pixel(image,xx,yy,color1);
 					}
 				}
 			}
 			break;
 		case 180:
-			flag=0;
 			if((right_down[0]-left_up[0])%2==1) flag=1;
 			for(int y=left_up[1];y<right_down[1];y++){
 				for(int x=left_up[0];x<(right_down[0]+left_up[0])/2;x++){
@@ -104,8 +104,18 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 			}
 			break;
 		case 270:
-			function_rotate(image,left_up,right_down,90);
-			function_rotate(image,left_up,right_down,180);
+			if((right_down[1]-left_up[1])%2!=0 || (right_down[0]-left_up[0])%2!=0) flag=1;
+			for(int y=left_up[1];y<right_down[0];y++){
+				for(int x=left_up[0];x<right_down[1];x++){
+					int xx=right_down[1]+left_up[0]-x-1;
+					int yy=right_down[0]+left_up[1]-y-1;
+					if(x>left_up[0] && x<right_down[1] && y>=left_up[1] && y<right_down[0] && xx>=left_up[0] && yy>=left_up[1] && yy<right_down[0]){  //x>=left_up[0] +столбик справа
+						//int color1[3]={arr[right_down[1]-x][(y-left_up[0])*3+0], arr[right_down[1]-x][(y-left_up[0])*3+1], arr[right_down[1]-x][(y-left_up[0])*3+2]};
+						int color1[3]={arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+0], arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+1], arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+2]};
+						set_pixel(image,xx,yy,color1);
+					}
+				}
+			}
 			break;
 	}
 }
@@ -404,8 +414,7 @@ void print_help(){
 }
 
 void read_png_file(char* file_name, Png* image){
-	int x,y;
-	char header[8];
+	unsigned char header[8];
 	/* Открыть и проверить, что файл png */
 	FILE *fp = fopen(file_name, "rb");
 	if(!fp){
@@ -418,7 +427,7 @@ void read_png_file(char* file_name, Png* image){
 		}
 	}
 	fread(header, 1, 8, fp);
-	if(png_sig_cmp(header, 0, 8)){
+	if(png_sig_cmp(header, 0, 8)!=0){
 		printf("%sProbably, %s is not a png.%s\n",RED,file_name,RESET);
 		exit(40);
 	}
@@ -466,7 +475,7 @@ void read_png_file(char* file_name, Png* image){
 
 	/* чтение файла */
 	image->row_pointers = (png_bytep *) malloc(sizeof(png_bytep)* image->height);
-	for(y=0;y<image->height;y++){
+	for(int y=0;y<image->height;y++){
 		image->row_pointers[y]=(png_byte*)malloc(png_get_rowbytes(image->png_ptr,image->info_ptr));
 	}
 	png_read_image(image->png_ptr, image->row_pointers);
@@ -474,7 +483,6 @@ void read_png_file(char* file_name, Png* image){
 }
 
 void write_png_file(char* file_name, Png* image){
-	 int x,y;
 	/* создание файла */
 	FILE* fp=fopen(file_name, "wb");
 	if(!fp){
@@ -521,7 +529,7 @@ void write_png_file(char* file_name, Png* image){
 	png_write_end(image->png_ptr, NULL);
 
 	/* Очистка памяти */
-	for(y = 0; y < image->height; y++) free(image->row_pointers[y]);
+	for(int y = 0; y < image->height; y++) free(image->row_pointers[y]);
 	free(image->row_pointers);
 	fclose(fp);
 }
@@ -599,6 +607,10 @@ void draw_circle(Png* image, int color[3], int radius, int x0, int y0){
 }
 
 void function_ornament(Png* image, int pattern, int color[3], int thickness, int count){
+	int width=image->width/count/2+1;
+	int height=image->height/count/2+1;
+	int radius=image->width/2;
+	if(radius>image->height/2) radius=image->height/2;
 	switch(pattern){
 		case 1:
 			if(thickness>image->width) thickness=image->width/2;
@@ -612,8 +624,6 @@ void function_ornament(Png* image, int pattern, int color[3], int thickness, int
 			}
 			break;
 		case 2:
-			int radius=image->width/2;
-			if(radius>image->height/2) radius=image->height/2;
 			for(size_t y=image->height/2;y<image->height;y++){
 				for(size_t x=image->width/2;x<image->width;x++){
 					if((radius*radius)<((x-image->width/2)*(x-image->width/2)+(y-image->height/2)*(y-image->height/2))){
@@ -626,8 +636,6 @@ void function_ornament(Png* image, int pattern, int color[3], int thickness, int
 			}
 			break;
 		case 3:
-			int width=image->width/count/2+1;
-			int height=image->height/count/2+1;
 			for(size_t i=0;i<count;i++){
 				draw_ring(image,color,thickness,width,width+i*2*width,0);
 				draw_ring(image,color,thickness,width,width+i*2*width,image->height);
