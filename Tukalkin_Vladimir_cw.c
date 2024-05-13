@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <png.h>
 #include <string.h>
 #include <getopt.h>
 #include <math.h>
-#include <png.h>
 
 #define RED "\033[1;31m"
 #define RESET "\033[0m"
@@ -33,92 +33,7 @@ void function_rect(Png* image, int left_up[2], int right_down[2], int thickness,
 void draw_ring(Png* image, int color[3], int thickness, int radius, int x0, int y0);
 void draw_circle(Png* image, int color[3], int radius, int x0, int y0);
 void function_ornament(Png* image, int pattern, int color[3], int thickness, int count);
-
-void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
-	if((left_up[0]>right_down[0]) || (left_up[1]>right_down[1])){
-		int k1=left_up[0], k2=left_up[1];
-		left_up[0]=right_down[0];
-		left_up[1]=right_down[1];
-		right_down[0]=k1;
-		right_down[1]=k2;
-	}
-	if(right_down[0]>image->width || right_down[1]>image->height){
-		printf("%sInvalid size image.%s\n",RED,RESET);
-		exit(41);
-	}
-
-	int flag=0;
-	int arr[right_down[1]-left_up[1]+1][(right_down[0]-left_up[0]+1)*3];
-	if(angle==90 || angle==270){
-		for(int y=0;y<right_down[1]-left_up[1]+1;y++){
-			for(int x=0;x<right_down[0]-left_up[0]+1;x++){
-				if(x>=0 && x<image->width && y>=0 && y<image->height && (left_up[0]+x)==abs(left_up[0]+x) && (left_up[1]+y)==abs(left_up[1]+y)){
-					arr[y][x*3+0]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+0];
-					arr[y][x*3+1]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+1];
-					arr[y][x*3+2]=image->row_pointers[y+left_up[1]][(x+left_up[0])*3+2];
-				}else{
-					arr[y][x*3+0]=0;
-					arr[y][x*3+1]=0;
-					arr[y][x*3+2]=0;
-				}
-			}
-		}
-	}
-
-	switch(angle){
-		case 90:
-			if((right_down[1]-left_up[1])%2!=0 || (right_down[0]-left_up[0])%2!=0) flag=1;
-			for(int y=left_up[1];y<(right_down[0]+left_up[0])+flag;y++){
-				for(int x=left_up[0];x<(right_down[1]+left_up[1]);x++){
-					int xx=right_down[0]-right_down[1]+x-1;
-					int yy=right_down[0]-left_up[1]-y-1;
-					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[1] && y>=left_up[1] && y<right_down[0]){
-						int color1[3]={arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+0], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+1], arr[right_down[1]-x+left_up[1]][(y-left_up[0])*3+2]};
-						set_pixel(image,xx,yy,color1);
-					}
-				}
-			}
-			break;
-		case 180:
-			if((right_down[0]-left_up[0])%2==1) flag=1;
-			for(int y=left_up[1];y<right_down[1];y++){
-				for(int x=left_up[0];x<(right_down[0]+left_up[0])/2;x++){
-					int yy=right_down[1]+left_up[1]-y-1;
-					int xx=right_down[0]+left_up[0]-x-1-flag;
-
-					int color1[3]={0,0,0};
-					int color2[3]={0,0,0};
-					if(x>=0 && y>=0 && x>=left_up[0] && x<right_down[0] && y>=left_up[1] && y<right_down[1]){
-						color1[0]=image->row_pointers[y][x*3+0];
-						color1[1]=image->row_pointers[y][x*3+1];
-						color1[2]=image->row_pointers[y][x*3+2];
-					}
-					if(xx>=0 && yy>=0 && xx>=left_up[0] && xx<right_down[0] && yy>=left_up[1] && yy<right_down[1]){
-						color2[0]=image->row_pointers[yy][xx*3+0];
-						color2[1]=image->row_pointers[yy][xx*3+1];
-						color2[2]=image->row_pointers[yy][xx*3+2];
-					}
-					set_pixel(image,x,y,color2);
-					set_pixel(image,xx,yy,color1);
-				}
-			}
-			break;
-		case 270:
-			if((right_down[1]-left_up[1])%2!=0 || (right_down[0]-left_up[0])%2!=0) flag=1;
-			for(int y=left_up[1];y<right_down[0];y++){
-				for(int x=left_up[0];x<right_down[1];x++){
-					int xx=right_down[1]+left_up[0]-x-1;
-					int yy=right_down[0]+left_up[1]-y-1;
-					if(x>left_up[0] && x<right_down[1] && y>=left_up[1] && y<right_down[0] && xx>=left_up[0] && yy>=left_up[1] && yy<right_down[0]){  //x>=left_up[0] +столбик справа
-						//int color1[3]={arr[right_down[1]-x][(y-left_up[0])*3+0], arr[right_down[1]-x][(y-left_up[0])*3+1], arr[right_down[1]-x][(y-left_up[0])*3+2]};
-						int color1[3]={arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+0], arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+1], arr[right_down[1]-x-left_up[1]+left_up[0]][(y-left_up[0])*3+2]};
-						set_pixel(image,xx,yy,color1);
-					}
-				}
-			}
-			break;
-	}
-}
+void function_rotate(Png* image, int left_up[2], int right_down[2], int angle);
 
 int main(int argc, char* argv[]){
 	printf("Course work for option 4.15, created by Vladimir Tukalkin.\n");
@@ -161,12 +76,12 @@ int main(int argc, char* argv[]){
 		{"angle",      required_argument,NULL,'I'},
 		{"input",      required_argument,NULL,'i'},
 		{"output",     required_argument,NULL,'o'},
-		{"fill",     optional_argument,NULL,'f'},
-		{"info",     optional_argument,NULL,'n'},
-		{"help",     optional_argument,NULL,'h'},
-		{"rect",     optional_argument,NULL,'r'},
-		{"ornament", optional_argument,NULL,'z'},
-		{"rotate",   optional_argument,NULL,'t'},
+		{"fill",     no_argument,NULL,'f'},
+		{"info",     no_argument,NULL,'n'},
+		{"help",     no_argument,NULL,'h'},
+		{"rect",     no_argument,NULL,'r'},
+		{"ornament", no_argument,NULL,'z'},
+		{"rotate",   no_argument,NULL,'t'},
 		{0,0,0,0}};
 	int opt=getopt_long(argc,argv,optstring,long_options,&option_index);
 
@@ -320,7 +235,7 @@ int main(int argc, char* argv[]){
 		case 2:
 			if(parameters_ornament>=2){
 				if(pattern==2 && color[0]!=-1){
-					function_ornament(&img,pattern,color,0,0);
+					function_ornament(&img,pattern,color,0,1);
 					break;
 				}
 				if(pattern!=2 && pattern!=-1 && color[0]!=-1 && thickness!=-1 && count!=-1){
@@ -544,41 +459,45 @@ void set_pixel(Png* image,int x,int y,int color[3]){
 
 void function_rect(Png* image, int left_up[2], int right_down[2], int thickness, int color[3], int fill, int fill_color[3]){
 	/* Сhecking the correctness of coordinates */
-	if((left_up[0]>right_down[0]) || (left_up[1]>right_down[1])){
-		int k1=left_up[0], k2=left_up[1];
-		left_up[0]=right_down[0];
-		left_up[1]=right_down[1];
-		right_down[0]=k1;
-		right_down[1]=k2;
+	int k;
+	if(left_up[0]>right_down[0]){
+		k=right_down[0];
+		right_down[0]=left_up[0];
+		left_up[0]=k;
+	}
+	if(left_up[1]>right_down[1]){
+		k=right_down[1];
+		right_down[1]=left_up[1];
+		left_up[1]=k;
 	}
 	/* Draw up */
-	for(int y=left_up[1];y<left_up[1]+thickness;y++){
+	for(int y=left_up[1]-thickness/2;y<left_up[1]+thickness/2;y++){
 		for(int x=left_up[0];x<right_down[0];x++){
 			set_pixel(image,x,y,color);
 		}
 	}
 	/* Draw left */
 	for(int y=left_up[1];y<right_down[1];y++){
-		for(int x=left_up[0];x<left_up[0]+thickness;x++){
+		for(int x=left_up[0]-thickness/2;x<left_up[0]+thickness/2;x++){
 			set_pixel(image,x,y,color);
 		}
 	}
 	/* Draw down */
-	for(int y=right_down[1]-thickness;y<right_down[1];y++){
+	for(int y=right_down[1]-thickness/2;y<right_down[1]+thickness/2;y++){
 		for(int x=left_up[0];x<right_down[0];x++){
 			set_pixel(image,x,y,color);
 		}
 	}
 	/* Draw right */
 	for(int y=left_up[1];y<right_down[1];y++){
-		for(int x=right_down[0]-thickness;x<right_down[0];x++){
+		for(int x=right_down[0]-thickness/2;x<right_down[0]+thickness/2;x++){
 			set_pixel(image,x,y,color);
 		}
 	}
 	/* Fill */
 	if(fill==1){
-		for(int y=left_up[1]+thickness;y<right_down[1]-thickness;y++){
-			for(int x=left_up[0]+thickness;x<right_down[0]-thickness;x++){
+		for(int y=left_up[1]+thickness/2;y<right_down[1]-thickness/2;y++){
+			for(int x=left_up[0]+thickness/2;x<right_down[0]-thickness/2;x++){
 				set_pixel(image,x,y,fill_color);
 			}
 		}
@@ -620,12 +539,35 @@ void function_ornament(Png* image, int pattern, int color[3], int thickness, int
 			for(size_t i=0;i<count;i++){
 				int left_up[2]={0+i*2*thickness,0+i*2*thickness};
 				int right_down[2]={image->width-i*2*thickness,image->height-i*2*thickness};
-				function_rect(image,left_up,right_down,thickness,color,0,NULL);
+				/* Draw up */
+				for(int y=left_up[1];y<left_up[1]+thickness;y++){
+					for(int x=left_up[0];x<right_down[0];x++){
+						set_pixel(image,x,y,color);
+					}
+				}
+				/* Draw left */
+				for(int y=left_up[1];y<right_down[1];y++){
+					for(int x=left_up[0];x<left_up[0]+thickness;x++){
+						set_pixel(image,x,y,color);
+					}
+				}
+				/* Draw down */
+				for(int y=right_down[1]-thickness;y<right_down[1];y++){
+					for(int x=left_up[0];x<right_down[0];x++){
+						set_pixel(image,x,y,color);
+					}
+				}
+				/* Draw right */
+				for(int y=left_up[1];y<right_down[1];y++){
+					for(int x=right_down[0]-thickness;x<right_down[0];x++){
+						set_pixel(image,x,y,color);
+					}
+				}
 			}
 			break;
 		case 2:
-			for(size_t y=image->height/2;y<image->height;y++){
-				for(size_t x=image->width/2;x<image->width;x++){
+			for(int y=image->height/2;y<image->height;y++){
+				for(int x=image->width/2;x<image->width;x++){
 					if((radius*radius)<((x-image->width/2)*(x-image->width/2)+(y-image->height/2)*(y-image->height/2))){
 						set_pixel(image,x,y,color); //right down
 						set_pixel(image,image->width-x-1,image->height-y-1,color); //left up
@@ -637,16 +579,95 @@ void function_ornament(Png* image, int pattern, int color[3], int thickness, int
 			break;
 		case 3:
 			for(size_t i=0;i<count;i++){
-				draw_ring(image,color,thickness,width,width+i*2*width,0);
-				draw_ring(image,color,thickness,width,width+i*2*width,image->height);
+				draw_ring(image,color,thickness+1,width,width+i*2*width,0);
+				draw_ring(image,color,thickness+1,width,width+i*2*width,image->height);
 			}
 			for(size_t i=0;i<count;i++){
-				draw_ring(image,color,thickness,height,0,height+2*i*height);
-				draw_ring(image,color,thickness,height,image->width,height+2*i*height);
+				draw_ring(image,color,thickness+1,height,0,height+2*i*height);
+				draw_ring(image,color,thickness+1,height,image->width,height+2*i*height);
 			}
 			break;
 		default:
 			printf("КАК ТЫ СЮДА ПОПАЛ?!\n");
+			exit(41);
+	}
+}
+
+void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
+	if((left_up[0]>right_down[0]) || (left_up[1]>right_down[1])){
+		int k1=left_up[0], k2=left_up[1];
+		left_up[0]=right_down[0];
+		left_up[1]=right_down[1];
+		right_down[0]=k1;
+		right_down[1]=k2;
+	}
+	if(right_down[0]>image->width || right_down[1]>image->height){
+		printf("%sInvalid size image.%s\n",RED,RESET);
+		exit(41);
+	}
+	int arr[right_down[1]+1][(right_down[0]+1)*3];
+	for(int y=0;y<right_down[1];y++){
+		for(int x=0;x<right_down[0];x++){
+			if(x>=0 && y>=0 && x<right_down[0] && y<right_down[1]){
+				arr[y][x*3+0]=image->row_pointers[y][(x)*3+0];
+				arr[y][x*3+1]=image->row_pointers[y][(x)*3+1];
+				arr[y][x*3+2]=image->row_pointers[y][(x)*3+2];
+			}
+		}
+	}
+
+	int x0=(right_down[0]-left_up[0])/2+left_up[0];
+	int y0=(right_down[1]-left_up[1])/2+left_up[1];
+	int x1,y1;
+	switch(angle){
+		case 90:			
+			x1=x0 - (right_down[1]-left_up[1])/2;
+			y1=y0 + (right_down[0]-left_up[0])/2;
+			for(int y=left_up[1];y<right_down[1];y++){
+				for(int x=left_up[0];x<right_down[0];x++){
+					int xx=x1+y-left_up[1];
+					int yy=y1-x+left_up[0];
+					if(x>0 && y>0){
+						int color1[3]={arr[y][x*3+0],arr[y][x*3+1],arr[y][x*3+2]};
+						set_pixel(image,xx,yy,color1);
+					}else{
+						int color[3]={0,0,0};
+						set_pixel(image,xx,yy,color);
+					}
+				}
+			}
+			break;
+		case 180:		
+			for(int y=left_up[1];y<right_down[1];y++){
+				for(int x=left_up[0];x<right_down[0];x++){
+					int xx=right_down[0]+left_up[0]-x-1;
+					int yy=right_down[1]+left_up[1]-y-1;
+					int color1[3]={0,0,0};
+					if(x>=0 && y>=0 && xx>0 && yy>0 && xx>=left_up[0] && xx<right_down[0] && yy>=left_up[1] && yy<right_down[1]){
+						color1[0]=arr[y][x*3+0];
+						color1[1]=arr[y][x*3+1];
+						color1[2]=arr[y][x*3+2];
+					}
+					set_pixel(image,xx,yy,color1);
+				}
+			}
+			break;
+		case 270:
+			x1=x0+(right_down[1]-left_up[1])/2;
+			y1=y0-(right_down[0]-left_up[0])/2;
+			for(int y=left_up[1]+1;y<right_down[1];y++){
+				for(int x=left_up[0];x<right_down[0];x++){
+					int xx=x1-y+left_up[1];
+					int yy=y1+x-left_up[0];
+					if(x>0 && y>0){
+						int color1[3]={arr[y][x*3+0],arr[y][x*3+1],arr[y][x*3+2]};
+						set_pixel(image,xx,yy,color1);
+					}else{
+						int color[3]={0,0,0};
+						set_pixel(image,xx,yy,color);
+					}
+				}
+			}
 			break;
 	}
 }
