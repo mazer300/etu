@@ -617,12 +617,15 @@ void function_rotate(Png* image, int left_up[2], int right_down[2], int angle){
 	}
 
 	int x0=(right_down[0]-left_up[0])/2+left_up[0];
+	if((right_down[0]-left_up[0])%2!=0) x0-=1;
 	int y0=(right_down[1]-left_up[1])/2+left_up[1];
+	//if((right_down[1]-left_up[1])%2==0) y0-=1;
 	int x1,y1;
 	switch(angle){
 		case 90:			
 			x1=x0 - (right_down[1]-left_up[1])/2;
 			y1=y0 + (right_down[0]-left_up[0])/2;
+			if((right_down[1]-left_up[1])%2==0) y1-=1;
 			for(int y=left_up[1];y<right_down[1];y++){
 				for(int x=left_up[0];x<right_down[0];x++){
 					int xx=x1+y-left_up[1];
