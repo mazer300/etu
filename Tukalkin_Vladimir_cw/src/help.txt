@@ -1,0 +1,57 @@
+---СПРАВКА---
+
+Программа для обработки изображений в формате PNG.
+
+Функционал:
+1) Рисование прямоугольника.
+2) Сделать рамку в виде узора.
+3) Поворот изображения (части) на 90/180/270 градусов.
+
+Флаги:
+ --help (-h): вывести справку.
+ 
+ --info (-n): вывести информацию об изображении.
+
+ --rect (-r) {--left_up, --right_down, --thickness, --color, --fill, --fill_color}: рисование прямоугольника.
+ 
+ --ornament (-z) {--pattern, --color, --thickness, --count}: сделать рамку в виде узора.
+ 
+ --rotate (-t) {--left_up, --right_down, --angle}: поворот изображения (части) на 90/180/270 градусов.
+ 
+ --input (-i) {filename}: задать имя входного изображения. Если флаг отсутствует, то предполагается, что имя входного изображения передаётся последним аргументом.
+ 
+ --output (-o) {filename}: задать имя выходного изображения. Если флаг отсутствует, то предполагается, что имя выходного изображения является аналогичным входному.
+ 
+ --fill (-f): залить прямоугольник цветом флага --fill_color. Работает как бинарное значение: флага нет – false , флаг есть – true.
+ 
+ --left_up (-Q) {x.y}: задать координаты левого верхнего угла. Значение задаётся в формате `left.up`, где left – координата по x, up – координата по y.
+ 
+ --right_down (-W) {x.y}: задать координаты правого нижнего угла. Значение задаётся в формате `right.down`, где right – координата по x, down – координата по y.
+ 
+ --thickness (-E) {N}: задать толщину линии. На вход принимает число больше 0.
+ 
+ --color (-R) {r.g.b}: задать цвет линии. Цвет задаётся строкой `rrr.ggg.bbb`, где rrr/ggg/bbb – числа, задающие цветовую компоненту.
+ 
+ --fill_color (-T) {r.g.b}: задать цвет заливки. Цвет задаётся строкой `rrr.ggg.bbb`, где rrr/ggg/bbb – числа, задающие цветовую компоненту.
+ 
+ --pattern (-Y) {pattern}: задать узор рамки. Имеет значения: rectangle и circle, semicircles.
+ 
+ --count (-U) {N}: задать количество для узора рамки. На вход принимает число больше 0.
+ 
+ --angle (-I) {N}: задать угл поворота. Возможные значения: 90, 180, 270.
+ 
+Пример корректной передачи аргументов:
+
+./a.out -h
+
+./a.out --info --input input_filename.png
+
+./a.out --rect --left_up 10.20 --right_down 100.20 --thickness 5 --color 255.0.0 --input input_filename.png --output output_filename.png
+
+./a.out --rect --left_up 10.20 --right_down 100.20 --thickness 5 --color 255.0.0 --input input_filename.png --output output_filename.png --fill --fill_color 0.255.0
+
+./a.out --ornament --pattern circle --color 127.255.0 -i input_filename.png -o output_filename.png
+
+./a.out --ornament --semicircles --color 0.255.0 --thickness 10 --count 7 --input input_filename.png -o output_filename.png
+
+./a.out --rotate --left_up 0.0 --right_down 100.100 --angle 180 -i input_filename.png -o output_filename.png
