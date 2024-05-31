@@ -34,6 +34,19 @@ void draw_ring(Png* image, int color[3], int thickness, int radius, int x0, int 
 void draw_circle(Png* image, int color[3], int radius, int x0, int y0);
 void function_ornament(Png* image, int pattern, int color[3], int thickness, int count);
 void function_rotate(Png* image, int left_up[2], int right_down[2], int angle);
+void function_square_rhombus(Png* image, int upper_vertex[2], int size, int fill_color[3]){
+	int center[2]={upper_vertex[0],upper_vertex[1]+size};
+	for(int y=center[1]-size;y<center[1];y++){
+		for(int x=center[0];x<center[0]+size;x++){
+			if(x-center[0]-size<=y-center[1]){
+				set_pixel(image,x,y,fill_color);
+				set_pixel(image,center[0]*2-x,y,fill_color);
+				set_pixel(image,x,center[1]*2-y-1,fill_color);
+				set_pixel(image,center[0]*2-x,center[1]*2-y-1,fill_color);
+			}
+		}
+	}
+}
 
 int main(int argc, char* argv[]){
 	printf("Course work for option 4.15, created by Vladimir Tukalkin.\n");
@@ -52,6 +65,7 @@ int main(int argc, char* argv[]){
 	int flag_left_up=0;
 	int flag_right_down=0;
 	int flag_input_filename=0;
+	int flag_upper_vertex=0;
 
 	int left_up[2]={0,0};
 	int right_down[2]={0,0};
@@ -62,6 +76,8 @@ int main(int argc, char* argv[]){
 	int pattern=-1;
 	int count=-1;
 	int angle=-1;
+	int upper_vertex[2]={0,0};
+	int size=-1;
 
 	char* optstring="i:o:fnhrztQ:W:E:R:T:Y:U:I:";
 	int option_index=0;
@@ -76,6 +92,11 @@ int main(int argc, char* argv[]){
 		{"angle",      required_argument,NULL,'I'},
 		{"input",      required_argument,NULL,'i'},
 		{"output",     required_argument,NULL,'o'},
+		
+		{"upper_vertex",required_argument,NULL,'Z'},
+		{"size",        required_argument,NULL,'X'},
+		{"square_rhombus",no_argument,NULL,'s'},
+		
 		{"fill",     no_argument,NULL,'f'},
 		{"info",     no_argument,NULL,'n'},
 		{"help",     no_argument,NULL,'h'},
@@ -108,6 +129,9 @@ int main(int argc, char* argv[]){
 				break;
 			case 't':
 				number_function=3;       //function rotate
+				break;
+			case 's':
+				number_function=4;       //function square_rhombus
 				break;
 			case 'Q':
 				if(!check_color_and_coordinates(optarg,1)){
@@ -195,6 +219,23 @@ int main(int argc, char* argv[]){
 					printf("%sParameter angle is incorrect.%s\n",RED,RESET);
 					return 41;
 				}
+			case 'Z':
+				if(!check_color_and_coordinates(optarg,1)){
+					printf("%sParameter upper_vertex is not a number.%s\n",RED,RESET);
+					return 41;
+				}
+				upper_vertex[1]=atoi(strtok(optarg,"."));
+				upper_vertex[0]=upper_vertex[1];
+				upper_vertex[1]=atoi(strtok(NULL,"."));
+				flag_upper_vertex=1;
+				break;
+			case 'X':
+				if(!is_number(optarg)){
+					printf("%sParameter size is not a number.%s\n",RED,RESET);
+					return 41;
+				}
+				size=atoi(optarg);
+				break;
 			case 'h':
 				print_help();
 				return 0;
@@ -254,6 +295,14 @@ int main(int argc, char* argv[]){
 				break;
 			}else{
 				printf("%sThere are not enough parameters for the function rotate.%s\n",RED,RESET);
+				return 42;
+			}
+		case 4:
+			if(flag_upper_vertex==1 && size!=-1 && fill_color[0]!=-1){
+				function_square_rhombus(&img,upper_vertex,size,fill_color);
+				break;
+			}else{
+				printf("%sThere are not enough parameters for the function square_rhombus.%s\n",RED,RESET);
 				return 42;
 			}
 		default:
@@ -472,7 +521,7 @@ void function_rect(Png* image, int left_up[2], int right_down[2], int thickness,
 	}
 	/* Draw up */
 	for(int y=left_up[1]-thickness/2;y<left_up[1]+thickness/2;y++){
-		for(int x=left_up[0];x<right_down[0];x++){
+		for(int x=left_up[0]-thickness/2;x<right_down[0]+thickness/2;x++){
 			set_pixel(image,x,y,color);
 		}
 	}
@@ -484,7 +533,7 @@ void function_rect(Png* image, int left_up[2], int right_down[2], int thickness,
 	}
 	/* Draw down */
 	for(int y=right_down[1]-thickness/2;y<right_down[1]+thickness/2;y++){
-		for(int x=left_up[0];x<right_down[0];x++){
+		for(int x=left_up[0]-thickness/2;x<right_down[0]+thickness/2;x++){
 			set_pixel(image,x,y,color);
 		}
 	}
