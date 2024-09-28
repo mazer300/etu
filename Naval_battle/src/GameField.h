@@ -1,10 +1,5 @@
 #include <vector>
 #include "ShipManager.h"
-/*
-enum OpenCell{
-    Close,
-    Open
-};*/
 
 enum FieldState{
     Unknown,
