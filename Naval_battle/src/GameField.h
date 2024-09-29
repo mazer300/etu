@@ -15,13 +15,14 @@ private:
     int height;
     int width;
     std::vector<std::vector<FieldState>> Battelground;
+    std::vector<std::vector<bool>> IsOpenedCell;
     std::vector<Ship> ships;
     ShipManager shipManager;
 
     bool hasIntersectionShips(Ship& ship, int x, int y);
 
 public:
-    GameField(int width, int height);
+    GameField(int width, int height, int numShips);
     GameField(const GameField& other);                //Копирование
     GameField(GameField&& other) noexcept;            //Перемещение
     GameField& operator=(const GameField& other);     //оператор копирования

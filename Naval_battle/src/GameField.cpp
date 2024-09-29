@@ -39,7 +39,7 @@ bool GameField::hasIntersectionShips(Ship& ship, int x, int y){
     return true;
 }
 
-GameField::GameField(int width, int height) : width(width), height(height), Battelground(height, std::vector<FieldState>(width, FieldState::Unknown)), shipManager(10) {}
+GameField::GameField(int width, int height, int numShips) : width(width), height(height), Battelground(height, std::vector<FieldState>(width, FieldState::Unknown)), IsOpenedCell(height, std::vector<bool>(width, 0)), shipManager(numShips) {}
 
 GameField::GameField(const GameField& other) : width(other.width), height(other.height), shipManager(other.shipManager), Battelground(other.Battelground) {}
 
@@ -73,23 +73,61 @@ GameField& GameField::operator=(GameField&& other) noexcept {
 
 void GameField::attack(int x, int y){
     if (x >= 0 && x < width && y >= 0 && y < height) {
-        if(Battelground[x][y] == FieldState::Boat){
+        IsOpenedCell[y][x] = 1;
+        if(Battelground[y][x] == FieldState::Boat || Battelground[y][x] == FieldState::LowBoat){
+            
+            for(auto& ship : ships){
+                if(ship.getOrientationShip()==Horizontal){
+                    if(y==ship.getY() && x>=ship.getX() && x<ship.getX()+ship.getLength()){
+                        ship.shoot(x-ship.getX());
+                        if(Battelground[y][x] == FieldState::Boat){
+                            Battelground[y][x] = FieldState::LowBoat;
+                        }else{
+                            Battelground[y][x] = FieldState::DeadBoat;
+                        }
+                        if(ship.isDestroy()){
+                            std::cout << "Корабль уничтожен!" << std::endl;
 
-            // Find the ship and update its state
-            // This is a simplified example, in a real game you would need to track which ship is at which cell
-            // For simplicity, assume the first ship is hit
+                        }
+                    }
+                }else{
+                    if(x==ship.getX() && y>=ship.getY() && y<ship.getY()+ship.getLength()){
+                        ship.shoot(y-ship.getY());
+                        if(Battelground[y][x] == FieldState::Boat){
+                            Battelground[y][x] = FieldState::LowBoat;
+                        }else{
+                            Battelground[y][x] = FieldState::DeadBoat;
+                        }
+                        if(ship.isDestroy()){
+                            std::cout << "Корабль уничтожен!" << std::endl;
+                        }
 
-            shipManager.updateShipState(0, 0);
-            Battelground[x][y] = FieldState::LowBoat;
-        }else if(Battelground[x][y] == FieldState::LowBoat){
-
-            shipManager.updateShipState(0, 0);
-            Battelground[x][y] = FieldState::DeadBoat;
-        }else if (Battelground[x][y] == FieldState::Unknown){
-            Battelground[x][y] = FieldState::Empty;
+                    }
+                }
+            }
+ 
+        }else if (Battelground[y][x] == FieldState::Unknown){
+            Battelground[y][x] = FieldState::Empty;
         }
     }
 }
+
+/*
+void GameField::attack(int x, int y){
+    if (x >= 0 && x < width && y >= 0 && y < height) {
+        if(Battelground[y][x] == FieldState::Boat){
+            shipManager.updateShipState(0, 0);
+            Battelground[y][x] = FieldState::LowBoat;
+        }else if(Battelground[y][x] == FieldState::LowBoat){
+
+            shipManager.updateShipState(0, 0);
+            Battelground[y][x] = FieldState::DeadBoat;
+        }else if (Battelground[y][x] == FieldState::Unknown){
+            Battelground[y][x] = FieldState::Empty;
+        }
+    }
+}
+*/
 
 void GameField::PlaceShip(Ship& ship, int x, int y){
     if (hasIntersectionShips(ship, x, y)) {
@@ -109,27 +147,31 @@ void GameField::PlaceShip(Ship& ship, int x, int y){
 }
 
 void GameField::printField(){
-    for(auto row : Battelground){
-        for(auto cell : row){
-            switch(cell)
-            {
-            case Unknown:
+    int flagIsOpenCell = 1;
+    for(int i = 0; i < height; i++){
+        for(int j = 0; j < width; j++){
+            if(flagIsOpenCell == 0 || (flagIsOpenCell == 1 && IsOpenedCell[i][j] == 1)){
+                switch(Battelground[i][j]){
+                case Unknown:
+                    std::cout << "⬜";
+                    break;
+                case Empty:
+                    std::cout << "⬛";
+                    break;
+                case Boat:
+                    std::cout << "🟥";
+                    break;
+                case LowBoat:
+                    std::cout << "🔥";
+                    break;
+                case DeadBoat:
+                    std::cout << "❌";
+                    break;
+                default:
+                    break;
+                }
+            }else if(flagIsOpenCell == 1 && IsOpenedCell[i][j] == 0){
                 std::cout << "⬜";
-                break;
-            case Empty:
-                std::cout << "⬛";
-                break;
-            case Boat:
-                std::cout << "🟥";
-                break;
-            case LowBoat:
-                std::cout << "🔥";
-                break;
-            case DeadBoat:
-                std::cout << "❌";
-                break;
-            default:
-                break;
             }
         }
         std::cout << '\n';

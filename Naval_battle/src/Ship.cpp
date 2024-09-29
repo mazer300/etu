@@ -9,7 +9,7 @@ Ship::Ship(int _length, int _x, int _y, OrientationShip _orientation) : length(_
 }
 
 void Ship::shoot(int segment){
-    if(segment <= segmentsHP.size() && segment > 0){
+    if(segment <= segmentsHP.size() && segment >= 0){
         if(segmentsHP[segment] != ShipStateHP::dead){
             if(segmentsHP[segment] == ShipStateHP::full){
                 segmentsHP[segment] = ShipStateHP::low;
@@ -18,6 +18,7 @@ void Ship::shoot(int segment){
             }
         }
     }
+    
 }
 
 bool Ship::isDestroy(){
