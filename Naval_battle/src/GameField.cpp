@@ -112,25 +112,10 @@ void GameField::attack(int x, int y){
     }
 }
 
-/*
-void GameField::attack(int x, int y){
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        if(Battelground[y][x] == FieldState::Boat){
-            shipManager.updateShipState(0, 0);
-            Battelground[y][x] = FieldState::LowBoat;
-        }else if(Battelground[y][x] == FieldState::LowBoat){
-
-            shipManager.updateShipState(0, 0);
-            Battelground[y][x] = FieldState::DeadBoat;
-        }else if (Battelground[y][x] == FieldState::Unknown){
-            Battelground[y][x] = FieldState::Empty;
-        }
-    }
-}
-*/
-
 void GameField::PlaceShip(Ship& ship, int x, int y){
     if (hasIntersectionShips(ship, x, y)) {
+        ship.setX(x);
+        ship.setY(y);
         int length = ship.getLength();
         OrientationShip orientation = ship.getOrientationShip();
 
@@ -147,7 +132,7 @@ void GameField::PlaceShip(Ship& ship, int x, int y){
 }
 
 void GameField::printField(){
-    int flagIsOpenCell = 1;
+    int flagIsOpenCell = 1;       //0 = поле открыто, 1 = поле закрыто
     for(int i = 0; i < height; i++){
         for(int j = 0; j < width; j++){
             if(flagIsOpenCell == 0 || (flagIsOpenCell == 1 && IsOpenedCell[i][j] == 1)){

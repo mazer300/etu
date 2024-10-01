@@ -7,7 +7,7 @@ int main(){
     GameField board(10, 10, 5);
     
     Ship ship1(10,0,0, OrientationShip::Horizontal);
-    Ship ship2(5,0,2, OrientationShip::Vertical);
+    Ship ship2(5,0,0, OrientationShip::Vertical);
     Ship ship3(1,2,5, OrientationShip::Horizontal);
     Ship ship4(7,3,9, OrientationShip::Horizontal);
 

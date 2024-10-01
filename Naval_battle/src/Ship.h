@@ -1,5 +1,6 @@
 #include <vector>
 
+
 enum OrientationShip{
     Vertical,
     Horizontal
@@ -20,12 +21,12 @@ private:
     OrientationShip orietation;              // Положение корабля 
 
 public:
-    //Ship();
-    // Конструктор
     Ship(int _length, int _x, int _y, OrientationShip _orientation);
     void shoot(int segment);
     bool isDestroy();
     void show();
+    void setX(int x);
+    void setY(int y);
     int getX();
     int getY();
     int getLength();

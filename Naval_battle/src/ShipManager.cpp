@@ -1,5 +1,4 @@
 #include "ShipManager.h"
-#include <vector>
 
 
 ShipManager::ShipManager(int numShips){
@@ -13,12 +12,6 @@ bool ShipManager::allShipIsDetroy(){
         }
     }
     return true;
-}
-
-void ShipManager::updateShipState(int shipIndex, int segmentIndex){
-    if(shipIndex >= 0 && shipIndex < ships.size()){
-        ships[shipIndex].shoot(segmentIndex);
-    }
 }
 
 void ShipManager::addShip(Ship& ship){

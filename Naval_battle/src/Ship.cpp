@@ -2,8 +2,7 @@
 #include <algorithm>
 #include "Ship.h"
 
-//Ship::Ship() : length(0), orietation(OrientationShip::Vertical), segmentsHP({}) {}
-// Конструктор
+
 Ship::Ship(int _length, int _x, int _y, OrientationShip _orientation) : length(_length), x(_x), y(_y), orietation(_orientation) {
     segmentsHP.resize(length, ShipStateHP::full);
 }
@@ -35,6 +34,8 @@ void Ship::show(){
     std::cout << '\n';
 }
 
+void Ship::setX(int _x){ x=_x; }
+void Ship::setY(int _y){ y=_y; }
 int Ship::getX(){ return x; }
 int Ship::getY(){ return y; }
 int Ship::getLength(){ return length; }

@@ -1,6 +1,7 @@
 #include <vector>
 #include "ShipManager.h"
 
+
 enum FieldState{
     Unknown,
     Empty,
@@ -12,21 +13,21 @@ enum FieldState{
 
 class GameField{
 private:
-    int height;
-    int width;
-    std::vector<std::vector<FieldState>> Battelground;
-    std::vector<std::vector<bool>> IsOpenedCell;
-    std::vector<Ship> ships;
-    ShipManager shipManager;
+    int height;                                        //Высота поля
+    int width;                                         //Ширина поля
+    std::vector<std::vector<FieldState>> Battelground; //Поле
+    std::vector<std::vector<bool>> IsOpenedCell;       //Статусы клеток поля 0 = закрыто, 1 = открыто
+    std::vector<Ship> ships;                           //Корабли
+    ShipManager shipManager;                           //Менеджер кораблей
 
     bool hasIntersectionShips(Ship& ship, int x, int y);
 
 public:
     GameField(int width, int height, int numShips);
-    GameField(const GameField& other);                //Копирование
-    GameField(GameField&& other) noexcept;            //Перемещение
-    GameField& operator=(const GameField& other);     //оператор копирования
-    GameField& operator=(GameField&& other) noexcept; //оператор перемещения
+    GameField(const GameField& other);                  //Копирование
+    GameField(GameField&& other) noexcept;              //Перемещение
+    GameField& operator=(const GameField& other);       //оператор копирования
+    GameField& operator=(GameField&& other) noexcept;   //оператор перемещения
     void attack(int x, int y);
     void PlaceShip(Ship& ship, int x, int y);
     void printField();
