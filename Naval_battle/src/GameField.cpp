@@ -1,16 +1,23 @@
 #include "GameField.h"
+#include "Exceptions/OutOfFieldAttackException.h"
+#include "Exceptions/InvalidPlacementShipException.h"
 #include <iostream>
+#include <functional>
 
 
 bool GameField::hasIntersectionShips(Ship& ship, int x, int y){
-    if(x < 0 || y < 0 || x > width || y > height){
+    if(x < 0 || y < 0 || x >= width || y >= height){
+        throw InvalidPlacementShipExceptions();
         return false;
     }
 
     int length=ship.getLength();
     OrientationShip orientationShip=ship.getOrientationShip();
     if(orientationShip==OrientationShip::Horizontal){
-        if(x+length>width) return false;
+        if(x+length>width){
+            throw InvalidPlacementShipExceptions();
+            return false;
+        }
 
         int up = 0;
         if(x>0) up=-1;
@@ -18,12 +25,16 @@ bool GameField::hasIntersectionShips(Ship& ship, int x, int y){
         if(x+length<width) down=length;
 
         for(int i=up;i<=down;i++){
-            if(Battelground[y][x+i] != FieldState::Unknown || ((y+1)<height && Battelground[y+1][x+i] != FieldState::Unknown) || ((y-1)>0 && Battelground[y-1][x+i] != FieldState::Unknown)){
+            if(Battleground[y][x+i].second != FieldState::Unknown || ((y+1)<height && Battleground[y+1][x+i].second != FieldState::Unknown) || ((y)>0 && Battleground[y-1][x+i].second != FieldState::Unknown)){
+                throw InvalidPlacementShipExceptions();
                 return false;
             }
         }
     }else if(orientationShip==OrientationShip::Vertical){
-        if(y+length>height) return false;
+        if(y+length>height){
+            throw InvalidPlacementShipExceptions();
+            return false;
+        }
 
         int up = 0;
         if(y>0) up=-1;
@@ -31,7 +42,8 @@ bool GameField::hasIntersectionShips(Ship& ship, int x, int y){
         if(y+length<height) down=length;
 
         for(int i=up; i<=down; i++){
-            if(Battelground[y+i][x] != FieldState::Unknown || (Battelground[y+i][x+1] != FieldState::Unknown && (x+1) < width) || Battelground[y+i][x-1] != FieldState::Unknown){
+            if(Battleground[y+i][x].second != FieldState::Unknown || (Battleground[y+i][x+1].second != FieldState::Unknown && (x+1) < width) || Battleground[y+i][x-1].second != FieldState::Unknown){
+                throw InvalidPlacementShipExceptions();
                 return false;
             }
         }
@@ -39,11 +51,11 @@ bool GameField::hasIntersectionShips(Ship& ship, int x, int y){
     return true;
 }
 
-GameField::GameField(int width, int height, int numShips) : width(width), height(height), Battelground(height, std::vector<FieldState>(width, FieldState::Unknown)), IsOpenedCell(height, std::vector<bool>(width, 0)), shipManager(numShips) {}
+GameField::GameField(int width, int height) : width(width), height(height), Battleground(height, std::vector<std::pair<bool, FieldState>>(width, std::make_pair(false, FieldState::Unknown))) {}
 
-GameField::GameField(const GameField& other) : width(other.width), height(other.height), shipManager(other.shipManager), Battelground(other.Battelground) {}
+GameField::GameField(const GameField& other) : width(other.width), height(other.height), Battleground(other.Battleground) {}
 
-GameField::GameField(GameField&& other) noexcept : width(other.width), height(other.height), shipManager(std::move(other.shipManager)), Battelground(std::move(other.Battelground)) {}
+GameField::GameField(GameField&& other) noexcept : width(other.width), height(other.height), Battleground(std::move(other.Battleground)) {}
 
 GameField& GameField::operator=(const GameField& other) {
     if (this == &other) {
@@ -51,10 +63,9 @@ GameField& GameField::operator=(const GameField& other) {
     }
     width = other.width;
     height = other.height;
-    shipManager = other.shipManager;
     for(int i = 0; i < height; i++){
         for(int j = 0; j < width; j++){
-            Battelground[i][j] = other.Battelground[i][j];
+            Battleground[i][j] = other.Battleground[i][j];
         }
     }
     return *this;
@@ -66,77 +77,91 @@ GameField& GameField::operator=(GameField&& other) noexcept {
     }
     width = other.width;
     height = other.height;
-    shipManager = std::move(other.shipManager);
-    Battelground = std::move(other.Battelground);
+    Battleground = std::move(other.Battleground);
     return *this;
 }
 
-void GameField::attack(int x, int y){
-    if (x >= 0 && x < width && y >= 0 && y < height) {
-        IsOpenedCell[y][x] = 1;
-        if(Battelground[y][x] == FieldState::Boat || Battelground[y][x] == FieldState::LowBoat){
-            
-            for(auto& ship : ships){
-                if(ship.getOrientationShip()==Horizontal){
-                    if(y==ship.getY() && x>=ship.getX() && x<ship.getX()+ship.getLength()){
-                        ship.shoot(x-ship.getX());
-                        if(Battelground[y][x] == FieldState::Boat){
-                            Battelground[y][x] = FieldState::LowBoat;
-                        }else{
-                            Battelground[y][x] = FieldState::DeadBoat;
-                        }
-                        if(ship.isDestroy()){
-                            std::cout << "Корабль уничтожен!" << std::endl;
+bool GameField::attack(int x, int y){
+    if (x < 0 || y < 0 || x >= width || y >= height) {
+        throw OutOfFieldAttackExceptions();
+    }
 
-                        }
-                    }
-                }else{
-                    if(x==ship.getX() && y>=ship.getY() && y<ship.getY()+ship.getLength()){
-                        ship.shoot(y-ship.getY());
-                        if(Battelground[y][x] == FieldState::Boat){
-                            Battelground[y][x] = FieldState::LowBoat;
-                        }else{
-                            Battelground[y][x] = FieldState::DeadBoat;
-                        }
-                        if(ship.isDestroy()){
-                            std::cout << "Корабль уничтожен!" << std::endl;
-                        }
+    Battleground[y][x].first = true;
+    for (int i = 0; i < ships.size(); i++) {
+        int len = ships[i].second.getLength();
+        int startX = ships[i].first.first;
+        int startY = ships[i].first.second;
 
-                    }
-                }
+        if (y == startY && x >= startX && x < startX + len) {
+            Ship& ship = ships[i].second;
+            int indexSegment = x - startX;
+
+            if (Battleground[y][x].second == FieldState::Boat) {
+                ship.shoot(indexSegment);
+                Battleground[y][x].second = FieldState::LowBoat;
+            } else if (Battleground[y][x].second == FieldState::LowBoat) {
+                ship.shoot(indexSegment);
+                Battleground[y][x].second = FieldState::DeadBoat;
             }
- 
-        }else if (Battelground[y][x] == FieldState::Unknown){
-            Battelground[y][x] = FieldState::Empty;
+
+            if (ship.isDestroy()) {
+                return true;
+            }
+            return false;
+        }
+
+        if (x == startX && y >= startY && y < startY + len) {
+            Ship& ship = ships[i].second;
+            int indexSegment = y - startY;
+
+            if (Battleground[y][x].second == FieldState::Boat) {
+                ship.shoot(indexSegment);
+                Battleground[y][x].second = FieldState::LowBoat;
+            } else if (Battleground[y][x].second == FieldState::LowBoat) {
+                ship.shoot(indexSegment);
+                Battleground[y][x].second = FieldState::DeadBoat;
+            }
+
+            if (ship.isDestroy()) {
+                ships.erase(ships.begin()+i);
+                return true;
+            }
+            return false;
         }
     }
+
+    if (Battleground[y][x].second == FieldState::Unknown) {
+        Battleground[y][x].second = FieldState::Empty;
+    }
+
+    return false;
 }
 
-void GameField::PlaceShip(Ship& ship, int x, int y){
+void GameField::placeShip(Ship& ship, int x, int y, OrientationShip orientationShip){
+    ship.setOrientationShip(orientationShip);
     if (hasIntersectionShips(ship, x, y)) {
-        ship.setX(x);
-        ship.setY(y);
         int length = ship.getLength();
-        OrientationShip orientation = ship.getOrientationShip();
-
         for (int i = 0; i < length; ++i) {
-            if (orientation == OrientationShip::Horizontal) {
-                Battelground[y][x + i] = FieldState::Boat;
+            if (orientationShip == OrientationShip::Horizontal) {
+                Battleground[y][x + i].second = FieldState::Boat;
             } else {
-                Battelground[y + i][x] = FieldState::Boat;
+                Battleground[y + i][x].second = FieldState::Boat;
             }
         }
-        ships.push_back(ship);
-        shipManager.addShip(ship);
     }
+    ships.push_back(std::make_pair(std::make_pair(x,y), ship));
+}
+
+void GameField::OpenCell(int x, int y){
+    Battleground[y][x].first = true;
 }
 
 void GameField::printField(){
-    int flagIsOpenCell = 1;       //0 = поле открыто, 1 = поле закрыто
+    bool flagOpen = 0;     // 0 = Закрытое поле, 1 = Открытое поле
     for(int i = 0; i < height; i++){
         for(int j = 0; j < width; j++){
-            if(flagIsOpenCell == 0 || (flagIsOpenCell == 1 && IsOpenedCell[i][j] == 1)){
-                switch(Battelground[i][j]){
+            if(Battleground[i][j].first || flagOpen){
+                switch(Battleground[i][j].second){
                 case Unknown:
                     std::cout << "⬜";
                     break;
@@ -155,7 +180,7 @@ void GameField::printField(){
                 default:
                     break;
                 }
-            }else if(flagIsOpenCell == 1 && IsOpenedCell[i][j] == 0){
+            }else{
                 std::cout << "⬜";
             }
         }
@@ -163,6 +188,10 @@ void GameField::printField(){
     }
 }
 
-std::vector<std::vector<FieldState>> GameField::getBattelground(){
-    return Battelground;
+std::vector<std::pair<std::pair<int,int>, Ship>> GameField::getShips(){
+    return ships;
+}
+
+std::vector<std::vector<std::pair<bool, FieldState>>> GameField::getBattleground(){
+    return Battleground;
 }

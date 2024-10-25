@@ -1,3 +1,6 @@
+#ifndef SHIP_H
+#define SHIP_H
+
 #include <vector>
 
 
@@ -14,22 +17,20 @@ enum ShipStateHP{
 
 class Ship{
 private:
-    int x;                                   // Координаты корабля
-    int y;
     std::vector<ShipStateHP> segmentsHP;     // Массив значений для отслеживания состояния каждого сегмента
     int length;                              // Длина корабля
     OrientationShip orietation;              // Положение корабля 
 
 public:
-    Ship(int _length, int _x, int _y, OrientationShip _orientation);
+    Ship(int _length);
     void shoot(int segment);
     bool isDestroy();
     void show();
-    void setX(int x);
-    void setY(int y);
-    int getX();
-    int getY();
     int getLength();
     std::vector<ShipStateHP> getShipHP();
+    ShipStateHP getSegmentHP(int index);
     OrientationShip getOrientationShip();
+    void setOrientationShip(OrientationShip orientationShip);
 };
+
+#endif // SHIP_H

@@ -1,3 +1,7 @@
+#ifndef GAMEFIELD_H
+#define GAMEFIELD_H
+
+#include <functional>
 #include <vector>
 #include "ShipManager.h"
 
@@ -15,21 +19,24 @@ class GameField{
 private:
     int height;                                        //Высота поля
     int width;                                         //Ширина поля
-    std::vector<std::vector<FieldState>> Battelground; //Поле
-    std::vector<std::vector<bool>> IsOpenedCell;       //Статусы клеток поля 0 = закрыто, 1 = открыто
-    std::vector<Ship> ships;                           //Корабли
-    ShipManager shipManager;                           //Менеджер кораблей
+    std::vector<std::vector<std::pair<bool, FieldState>>> Battleground; //Поле
+    //std::vector<Ship> ships;                         //Корабли
+    std::vector<std::pair<std::pair<int,int>, Ship>> ships;
 
     bool hasIntersectionShips(Ship& ship, int x, int y);
 
 public:
-    GameField(int width, int height, int numShips);
+    GameField(int width, int height);
     GameField(const GameField& other);                  //Копирование
     GameField(GameField&& other) noexcept;              //Перемещение
     GameField& operator=(const GameField& other);       //оператор копирования
     GameField& operator=(GameField&& other) noexcept;   //оператор перемещения
-    void attack(int x, int y);
-    void PlaceShip(Ship& ship, int x, int y);
+    bool attack(int x, int y);
+    void placeShip(Ship& ship, int x, int y, OrientationShip orientationShip);
+    void OpenCell(int x, int y);
     void printField();
-    std::vector<std::vector<FieldState>> getBattelground();
+    std::vector<std::pair<std::pair<int,int>, Ship>> getShips();
+    std::vector<std::vector<std::pair<bool, FieldState>>> getBattleground();
 };
+
+#endif // GAMEFIELD_H
