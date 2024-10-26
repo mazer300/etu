@@ -152,8 +152,10 @@ void GameField::placeShip(Ship& ship, int x, int y, OrientationShip orientationS
     ships.push_back(std::make_pair(std::make_pair(x,y), ship));
 }
 
-void GameField::OpenCell(int x, int y){
-    Battleground[y][x].first = true;
+bool GameField::OpenCell(int x, int y){
+    //Battleground[y][x].first = true;
+    if(Battleground[y][x].second == FieldState::Boat || Battleground[y][x].second == FieldState::LowBoat) return true;
+    return false;
 }
 
 void GameField::printField(){
@@ -192,6 +194,5 @@ std::vector<std::pair<std::pair<int,int>, Ship>> GameField::getShips(){
     return ships;
 }
 
-std::vector<std::vector<std::pair<bool, FieldState>>> GameField::getBattleground(){
-    return Battleground;
-}
+int GameField::getHeight(){ return height; }
+int GameField::getWidth(){ return width; }

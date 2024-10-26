@@ -33,10 +33,11 @@ public:
     GameField& operator=(GameField&& other) noexcept;   //оператор перемещения
     bool attack(int x, int y);
     void placeShip(Ship& ship, int x, int y, OrientationShip orientationShip);
-    void OpenCell(int x, int y);
+    bool OpenCell(int x, int y);
     void printField();
     std::vector<std::pair<std::pair<int,int>, Ship>> getShips();
-    std::vector<std::vector<std::pair<bool, FieldState>>> getBattleground();
+    int getHeight();
+    int getWidth();
 };
 
 #endif // GAMEFIELD_H
