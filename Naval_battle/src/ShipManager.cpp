@@ -17,7 +17,7 @@ bool ShipManager::allShipIsDetroy(){
     return true;
 }
 
-void ShipManager::addShip(int shipSize, OrientationShip orientationShip){
+void ShipManager::addShip(int shipSize){
     Ship ship(shipSize);
     ships.push_back(ship);
 }
