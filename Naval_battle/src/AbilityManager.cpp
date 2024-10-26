@@ -14,7 +14,7 @@ AbilityManager::AbilityManager(){
 }
 
 void AbilityManager::applyAbility(GameField& field, int x, int y){
-    if(abilities.size()<0){
+    if(abilities.size()<=0){
         throw NoAbilityExceptions();
     }
     abilities.back()->apply(field, x, y);
@@ -26,13 +26,13 @@ void AbilityManager::addRandomAbility(){
     switch (rand()%3)
     {
     case 0:
-        abilities.push_back(std::make_unique<DoubleDamageAbility>());
+        abilities.insert(abilities.begin(), std::make_unique<DoubleDamageAbility>());
         break;
     case 1:
-        abilities.push_back(std::make_unique<ScannerAbility>());
+        abilities.insert(abilities.begin(), std::make_unique<ScannerAbility>());
         break;
     case 2:
-        abilities.push_back(std::make_unique<ShootingAbility>());
+        abilities.insert(abilities.begin(), std::make_unique<ShootingAbility>());
         break;
     default:
         break;
