@@ -12,6 +12,8 @@ int main(){
     GameField board(10, 10);
     AbilityManager abilityManager;
 
+    InfoHolder info(board,shipmanager,2,0);
+
 
     try{
         board.placeShip(shipmanager.getShip(1), 0, 2, OrientationShip::Vertical);
@@ -23,17 +25,18 @@ int main(){
     }
 
     try{
-        bool a=board.attack(0, 0);
+        bool a=board.attack(0, 0, info.flagDoubleDamage);
         if(a) abilityManager.addRandomAbility();
-        board.attack(0, 0);
-        board.attack(1, 0);
-        board.attack(3, 9);
-        board.attack(1, 1);
-        board.attack(100,10);
+        board.attack(0, 0, info.flagDoubleDamage);
+        board.attack(1, 0, info.flagDoubleDamage);
+        board.attack(3, 9, info.flagDoubleDamage);
+        board.attack(1, 1, info.flagDoubleDamage);
+        board.attack(100,10, info.flagDoubleDamage);
     } catch(const OutOfFieldAttackExceptions& e){
         std::cerr << e.what() << '\n';
     }
-    abilityManager.applyAbility(board,2,0);
+    abilityManager.applyAbility(info);
+    
     board.printField();
     return 0;
 }

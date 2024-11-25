@@ -1,7 +1,12 @@
 #include "ShootingAbility.h"
 #include <random>
+#include <iostream>
 
-void ShootingAbility::apply(GameField& field, int x, int y){
+void ShootingAbility::apply(InfoHolder& info){
+    GameField &field = info.field;
+    int x = info.x;
+    int y = info.y;
+
     auto ships = field.getShips();
     srand(time(0));
     int index = rand()%ships.size();
@@ -18,12 +23,8 @@ void ShootingAbility::apply(GameField& field, int x, int y){
         }
     }
     if(orientation == OrientationShip::Horizontal){
-        field.attack(x + segmentShip, y);
+        field.attack(x + segmentShip, y, info.flagDoubleDamage);
     }else{
-        field.attack(x, y + segmentShip);
+        field.attack(x, y + segmentShip, info.flagDoubleDamage);
     }
-}
-
-std::string ShootingAbility::getName() const{
-    return "Shooting";
 }

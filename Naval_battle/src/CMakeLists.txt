@@ -12,11 +12,13 @@ add_executable(NavalBattle
     ShipManager.cpp
     GameField.cpp
     AbilityManager.cpp
+    InfoHolder.cpp
     ./Abilities/ShootingAbility.cpp
+    ./Abilities/ShootingAbilityFactory.cpp
     ./Abilities/ScannerAbility.cpp
+    ./Abilities/ScannerAbilityFactory.cpp
     ./Abilities/DoubleDamageAbility.cpp
-    
-
+    ./Abilities/DoubleDamageAbilityFactory.cpp
 )
 
 target_include_directories(NavalBattle PUBLIC ${CMAKE_SOURCE_DIR})

@@ -1,11 +1,10 @@
 #ifndef DOUBLEDAMAGEABILITIES_H
 #define DOUBLEDAMAGEABILITIES_H
 
-#include "Ability.h"
+#include "IAbility.h"
 
-class DoubleDamageAbility : public Ability{
-    void apply(GameField& field, int x, int y) override;
-    std::string getName() const override;
+class DoubleDamageAbility : public IAbility{
+    void apply(InfoHolder& info) override;
 };
 
 #endif // DOUBLEDAMAGEABILITIES_H

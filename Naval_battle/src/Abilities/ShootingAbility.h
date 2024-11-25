@@ -1,11 +1,10 @@
 #ifndef SHOOTINGABILITIES_H
 #define SHOOTINGABILITIES_H
 
-#include "Ability.h"
+#include "IAbility.h"
 
-class ShootingAbility : public Ability{
-    void apply(GameField& field, int x, int y) override;
-    std::string getName() const override;
+class ShootingAbility : public IAbility{
+    void apply(InfoHolder& info) override;
 };
 
 #endif // SHOOTINGABILITIES_H
