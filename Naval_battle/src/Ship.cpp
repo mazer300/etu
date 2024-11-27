@@ -42,3 +42,9 @@ ShipStateHP Ship::getSegmentHP(int index){ return segmentsHP[index]; }
 std::vector<ShipStateHP> Ship::getShipHP(){ return segmentsHP; }
 OrientationShip Ship::getOrientationShip(){ return orietation; }
 void Ship::setOrientationShip(OrientationShip orientationShip){ orietation = orientationShip; }
+
+void Ship::setSegmentState(int index, ShipStateHP state) {
+    if (index >= 0 && index < segmentsHP.size()) {
+        segmentsHP[index] = state;
+    }
+}

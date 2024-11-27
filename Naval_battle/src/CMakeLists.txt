@@ -19,6 +19,9 @@ add_executable(NavalBattle
     ./Abilities/ScannerAbilityFactory.cpp
     ./Abilities/DoubleDamageAbility.cpp
     ./Abilities/DoubleDamageAbilityFactory.cpp
+    Game.cpp
+    Player.cpp
+    GameState.cpp
 )
 
 target_include_directories(NavalBattle PUBLIC ${CMAKE_SOURCE_DIR})

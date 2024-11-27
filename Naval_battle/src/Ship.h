@@ -31,6 +31,7 @@ public:
     ShipStateHP getSegmentHP(int index);
     OrientationShip getOrientationShip();
     void setOrientationShip(OrientationShip orientationShip);
+    void setSegmentState(int index, ShipStateHP state);
 };
 
 #endif // SHIP_H
