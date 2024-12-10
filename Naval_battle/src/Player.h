@@ -11,7 +11,7 @@ class Player {
 public:
     Player(GameField& field, ShipManager& shipManager, AbilityManager& abilityManager);
     void applyAbility();
-    int attack(GameField& enemyField, int x, int y);
+    int attack(GameField& enemyField, int x, int y, int flagDoubleDamage);
     bool getState();
     void reinitialize(GameField& field, ShipManager& shipManager, AbilityManager& abilityManager);
 

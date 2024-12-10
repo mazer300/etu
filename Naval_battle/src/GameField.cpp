@@ -86,6 +86,10 @@ int GameField::attack(int x, int y, int damage){
         throw OutOfFieldAttackExceptions();
     }
 
+    if(Battleground[y][x].second == FieldState::Empty || Battleground[y][x].second == FieldState::DeadBoat){
+        return -1;
+    }
+
     Battleground[y][x].first = true;
     for (int i = 0; i < ships.size(); i++) {
         int len = ships[i].second.getLength();
@@ -150,8 +154,9 @@ int GameField::attack(int x, int y, int damage){
     return 0;
 }
 
-void GameField::placeShip(Ship& ship, int x, int y, OrientationShip orientationShip, int flagBot){
+bool GameField::placeShip(Ship& ship, int x, int y, OrientationShip orientationShip, int flagBot){
     ship.setOrientationShip(orientationShip);
+    if (!hasIntersectionShips(ship, x, y, flagBot)) return false;
     if (hasIntersectionShips(ship, x, y, flagBot)) {
         int length = ship.getLength();
         for (int i = 0; i < length; ++i) {
@@ -163,6 +168,7 @@ void GameField::placeShip(Ship& ship, int x, int y, OrientationShip orientationS
         }
     }
     ships.push_back(std::make_pair(std::make_pair(x,y), ship));
+    return true;
 }
 
 bool GameField::OpenCell(int x, int y){
@@ -171,7 +177,6 @@ bool GameField::OpenCell(int x, int y){
 }
 
 void GameField::printField(bool flagOpen){
-    //bool flagOpen = 0;     // 0 = Закрытое поле, 1 = Открытое поле
     for(int i = 0; i < height; i++){
         for(int j = 0; j < width; j++){
             if(Battleground[i][j].first || !flagOpen){
@@ -208,3 +213,7 @@ std::vector<std::pair<std::pair<int,int>, Ship>> GameField::getShips(){
 
 int GameField::getHeight(){ return height; }
 int GameField::getWidth(){ return width; }
+FieldState GameField::getState(int x, int y){ return Battleground[y][x].second; }
+void GameField::setState(int x, int y, FieldState state){
+    Battleground[y][x].second = state;
+}

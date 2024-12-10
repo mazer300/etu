@@ -8,15 +8,6 @@ ShipManager::ShipManager(int numShips, std::vector<int> shipSizes){
 
 }
 
-bool ShipManager::allShipIsDetroy(){
-    for (Ship &ship : ships){
-        if (!ship.isDestroy()){
-            return false;
-        }
-    }
-    return true;
-}
-
 void ShipManager::addShip(int shipSize){
     Ship ship(shipSize);
     ships.push_back(ship);

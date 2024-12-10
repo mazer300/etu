@@ -31,3 +31,26 @@ void AbilityManager::addRandomAbility(){
     int index = rand() % abilityFactories.size();
     abilities.insert(abilities.begin(), abilityFactories[index]->createAbility());
 }
+
+void AbilityManager::setAbilities(std::vector<int> abil){
+    for(auto i : abil){
+        abilities.push_back(abilityFactories[i]->createAbility());
+    }
+}
+
+std::vector<int> AbilityManager::getAbilities(){
+    std::vector<int> abil;
+    for (const auto& ability : abilities) {
+        for (int i = 0; i < abilityFactories.size(); ++i) {
+            if (abilityFactories[i]->createAbility() == ability) {
+                abil.push_back(i);
+                break;
+            }
+        }
+    }
+    return abil;
+}
+
+int AbilityManager::countAbilities(){
+    return abilities.size();
+}

@@ -10,15 +10,15 @@
 
 class AbilityManager{
 private:
-    //GameField& gameField;
-    //ShipManager& shipManager;
     std::vector<std::shared_ptr<IAbilityFactory>> abilityFactories;
     std::vector<std::shared_ptr<IAbility>> abilities;
-    //std::vector<std::unique_ptr<IAbility>> abilities;
 public:
     AbilityManager();
     void applyAbility(InfoHolder& info);
     void addRandomAbility();
+    void setAbilities(std::vector<int> abil);
+    std::vector<int> getAbilities();
+    int countAbilities();
 };
 
 #endif // ABILITYMANAGER_H

@@ -2,6 +2,7 @@
 #include "Exceptions/InvalidPlacementShipException.h"
 #include "Exceptions/OutOfFieldAttackException.h"
 #include <iostream>
+#include <random>
 
 Game::Game()
     : playerField(10, 10), enemyField(10, 10),
@@ -10,7 +11,7 @@ Game::Game()
       player(playerField, playerShipManager, playerAbilityManager),
       enemy(enemyField, enemyShipManager, enemyAbilityManager),
       gameState(playerField, enemyField, playerShipManager, enemyShipManager, playerAbilityManager, enemyAbilityManager),
-      isPlayerTurn(true), isGameOver(false) {}
+      isPlayerTurn(true), isGameOver(false), numberRound(1), flagShooting(0) {}
 
 void Game::startGame() {
     playerField = GameField(10, 10);
@@ -24,122 +25,104 @@ void Game::startGame() {
     enemy.reinitialize(enemyField, enemyShipManager, enemyAbilityManager);
 
 
-    playerField.placeShip(playerShipManager.getShip(0),0,0,OrientationShip::Horizontal,0);
-    placeShips();
+    //playerField.placeShip(playerShipManager.getShip(0),0,0,OrientationShip::Horizontal,0);
 
-    generateEnemyField();
-
-    saveGame("gamedata.txt");
-    //loadGame("gamedata.txt");
+    autoplaceShips(enemyField,enemyShipManager);
 
     isPlayerTurn = true;
     isGameOver = false;
     
-    startRound();
 }
 
-void Game::placeShips(){
-    int x,y;
-    int a;
-    int indexShip=0;
-    OrientationShip orientation = OrientationShip::Horizontal;
-    while(1){
-        std::cout << "Поле игрока\n";
-        playerField.printField(false);
-        
-        std::cout << "Введите параметры корабля" << ", длина корабля " << playerShipManager.getShip(indexShip).getLength() << "\n";
-        std::cin >> x;
-        if(x == 2) break;
-        std::cin >> y >> a;
-        if(a == 0) orientation = OrientationShip::Vertical;
+bool Game::placeShips(int indexShip, int x, int y, int orientation){
+    OrientationShip orientationShip = OrientationShip::Horizontal;
+    if(orientation == 0) orientationShip = OrientationShip::Vertical;
+    bool flag = false;
+    try{
+        flag=playerField.placeShip(playerShipManager.getShip(indexShip), x,y,orientationShip,0);
+    }catch(...){
 
-        playerField.placeShip(playerShipManager.getShip(indexShip), x,y,orientation,0);    
-        indexShip++;
     }
+    return flag;
 }
 
 void Game::saveGame(const std::string& filename) {
-    gameState.save("game_save.txt");
+    gameState << filename;
 }
 
 void Game::loadGame(const std::string& filename) {
-    gameState.load("game_save.txt");
+    gameState >> filename;
 }
 
-void Game::playerTurn(){
-    int x,y;
-    int key;
-    while(1){
-        std::cout << "Поле игрока\n";
-        playerField.printField(false);
-        std::cout << "\n\nПоле врага\n";
-        enemyField.printField(false);
-        std::cout << "Введите индекс команды\n1 - атака  2 - использовать способность";
-        std::cin >> key;
-        if(key == 1){
-            std::cout << "Введите координаты атаки (x y): ";
-            std::cin >> x >> y;
-        }else if(key == 2){
-            std::cout << "Введите координаты атаки (x y): ";
-            std::cin >> x >> y;
-            playerInfo.x = x;
-            playerInfo.y = y;
+Interaction Game::playerTurn(int x, int y, int optionAttack){
+    if (optionAttack==0){
+        int result = player.attack(enemyField, x, y, playerInfo.flagDoubleDamage);
+        return static_cast<Interaction>(result);
+    }else if(optionAttack==1){
+        playerInfo.x = x;
+        playerInfo.y = y;
+        try{
             playerAbilityManager.applyAbility(playerInfo);
+        }catch(...){
+            int result = player.attack(enemyField, x, y, playerInfo.flagDoubleDamage);
+            if (result == 2) {
+                playerAbilityManager.addRandomAbility();
+            }
+            return Interaction::no_ability;
+            }
         }
-
-        int result = player.attack(enemyField, x, y);
-        if (result == 2) {
-            std::cout << "Корабль уничтожен!\n";
-            playerAbilityManager.addRandomAbility();
-        } else if (result == 1) {
-            std::cout << "Попадание!\n";
-        } else {
-            std::cout << "Промах!\n";
-        }
-    }
+    return Interaction::miss;
 }
 
 void Game::enemyTurn(){
+    srand(time(0));
     int x = 0, y = 0;
-    int result = 0;
-    while(result == 0){
+    int result = -1;
+    while(result == -1){
         x = rand() % playerField.getWidth();
         y = rand() % playerField.getHeight();
-        result = enemy.attack(playerField, x, y);
+        result = enemy.attack(playerField, x, y, 1);
     }
 }
+
 void Game::startRound(){
     if(player.getState() == false){
         std::cout << "Game over.\n";
     }else if(enemy.getState() == false){
         std::cout << "Win!\n";
+        numberRound++;
+        enemyField = GameField(10, 10);
+        enemyShipManager = ShipManager(10, {4, 3, 3, 2, 2, 2, 1, 1, 1, 1});
+        autoplaceShips(enemyField,enemyShipManager);
     }
-    playerTurn();
     if(enemy.getState() != false){
         enemyTurn();
     }
-    //startGame();
-    startRound();
 }
 
-bool Game::checkGameOver(GameField& field, ShipManager& shipManager) {
-    return shipManager.allShipIsDetroy();
+bool Game::checkGameOver() {
+    return !(player.getState() && enemy.getState());
 }
 
-void Game::generateEnemyField(){
+void Game::autoplaceShipsPlayer(){
+    autoplaceShips(playerField,playerShipManager);
+}
+
+void Game::autoplaceShips(GameField& field, ShipManager& shipManager){
+    srand(time(0));
     int x = 0, y = 0;
     bool isVertical = 0;
     OrientationShip orientation = OrientationShip::Horizontal;
-    for(int i=0;i<enemyShipManager.getShips().size();i++){
+    for(int i=0;i<shipManager.getShips().size();i++){
         while(true){
-            x = (std::rand() % enemyField.getWidth() / 2) * 2;
-            y = (std::rand() % enemyField.getHeight());
+            x = (std::rand() % field.getWidth() / 2) * 2;
+            y = (std::rand() % field.getHeight());
             isVertical = std::rand() % 2;
             if(isVertical == true) orientation = OrientationShip::Vertical;
-            enemyShipManager.getShip(i).setOrientationShip(orientation);
-            if(enemyField.hasIntersectionShips(enemyShipManager.getShip(i),x,y,1)){
+            shipManager.getShip(i).setOrientationShip(orientation);
+            if(field.hasIntersectionShips(shipManager.getShip(i),x,y,1)){
                 try{
-                    enemyField.placeShip(enemyShipManager.getShip(i),x,y,orientation,1);
+                    field.placeShip(shipManager.getShip(i),x,y,orientation,1);
                     break;
                 }catch(...){
                 }
@@ -147,3 +130,7 @@ void Game::generateEnemyField(){
         }
     }
 }
+
+GameField& Game::getPlayerField(){ return playerField; }
+GameField& Game::getEnemyField(){ return enemyField; }
+int Game::getAbilities(){ return playerAbilityManager.countAbilities(); }

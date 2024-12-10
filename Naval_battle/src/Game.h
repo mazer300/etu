@@ -10,17 +10,32 @@
 #include <iostream>
 #include <string>
 
+enum Interaction{
+    no_ability=-1,
+    destroy_ship=2,
+    shoot_ship=1,
+    miss=0,
+    save_game=3,
+    load_game=4,
+    empty=-2
+};
+
 class Game {
 public:
     Game();
     void startGame();
     void saveGame(const std::string& filename);
     void loadGame(const std::string& filename);
-    void playerTurn();
+    Interaction playerTurn(int x, int y, int optionAttack);
     void enemyTurn();
     void startRound();
-    void generateEnemyField();
-    void placeShips();
+    void autoplaceShips(GameField& field, ShipManager& shipManager);
+    bool placeShips(int indexShip, int x, int y, int orientation);
+    GameField& getPlayerField();
+    GameField& getEnemyField();
+    bool checkGameOver();
+    void autoplaceShipsPlayer();
+    int getAbilities();
 
 private:
     GameField playerField;
@@ -36,8 +51,9 @@ private:
     GameState gameState;
     bool isPlayerTurn;
     bool isGameOver;
+    int numberRound;
+    bool flagShooting;
 
-    bool checkGameOver(GameField& field, ShipManager& shipManager);
 };
 
 #endif // GAME_H

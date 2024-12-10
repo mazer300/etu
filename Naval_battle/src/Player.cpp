@@ -22,15 +22,15 @@ void Player::applyAbility() {
     }
 }
 
-int Player::attack(GameField& enemyField, int x, int y) {
+int Player::attack(GameField& enemyField, int x, int y, int flagDoubleDamage) {
     try {
-        int result = enemyField.attack(x, y, info.flagDoubleDamage);
+        int result = enemyField.attack(x, y, flagDoubleDamage);
         if(result == 2) abilityManager.addRandomAbility();
         return result;
     } catch (const OutOfFieldAttackExceptions& e) {
         std::cerr << e.what() << std::endl;
     }
-    return 0;
+    return -1;
 }
 
 bool Player::getState(){

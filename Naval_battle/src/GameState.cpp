@@ -12,15 +12,15 @@ AbilityManager& GameState::getEnemyAbilityManager() { return enemyAbilityManager
 ShipManager& GameState::getPlayerShipManager() { return playerShipManager; }
 ShipManager& GameState::getEnemyShipManager() { return enemyShipManager; }
 
-void GameState::save(const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Unable to open file for saving: " + filename);
+void GameState::operator <<(const std::string& filename) {
+    std::ofstream ofs(filename);
+    if (!ofs.is_open()) throw std::runtime_error("Unable to open file for saving: " + filename);
 
     nlohmann::json game_state_json = {
         {"player", {
             {"field", serializeField(playerField)},
             {"ship_manager", serializeShipManager(playerShipManager)},
-            //{"abilities_manager", playerAbilityManager.getAbilities().size()}
+            {"abilities_manager", playerAbilityManager.getAbilities()}
         }},
         {"enemy", {
             {"field", serializeField(enemyField)},
@@ -28,30 +28,32 @@ void GameState::save(const std::string& filename) {
         }}
     };
 
-    file << game_state_json.dump(4);
-    file.close();
+    ofs << game_state_json.dump(4);
+    ofs.close();
 }
 
-void GameState::load(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Unable to open file for loading: " + filename);
+void GameState::operator >>(const std::string& filename) {
+    std::ifstream ifs(filename);
+    if (!ifs.is_open()) throw std::runtime_error("Unable to open file for loading: " + filename);
 
     nlohmann::json game_state_json;
-    file >> game_state_json;
-    file.close();
+    ifs >> game_state_json;
+    ifs.close();
 
+    // Создаем новые игровые поля
+    playerField = GameField(10, 10);
+    enemyField = GameField(10, 10);
 
-    
+    // Десериализация кораблей игрока
     deserializeShipManager(game_state_json["player"]["ship_manager"], playerShipManager);
     deserializeField(game_state_json["player"]["field"], playerField, playerShipManager);
 
+    // Десериализация кораблей противника
     deserializeShipManager(game_state_json["enemy"]["ship_manager"], enemyShipManager);
     deserializeField(game_state_json["enemy"]["field"], enemyField, enemyShipManager);
 
-
-    for (int i = 0; i < game_state_json["player"]["abilities_manager"]; i++) {
-        playerAbilityManager.addRandomAbility();
-    }
+    // Восстановление способностей игрока
+    playerAbilityManager.setAbilities(game_state_json["player"]["abilities_manager"]);
 }
 
 nlohmann::json GameState::serializeField(GameField& field) {
@@ -63,21 +65,14 @@ nlohmann::json GameState::serializeField(GameField& field) {
     for (int y = 0; y < field.getHeight(); y++) {
         nlohmann::json row;
         for (int x = 0; x < field.getWidth(); x++) {
-            bool state = field.OpenCell(x, y);
-            if (state != false) {
-                row.push_back({
-                    {"x", x},
-                    {"y", y},
-                    {"state", static_cast<int>(state)}
-                });
-            }
-        }
-        if (!row.empty()) {
-            field_matrix.push_back({
+            FieldState state = field.getState(x, y);
+            row.push_back({
+                {"x", x},
                 {"y", y},
-                {"cells", row}
+                {"state", static_cast<int>(state)}
             });
         }
+        field_matrix.push_back(row);
     }
     field_json["field_matrix"] = field_matrix;
     return field_json;
@@ -101,14 +96,12 @@ nlohmann::json GameState::serializeShipManager(ShipManager& manager) {
 }
 
 void GameState::deserializeField(const nlohmann::json& field_json, GameField& field, ShipManager& ship_manager) {
-    
     for (const auto& row_data : field_json["field_matrix"]) {
-        int y = row_data["y"];
-
-        for (const auto& cell_data : row_data["cells"]) {
+        for (const auto& cell_data : row_data) {
             int x = cell_data["x"];
+            int y = cell_data["y"];
             FieldState state = static_cast<FieldState>(cell_data["state"]);
-            field.placeShip(ship_manager.getShip(0), x, y, static_cast<OrientationShip>(state), 1);
+            field.setState(x, y, state);
         }
     }
 }

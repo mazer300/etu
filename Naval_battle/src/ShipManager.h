@@ -10,7 +10,6 @@ private:
 
 public:
     ShipManager(int numShips, std::vector<int> shipSizes);
-    bool allShipIsDetroy();
     void addShip(int shipSize);
     void removeShip(int index);
     std::vector<Ship> getShips();

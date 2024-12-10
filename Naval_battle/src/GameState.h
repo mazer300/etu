@@ -19,8 +19,9 @@ public:
     AbilityManager& getEnemyAbilityManager();
     ShipManager& getPlayerShipManager();
     ShipManager& getEnemyShipManager();
-    void save(const std::string& filename);
-    void load(const std::string& filename);
+
+    void operator <<(const std::string& filename);
+    void operator >>(const std::string& filename);
 
 private:
     GameField& playerField;
