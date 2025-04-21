@@ -1,0 +1,1559 @@
+=== Дата исполнения отчета ===
+Вс 06 апр 2025 23:50:01 MSK
+
+=== ФИО студента ===
+Тукалкин Владимир Александрович
+
+=== Идентификация исполнителя ===
+mazer    tty2         2025-04-06 22:09 (tty2)
+
+=== Информация о системе ===
+# Информация о ядре (uname -a)
+Linux Ubuntu 6.8.0-57-generic #59~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Mar 19 17:07:41 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+=== Информация о виртуальной машине ===
+Виртуальная машина: Oracle VirtualBox
+ОС: Ubuntu 22.04.5 LTS
+Процессоры: 6
+Оперативная память: 7168 Мб
+
+
+# Информация о хосте (hostnamectl)
+ Static hostname: Ubuntu
+       Icon name: computer-vm
+         Chassis: vm
+      Machine ID: 76d9fce3e08f47b79e11b441afbcd731
+         Boot ID: cb1510727da74adfa663255b1a39e044
+  Virtualization: oracle
+Operating System: Ubuntu 22.04.5 LTS
+          Kernel: Linux 6.8.0-57-generic
+    Architecture: x86-64
+ Hardware Vendor: innotek GmbH
+  Hardware Model: VirtualBox
+
+# Информация о процессоре (lscpu)
+Архитектура:                          x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        39 bits physical, 48 bits virtual
+Порядок байт:                         Little Endian
+CPU(s):                               6
+On-line CPU(s) list:                  0-5
+ID прроизводителя:                    GenuineIntel
+Имя модели:                           12th Gen Intel(R) Core(TM) i5-12500H
+Семейство ЦПУ:                        6
+Модель:                               154
+Потоков на ядро:                      1
+Ядер на сокет:                        6
+Сокетов:                              1
+Степпинг:                             3
+BogoMIPS:                             6220.79
+Флаги:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch fsgsbase bmi1 avx2 bmi2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+Разработчик гипервизора:              KVM
+Тип виртуализации:                    полный
+L1d cache:                            288 KiB (6 instances)
+L1i cache:                            192 KiB (6 instances)
+L2 cache:                             7,5 MiB (6 instances)
+L3 cache:                             108 MiB (6 instances)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-5
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Not affected
+Vulnerability Reg file data sampling: Vulnerable: No microcode
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Vulnerable
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+#Программа лабораторной работы по курсу ОС по теме:
+#Управление процессами и потоками
+
+#1. Управление заданиями
+
+#1.1. Запустите в фоновом режиме несколько утилит, например:  cat *.c > myprog & lpr myprog & lpr intro&  Воспользуйтесь командой jobs для анализа списка заданий и очередности их выполнения.  Позаботьтесь об уведомлении о завершении одного из заданий с помощью команды notify. Аргументом команды является номер задания.  Верните невыполненные задания в приоритетный режим командой fg. Например: fg %3  Отмените одно из невыполненных заданий.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 1_1.c && ./a.out &
+[1] 7822
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ Parent process (PID: 7828)
+Running jobs:
+Child 1 started (PID: 7829)
+Child 2 started (PID: 7830)
+    PID TTY          TIME CMD
+   7832 pts/0    00:00:00 ps
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ echo "Hello world" > test.txt
+ping -c 4 yandex.ru
+jobs
+notify %2
+fg %3
+kill %2
+PING yandex.ru (77.88.44.55) 56(84) bytes of data.
+64 bytes from yandex.ru (77.88.44.55): icmp_seq=1 ttl=62 time=1.01 ms
+64 bytes from yandex.ru (77.88.44.55): icmp_seq=2 ttl=62 time=0.864 ms
+64 bytes from yandex.ru (77.88.44.55): icmp_seq=3 ttl=62 time=1.10 ms
+64 bytes from yandex.ru (77.88.44.55): icmp_seq=4 ttl=62 time=0.878 ms
+
+--- yandex.ru ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3053ms
+rtt min/avg/max/mdev = 0.864/0.961/1.095/0.095 ms
+[1]+  Запущен          gcc 1_1.c && ./a.out &
+Команда «notify» не найдена, но может быть установлена с помощью:
+sudo apt install ruby-notify
+bash: fg: %3: нет такого задания
+bash: kill: %2: нет такого задания
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ 
+
+#1.2.  Ознакомьтесь с командой nohup(1).  Запустите длительный процесс по nohup(1). Завершите сеанс работы. Снова войдите в систему и проверьте таблицу процессов. Поясните результат.
+
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ nohup find / > output.txt &
+[1] 9316
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ nohup: ввод игнорируется и поток ошибок перенаправляется на стандартный вывод
+exit
+[1]+  Выход 1            nohup find / > output.txt
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -ef | grep find
+mazer       9235    2438 13 19:29 ?        00:00:04 find /
+mazer       9276    2438 22 19:30 ?        00:00:03 find /
+mazer       9322    9305  0 23:57 pts/0    00:00:00 grep --color=auto find
+# Процесс всё ещё работает — значит, nohup правильно работает
+
+#1.3. Определите uid процесса, каково минимальное значение, и кому оно принадлежит. Каково минимальное и максимальное значение pid, каким процессам принадлежат. Отобразите в log-файле.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo uid,pid,comm | awk '$1 == 0'
+    0       1 systemd
+    0       2 kthreadd
+    0       3 pool_workqueue_release
+    0       4 kworker/R-rcu_g
+    0       5 kworker/R-rcu_p
+    0       6 kworker/R-slub_
+    0       7 kworker/R-netns
+    0      11 kworker/u12:0-ext4-rsv-conversion
+    0      12 kworker/R-mm_pe
+    0      13 rcu_tasks_kthread
+    0      14 rcu_tasks_rude_kthread
+    0      15 rcu_tasks_trace_kthread
+    0      16 ksoftirqd/0
+    0      17 rcu_preempt
+    0      18 migration/0
+    0      19 idle_inject/0
+    0      20 cpuhp/0
+    0      21 cpuhp/1
+    0      22 idle_inject/1
+    0      23 migration/1
+    0      24 ksoftirqd/1
+    0      26 kworker/1:0H-events_highpri
+    0      27 cpuhp/2
+    0      28 idle_inject/2
+    0      29 migration/2
+    0      30 ksoftirqd/2
+    0      32 kworker/2:0H-events_highpri
+    0      33 cpuhp/3
+    0      34 idle_inject/3
+    0      35 migration/3
+    0      36 ksoftirqd/3
+    0      38 kworker/3:0H-kblockd
+    0      39 cpuhp/4
+    0      40 idle_inject/4
+    0      41 migration/4
+    0      42 ksoftirqd/4
+    0      43 kworker/4:0-cgroup_destroy
+    0      44 kworker/4:0H-events_highpri
+    0      45 cpuhp/5
+    0      46 idle_inject/5
+    0      47 migration/5
+    0      48 ksoftirqd/5
+    0      50 kworker/5:0H-events_highpri
+    0      57 kdevtmpfs
+    0      58 kworker/R-inet_
+    0      60 kauditd
+    0      61 khungtaskd
+    0      62 oom_reaper
+    0      64 kworker/R-write
+    0      65 kcompactd0
+    0      66 ksmd
+    0      68 khugepaged
+    0      69 kworker/R-kinte
+    0      70 kworker/R-kbloc
+    0      71 kworker/R-blkcg
+    0      72 irq/9-acpi
+    0      73 kworker/R-tpm_d
+    0      74 kworker/R-ata_s
+    0      75 kworker/R-md
+    0      76 kworker/R-md_bi
+    0      77 kworker/R-edac-
+    0      78 kworker/R-devfr
+    0      79 watchdogd
+    0      80 kworker/2:1H-kblockd
+    0      81 kswapd0
+    0      82 ecryptfs-kthread
+    0      83 kworker/4:1-mm_percpu_wq
+    0      84 kworker/R-kthro
+    0      85 kworker/R-acpi_
+    0      87 scsi_eh_0
+    0      88 kworker/R-scsi_
+    0      89 scsi_eh_1
+    0      90 kworker/R-scsi_
+    0      93 kworker/R-mld
+    0      94 kworker/R-ipv6_
+    0     103 kworker/R-kstrp
+    0     107 kworker/u19:0
+    0     108 kworker/u20:0
+    0     109 kworker/u21:0
+    0     110 kworker/u22:0
+    0     111 kworker/u23:0
+    0     112 kworker/u24:0
+    0     113 kworker/u25:0
+    0     127 kworker/R-charg
+    0     149 kworker/5:1H-kblockd
+    0     151 kworker/4:1H-kblockd
+    0     181 kworker/1:1H-kblockd
+    0     182 kworker/0:1H
+    0     184 kworker/0:2-events
+    0     187 scsi_eh_2
+    0     188 kworker/R-scsi_
+    0     218 kworker/5:2-events
+    0     255 jbd2/sda3-8
+    0     256 kworker/R-ext4-
+    0     268 kworker/2:2-cgroup_destroy
+    0     296 systemd-journal
+    0     325 irq/18-vmwgfx
+    0     326 kworker/R-ttm
+    0     329 kworker/u12:1
+    0     333 kworker/u14:2-events_unbound
+    0     364 systemd-udevd
+    0     433 kworker/3:2H-kblockd
+    0     479 kworker/R-crypt
+    0     493 kworker/u13:7-events_power_efficient
+    0     572 kworker/0:2H-kblockd
+    0     615 kworker/1:4-events
+    0     839 accounts-daemon
+    0     840 acpid
+    0     844 cron
+    0     847 NetworkManager
+    0     854 irqbalance
+    0     855 networkd-dispat
+    0     856 polkitd
+    0     859 power-profiles-
+    0     863 snapd
+    0     865 switcheroo-cont
+    0     872 systemd-logind
+    0     875 udisksd
+    0     878 wpa_supplicant
+    0     938 ModemManager
+    0     943 run-cups-browse
+    0     944 run-cupsd
+    0     946 unattended-upgr
+    0     956 containerd
+    0     978 gdm3
+    0    1000 gdm-session-wor
+    0    1227 fusermount3
+    0    1438 cupsd
+    0    1460 dockerd
+    0    1631 upowerd
+    0    1674 run-cups-browse
+    0    1747 packagekitd
+    0    2713 fwupd
+    0    3773 kworker/5:3-cgroup_destroy
+    0    6439 kworker/1:0-events
+    0    7080 kworker/3:1-mm_percpu_wq
+    0    7157 kworker/u16:0-writeback
+    0    7256 kworker/u16:2-events_power_efficient
+    0    7259 kworker/u17:1-writeback
+    0    7261 kworker/u15:1-events_unbound
+    0    7267 kworker/u17:2-events_unbound
+    0    7276 kworker/3:2
+    0    7288 sleep
+    0    7289 kworker/u18:0-events_power_efficient
+    0    7369 kworker/u13:0-events_unbound
+    0    7396 kworker/u15:0-writeback
+    0    7406 kworker/u16:1-events_unbound
+    0    7415 kworker/u18:1-events_unbound
+    0    7512 kworker/u17:0-events_unbound
+    0    7516 kworker/u15:2-events_power_efficient
+    0    7553 kworker/u14:0-events_unbound
+    0    7589 kworker/u13:2
+    0    7623 kworker/u14:3-events_power_efficient
+    0    7665 kworker/u18:2-events_unbound
+    0    7753 kworker/0:0
+    0    7754 kworker/2:0-events
+    0    9196 kworker/2:1-mm_percpu_wq
+    0    9390 cupsd
+    0    9398 kworker/2:3-cgroup_destroy
+    0    9417 cups-browsed
+    0    9438 kworker/u16:3
+# Выдаст процессы с UID=0 (системные).
+# Важные процессы:
+# systemd (инициализация системы)
+# kthreadd (управление потоками ядра)
+# sshd (доступ по SSH)
+# cron (запуск запланированных задач)
+
+#1.4. Проанализируйте множество системных процессов, как их отличить от прочих, предложите способ, подтвердите экспериментально. Перечислите назначение самых важных из них.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo uid,pid,comm | sort -n | head
+    0    1000 gdm-session-wor
+    0     103 kworker/R-kstrp
+    0     107 kworker/u19:0
+    0     108 kworker/u20:0
+    0     109 kworker/u21:0
+    0     110 kworker/u22:0
+    0     111 kworker/u23:0
+    0     112 kworker/u24:0
+    0     113 kworker/u25:0
+    0      11 kworker/u12:0-ext4-rsv-conversion
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo pid,comm --sort=pid | head -n 5
+    PID COMMAND
+      1 systemd
+      2 kthreadd
+      3 pool_workqueue_release
+      4 kworker/R-rcu_g
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo pid,comm --sort=pid | tail
+   9305 bash
+   9390 cupsd
+   9398 kworker/2:3-cgroup_destroy
+   9412 dbus
+   9413 dbus
+   9414 dbus
+   9417 cups-browsed
+   9438 kworker/u16:3
+   9451 ps
+   9452 tail
+
+#1.5. Дайте характеристику процессу (например, прародителю всех пользовательских процессов вашей сессии), используя информацию из псевдоФС /proc . (Подготовьте и приведите необходимые фрагменты файлов и каталогов для подтверждения своих выводов).
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ pstree -p
+systemd(1)─┬─ModemManager(938)─┬─{ModemManager}(977)
+           │                   └─{ModemManager}(985)
+           ├─NetworkManager(847)─┬─{NetworkManager}(925)
+           │                     └─{NetworkManager}(928)
+           ├─accounts-daemon(839)─┬─{accounts-daemon}(871)
+           │                      └─{accounts-daemon}(927)
+           ├─acpid(840)
+           ├─avahi-daemon(843)───avahi-daemon(882)
+           ├─colord(2680)─┬─{colord}(2687)
+           │              └─{colord}(2689)
+           ├─containerd(956)─┬─{containerd}(991)
+           │                 ├─{containerd}(992)
+           │                 ├─{containerd}(993)
+           │                 ├─{containerd}(994)
+           │                 ├─{containerd}(997)
+           │                 ├─{containerd}(1031)
+           │                 ├─{containerd}(1032)
+           │                 ├─{containerd}(1041)
+           │                 ├─{containerd}(1042)
+           │                 └─{containerd}(1043)
+           ├─cron(844)
+           ├─cups-browsed(9417)─┬─{cups-browsed}(9436)
+           │                    └─{cups-browsed}(9437)
+           ├─cupsd(9390)─┬─dbus(9412)
+           │             ├─dbus(9413)
+           │             └─dbus(9414)
+           ├─dbus-daemon(846)
+           ├─dockerd(1460)─┬─{dockerd}(1615)
+           │               ├─{dockerd}(1616)
+           │               ├─{dockerd}(1617)
+           │               ├─{dockerd}(1618)
+           │               ├─{dockerd}(1619)
+           │               ├─{dockerd}(1635)
+           │               ├─{dockerd}(1636)
+           │               ├─{dockerd}(1646)
+           │               ├─{dockerd}(1647)
+           │               ├─{dockerd}(1875)
+           │               ├─{dockerd}(1877)
+           │               ├─{dockerd}(1878)
+           │               ├─{dockerd}(1879)
+           │               ├─{dockerd}(1880)
+           │               ├─{dockerd}(1881)
+           │               ├─{dockerd}(1882)
+           │               ├─{dockerd}(1884)
+           │               ├─{dockerd}(1885)
+           │               ├─{dockerd}(1886)
+           │               ├─{dockerd}(1887)
+           │               ├─{dockerd}(1889)
+           │               ├─{dockerd}(1892)
+           │               ├─{dockerd}(1916)
+           │               ├─{dockerd}(1917)
+           │               ├─{dockerd}(1918)
+           │               ├─{dockerd}(1919)
+           │               ├─{dockerd}(1920)
+           │               ├─{dockerd}(1921)
+           │               ├─{dockerd}(1922)
+           │               ├─{dockerd}(1925)
+           │               ├─{dockerd}(1926)
+           │               ├─{dockerd}(1927)
+           │               ├─{dockerd}(1928)
+           │               ├─{dockerd}(1929)
+           │               ├─{dockerd}(1930)
+           │               ├─{dockerd}(1931)
+           │               ├─{dockerd}(1933)
+           │               ├─{dockerd}(1934)
+           │               ├─{dockerd}(1935)
+           │               ├─{dockerd}(1936)
+           │               ├─{dockerd}(1937)
+           │               ├─{dockerd}(1938)
+           │               ├─{dockerd}(1940)
+           │               ├─{dockerd}(1941)
+           │               ├─{dockerd}(1945)
+           │               ├─{dockerd}(1946)
+           │               ├─{dockerd}(1955)
+           │               └─{dockerd}(1956)
+           ├─fwupd(2713)─┬─{fwupd}(2739)
+           │             ├─{fwupd}(2776)
+           │             ├─{fwupd}(2777)
+           │             └─{fwupd}(2785)
+           ├─gdm3(978)─┬─gdm-session-wor(1000)─┬─gdm-wayland-ses(1084)─┬─gnome-+
+           │           │                       │                       ├─{gdm-w+
+           │           │                       │                       └─{gdm-w+
+           │           │                       ├─{gdm-session-wor}(1003)
+           │           │                       └─{gdm-session-wor}(1006)
+           │           ├─{gdm3}(986)
+           │           └─{gdm3}(987)
+           ├─gnome-keyring-d(1072)─┬─{gnome-keyring-d}(1073)
+           │                       ├─{gnome-keyring-d}(1074)
+           │                       └─{gnome-keyring-d}(1139)
+           ├─irqbalance(854)───{irqbalance}(868)
+           ├─kerneloops(1475)
+           ├─kerneloops(1486)
+           ├─networkd-dispat(855)
+           ├─packagekitd(1747)─┬─{packagekitd}(1753)
+           │                   └─{packagekitd}(1754)
+           ├─polkitd(856)─┬─{polkitd}(870)
+           │              └─{polkitd}(929)
+           ├─power-profiles-(859)─┬─{power-profiles-}(886)
+           │                      └─{power-profiles-}(926)
+           ├─rsyslogd(860)─┬─{rsyslogd}(895)
+           │               ├─{rsyslogd}(896)
+           │               └─{rsyslogd}(897)
+           ├─rtkit-daemon(1064)─┬─{rtkit-daemon}(1079)
+           │                    └─{rtkit-daemon}(1080)
+           ├─run-cups-browse(943)───run-cups-browse(1674)───sleep(7288)
+           ├─run-cupsd(944)───cupsd(1438)
+           ├─snapd(863)─┬─{snapd}(1063)
+           │            ├─{snapd}(1075)
+           │            ├─{snapd}(1076)
+           │            ├─{snapd}(1077)
+           │            ├─{snapd}(1078)
+           │            ├─{snapd}(1167)
+           │            ├─{snapd}(1168)
+           │            ├─{snapd}(1253)
+           │            ├─{snapd}(1326)
+           │            ├─{snapd}(1338)
+           │            ├─{snapd}(1410)
+           │            └─{snapd}(4065)
+           ├─switcheroo-cont(865)─┬─{switcheroo-cont}(899)
+           │                      └─{switcheroo-cont}(931)
+           ├─systemd(1034)─┬─(sd-pam)(1035)
+           │               ├─at-spi2-registr(1774)─┬─{at-spi2-registr}(1780)
+           │               │                       └─{at-spi2-registr}(1783)
+           │               ├─chrome_crashpad(3736)─┬─{chrome_crashpad}(3740)
+           │               │                       └─{chrome_crashpad}(3741)
+           │               ├─chrome_crashpad(3738)───{chrome_crashpad}(3739)
+           │               ├─dbus-daemon(1086)
+           │               ├─dconf-service(1642)─┬─{dconf-service}(1643)
+           │               │                     └─{dconf-service}(1644)
+           │               ├─evolution-addre(1743)─┬─{evolution-addre}(1748)
+           │               │                       ├─{evolution-addre}(1749)
+           │               │                       ├─{evolution-addre}(1751)
+           │               │                       ├─{evolution-addre}(1752)
+           │               │                       └─{evolution-addre}(1757)
+           │               ├─evolution-calen(1671)─┬─{evolution-calen}(1679)
+           │               │                       ├─{evolution-calen}(1680)
+           │               │                       ├─{evolution-calen}(1721)
+           │               │                       ├─{evolution-calen}(1722)
+           │               │                       ├─{evolution-calen}(1736)
+           │               │                       ├─{evolution-calen}(1738)
+           │               │                       ├─{evolution-calen}(1740)
+           │               │                       ├─{evolution-calen}(1741)
+           │               │                       └─{evolution-calen}(1742)
+           │               ├─evolution-sourc(1629)─┬─{evolution-sourc}(1632)
+           │               │                       ├─{evolution-sourc}(1633)
+           │               │                       └─{evolution-sourc}(1634)
+           │               ├─gedit(6569)─┬─{gedit}(6570)
+           │               │             ├─{gedit}(6571)
+           │               │             └─{gedit}(6573)
+           │               ├─gjs(1776)─┬─{gjs}(1779)
+           │               │           ├─{gjs}(1782)
+           │               │           ├─{gjs}(1786)
+           │               │           ├─{gjs}(1787)
+           │               │           ├─{gjs}(1788)
+           │               │           ├─{gjs}(1789)
+           │               │           ├─{gjs}(1790)
+           │               │           └─{gjs}(1791)
+           │               ├─gjs(2746)─┬─{gjs}(2751)
+           │               │           ├─{gjs}(2755)
+           │               │           ├─{gjs}(2757)
+           │               │           ├─{gjs}(2758)
+           │               │           ├─{gjs}(2759)
+           │               │           ├─{gjs}(2760)
+           │               │           ├─{gjs}(2761)
+           │               │           └─{gjs}(2762)
+           │               ├─gnome-session-b(1162)─┬─at-spi-bus-laun(1193)─┬─db+
+           │               │                       │                       ├─{a+
+           │               │                       │                       ├─{a+
+           │               │                       │                       └─{a+
+           │               │                       ├─evolution-alarm(1860)─┬─{e+
+           │               │                       │                       ├─{e+
+           │               │                       │                       ├─{e+
+           │               │                       │                       ├─{e+
+           │               │                       │                       └─{e+
+           │               │                       ├─gnome-software(1901)─┬─{gn+
+           │               │                       │                      ├─{gn+
+           │               │                       │                      └─{gn+
+           │               │                       ├─gsd-disk-utilit(1908)─┬─{g+
+           │               │                       │                       └─{g+
+           │               │                       ├─update-notifier(5073)─┬─{u+
+           │               │                       │                       ├─{u+
+           │               │                       │                       └─{u+
+           │               │                       ├─{gnome-session-b}(1165)
+           │               │                       ├─{gnome-session-b}(1166)
+           │               │                       └─{gnome-session-b}(1170)
+           │               ├─gnome-session-c(1133)───{gnome-session-c}(1140)
+           │               ├─gnome-shell(1203)─┬─Xwayland(3760)
+           │               │                   ├─gjs(2778)─┬─{gjs}(2783)
+           │               │                   │           ├─{gjs}(2784)
+           │               │                   │           ├─{gjs}(2786)
+           │               │                   │           ├─{gjs}(2787)
+           │               │                   │           ├─{gjs}(2788)
+           │               │                   │           ├─{gjs}(2789)
+           │               │                   │           ├─{gjs}(2790)
+           │               │                   │           ├─{gjs}(2791)
+           │               │                   │           └─{gjs}(2795)
+           │               │                   ├─yandex_browser(3722)─┬─cat(372+
+           │               │                   │                      ├─cat(373+
+           │               │                   │                      ├─yandex_+
+           │               │                   │                      ├─yandex_+
+           │               │                   │                      ├─yandex_+
+           │               │                   │                      ├─yandex_+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      ├─{yandex+
+           │               │                   │                      └─{yandex+
+           │               │                   ├─{gnome-shell}(1238)
+           │               │                   ├─{gnome-shell}(1242)
+           │               │                   ├─{gnome-shell}(1251)
+           │               │                   ├─{gnome-shell}(1306)
+           │               │                   ├─{gnome-shell}(1307)
+           │               │                   ├─{gnome-shell}(1308)
+           │               │                   ├─{gnome-shell}(1309)
+           │               │                   ├─{gnome-shell}(1310)
+           │               │                   ├─{gnome-shell}(1311)
+           │               │                   ├─{gnome-shell}(1312)
+           │               │                   ├─{gnome-shell}(1313)
+           │               │                   ├─{gnome-shell}(1314)
+           │               │                   ├─{gnome-shell}(1315)
+           │               │                   ├─{gnome-shell}(1316)
+           │               │                   ├─{gnome-shell}(1317)
+           │               │                   ├─{gnome-shell}(1318)
+           │               │                   ├─{gnome-shell}(1327)
+           │               │                   ├─{gnome-shell}(1341)
+           │               │                   ├─{gnome-shell}(1342)
+           │               │                   ├─{gnome-shell}(1343)
+           │               │                   ├─{gnome-shell}(1344)
+           │               │                   ├─{gnome-shell}(1345)
+           │               │                   ├─{gnome-shell}(1346)
+           │               │                   ├─{gnome-shell}(3814)
+           │               │                   ├─{gnome-shell}(6904)
+           │               │                   └─{gnome-shell}(9492)
+           │               ├─gnome-shell-cal(1622)─┬─{gnome-shell-cal}(1623)
+           │               │                       ├─{gnome-shell-cal}(1626)
+           │               │                       ├─{gnome-shell-cal}(1627)
+           │               │                       ├─{gnome-shell-cal}(1628)
+           │               │                       └─{gnome-shell-cal}(1670)
+           │               ├─gnome-terminal-(9279)─┬─bash(9305)───pstree(9494)
+           │               │                       ├─{gnome-terminal-}(9280)
+           │               │                       ├─{gnome-terminal-}(9282)
+           │               │                       └─{gnome-terminal-}(9283)
+           │               ├─goa-daemon(1650)─┬─{goa-daemon}(1686)
+           │               │                  ├─{goa-daemon}(1688)
+           │               │                  └─{goa-daemon}(1689)
+           │               ├─goa-identity-se(1694)─┬─{goa-identity-se}(1702)
+           │               │                       └─{goa-identity-se}(1704)
+           │               ├─gsd-a11y-settin(1795)─┬─{gsd-a11y-settin}(1808)
+           │               │                       ├─{gsd-a11y-settin}(1811)
+           │               │                       └─{gsd-a11y-settin}(1830)
+           │               ├─gsd-color(1796)─┬─{gsd-color}(1902)
+           │               │                 ├─{gsd-color}(1909)
+           │               │                 └─{gsd-color}(1914)
+           │               ├─gsd-datetime(1797)─┬─{gsd-datetime}(1874)
+           │               │                    ├─{gsd-datetime}(1894)
+           │               │                    └─{gsd-datetime}(1953)
+           │               ├─gsd-housekeepin(1800)─┬─{gsd-housekeepin}(1812)
+           │               │                       ├─{gsd-housekeepin}(1814)
+           │               │                       └─{gsd-housekeepin}(1828)
+           │               ├─gsd-keyboard(1801)─┬─{gsd-keyboard}(1819)
+           │               │                    ├─{gsd-keyboard}(1824)
+           │               │                    └─{gsd-keyboard}(1834)
+           │               ├─gsd-media-keys(1802)─┬─{gsd-media-keys}(1869)
+           │               │                      ├─{gsd-media-keys}(1876)
+           │               │                      └─{gsd-media-keys}(1888)
+           │               ├─gsd-power(1803)─┬─{gsd-power}(1838)
+           │               │                 ├─{gsd-power}(1840)
+           │               │                 └─{gsd-power}(1858)
+           │               ├─gsd-print-notif(1804)─┬─{gsd-print-notif}(1827)
+           │               │                       └─{gsd-print-notif}(1854)
+           │               ├─gsd-printer(1971)─┬─{gsd-printer}(1976)
+           │               │                   └─{gsd-printer}(1984)
+           │               ├─gsd-rfkill(1806)─┬─{gsd-rfkill}(1815)
+           │               │                  └─{gsd-rfkill}(1816)
+           │               ├─gsd-screensaver(1807)─┬─{gsd-screensaver}(1825)
+           │               │                       └─{gsd-screensaver}(1832)
+           │               ├─gsd-sharing(1810)─┬─{gsd-sharing}(1821)
+           │               │                   ├─{gsd-sharing}(1822)
+           │               │                   └─{gsd-sharing}(1833)
+           │               ├─gsd-smartcard(1817)─┬─{gsd-smartcard}(1829)
+           │               │                     ├─{gsd-smartcard}(1855)
+           │               │                     └─{gsd-smartcard}(1949)
+           │               ├─gsd-sound(1818)─┬─{gsd-sound}(1852)
+           │               │                 ├─{gsd-sound}(1859)
+           │               │                 └─{gsd-sound}(1972)
+           │               ├─gsd-wacom(1820)─┬─{gsd-wacom}(1868)
+           │               │                 ├─{gsd-wacom}(1891)
+           │               │                 └─{gsd-wacom}(1899)
+           │               ├─gsd-xsettings(3772)─┬─{gsd-xsettings}(3776)
+           │               │                     ├─{gsd-xsettings}(3777)
+           │               │                     └─{gsd-xsettings}(3778)
+           │               ├─gvfs-afc-volume(1662)─┬─{gvfs-afc-volume}(1664)
+           │               │                       ├─{gvfs-afc-volume}(1665)
+           │               │                       └─{gvfs-afc-volume}(1667)
+           │               ├─gvfs-goa-volume(1676)─┬─{gvfs-goa-volume}(1677)
+           │               │                       └─{gvfs-goa-volume}(1678)
+           │               ├─gvfs-gphoto2-vo(1716)─┬─{gvfs-gphoto2-vo}(1717)
+           │               │                       └─{gvfs-gphoto2-vo}(1719)
+           │               ├─gvfs-mtp-volume(1728)─┬─{gvfs-mtp-volume}(1731)
+           │               │                       └─{gvfs-mtp-volume}(1733)
+           │               ├─gvfs-udisks2-vo(1651)─┬─{gvfs-udisks2-vo}(1652)
+           │               │                       ├─{gvfs-udisks2-vo}(1653)
+           │               │                       └─{gvfs-udisks2-vo}(1657)
+           │               ├─gvfsd(1144)─┬─gvfsd-burn(2944)─┬─{gvfsd-burn}(2945+
+           │               │             │                  └─{gvfsd-burn}(2946+
+           │               │             ├─gvfsd-trash(1764)─┬─{gvfsd-trash}(17+
+           │               │             │                   └─{gvfsd-trash}(17+
+           │               │             ├─{gvfsd}(1146)
+           │               │             └─{gvfsd}(1147)
+           │               ├─gvfsd-fuse(1152)─┬─{gvfsd-fuse}(1157)
+           │               │                  ├─{gvfsd-fuse}(1158)
+           │               │                  ├─{gvfsd-fuse}(1159)
+           │               │                  ├─{gvfsd-fuse}(1161)
+           │               │                  ├─{gvfsd-fuse}(1164)
+           │               │                  └─{gvfsd-fuse}(7614)
+           │               ├─gvfsd-metadata(1658)─┬─{gvfsd-metadata}(1660)
+           │               │                      └─{gvfsd-metadata}(1661)
+           │               ├─ibus-portal(1924)─┬─{ibus-portal}(1957)
+           │               │                   └─{ibus-portal}(1960)
+           │               ├─ibus-x11(3802)─┬─{ibus-x11}(3805)
+           │               │                └─{ibus-x11}(3806)
+           │               ├─nautilus(6536)─┬─{nautilus}(6537)
+           │               │                ├─{nautilus}(6538)
+           │               │                ├─{nautilus}(6540)
+           │               │                └─{nautilus}(6542)
+           │               ├─pipewire(1052)───{pipewire}(1089)
+           │               ├─pipewire-media-(1053)───{pipewire-media-}(1083)
+           │               ├─pulseaudio(1054)─┬─{pulseaudio}(1111)
+           │               │                  ├─{pulseaudio}(1115)
+           │               │                  └─{pulseaudio}(1126)
+           │               ├─sh(1792)───ibus-daemon(1794)─┬─ibus-engine-sim(205+
+           │               │                              ├─ibus-extension-(191+
+           │               │                              ├─ibus-memconf(1897)─+++
+           │               │                              │                    +++
+           │               │                              ├─{ibus-daemon}(1873)
+           │               │                              └─{ibus-daemon}(1890)
+           │               ├─snap-store(2002)─┬─{snap-store}(2708)
+           │               │                  ├─{snap-store}(2711)
+           │               │                  ├─{snap-store}(2712)
+           │               │                  └─{snap-store}(2830)
+           │               ├─snapd-desktop-i(1055)───snapd-desktop-i(1630)─┬─{s+
+           │               │                                               ├─{s+
+           │               │                                               ├─{s+
+           │               │                                               └─{s+
+           │               ├─tracker-miner-f(2690)─┬─{tracker-miner-f}(2714)
+           │               │                       ├─{tracker-miner-f}(2716)
+           │               │                       ├─{tracker-miner-f}(2726)
+           │               │                       ├─{tracker-miner-f}(2728)
+           │               │                       └─{tracker-miner-f}(2849)
+           │               ├─xdg-desktop-por(2686)─┬─{xdg-desktop-por}(2692)
+           │               │                       ├─{xdg-desktop-por}(2700)
+           │               │                       ├─{xdg-desktop-por}(2801)
+           │               │                       ├─{xdg-desktop-por}(2809)
+           │               │                       └─{xdg-desktop-por}(2810)
+           │               ├─xdg-desktop-por(2709)─┬─{xdg-desktop-por}(2735)
+           │               │                       ├─{xdg-desktop-por}(2736)
+           │               │                       └─{xdg-desktop-por}(2737)
+           │               ├─xdg-desktop-por(2802)─┬─{xdg-desktop-por}(2804)
+           │               │                       ├─{xdg-desktop-por}(2806)
+           │               │                       └─{xdg-desktop-por}(2807)
+           │               ├─xdg-document-po(1216)─┬─fusermount3(1227)
+           │               │                       ├─{xdg-document-po}(1217)
+           │               │                       ├─{xdg-document-po}(1218)
+           │               │                       ├─{xdg-document-po}(1226)
+           │               │                       ├─{xdg-document-po}(1228)
+           │               │                       ├─{xdg-document-po}(1229)
+           │               │                       └─{xdg-document-po}(7175)
+           │               └─xdg-permission-(1219)─┬─{xdg-permission-}(1220)
+           │                                       └─{xdg-permission-}(1222)
+           ├─systemd-journal(296)
+           ├─systemd-logind(872)
+           ├─systemd-oomd(610)
+           ├─systemd-resolve(617)
+           ├─systemd-timesyn(620)───{systemd-timesyn}(672)
+           ├─systemd-udevd(364)
+           ├─udisksd(875)─┬─{udisksd}(902)
+           │              ├─{udisksd}(930)
+           │              ├─{udisksd}(974)
+           │              └─{udisksd}(1004)
+           ├─unattended-upgr(946)───{unattended-upgr}(1014)
+           ├─upowerd(1631)─┬─{upowerd}(1639)
+           │               └─{upowerd}(1640)
+           └─wpa_supplicant(878)
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ sudo ls /proc/1
+[sudo] пароль для mazer: 
+arch_status	    fdinfo	       ns	      smaps_rollup
+attr		    gid_map	       numa_maps      stack
+autogroup	    io		       oom_adj	      stat
+auxv		    ksm_merging_pages  oom_score      statm
+cgroup		    ksm_stat	       oom_score_adj  status
+clear_refs	    latency	       pagemap	      syscall
+cmdline		    limits	       patch_state    task
+comm		    loginuid	       personality    timens_offsets
+coredump_filter     map_files	       projid_map     timers
+cpu_resctrl_groups  maps	       root	      timerslack_ns
+cpuset		    mem		       sched	      uid_map
+cwd		    mountinfo	       schedstat      wchan
+environ		    mounts	       sessionid
+exe		    mountstats	       setgroups
+fd		    net		       smaps
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ cat /proc/1/status | grep Name
+Name:	systemd
+#Главный процесс
+
+
+#2. Порождение и запуск процессов
+#Используя системные функции fork(); семейства execl(); wait(); exit() :
+#2.1. Создайте программу на основе одного файла (исходного, а затем исполняемого) с псевдораспараллеливанием вычислений посредством порождения процесса-потомка.
+#В каждом процессе сначала выполните однократные вычисления и вывод на терминал идентифицирующую его информацию (pid, ppid и т.п.) в течение его исполнения. Обратите внимание, какой процесс на каком этапе владеет процессорным ресурсом. В последней исполняемой команде функции main() выведите сообщение о завершении программы. Объясните результаты.
+#Сделайте выводы об использовании адресного пространства.
+#Затем однократные вычисления замените на циклы, длительность исполнения которых достаточна для наблюдения конкуренции процессов за процессорный ресурс.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 2_1.c && ./a.out
+Процесс-родитель: PID=9521, PID потомка=9522
+Процесс-потомок: PID=9522, PPID=9521
+Процесс-потомок завершен
+Родитель завершен
+# Из-за многопоточности операционной системы выводы от процессов чередуются, что указывает на "конкуренцию" за процессорные ресурсы
+
+#2.2. Создайте программы родителя и потомка с размещением в разных файлах (father.c и son.c).  Для фиксации состояния таблицы процессов в файле целесообразно использовать в коде программы системный вызов system("command_line"), т.е.
+#system("утилита -ключи  > имяфайла"), применяя различные ключи используемой утилиты, например,*  system("ps  -l> file") .
+#Запустите на выполнение father.out сначала в обычном, а затем в фоновом режимах (father &), получите таблицы процессов на др. теминале и в файле.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 2_2_son.c && ./a.out
+=== Потомок ===
+PID потомка: 9532
+PPID потомка: 9305
+Потомок завершает выполнение.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 2_2_father.c
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ./a.out
+=== Родитель ===
+PID родителя: 9540
+Ошибка запуска son: No such file or directory
+Дочерний процесс завершён. Родитель завершает выполнение.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ./a.out &
+[1] 9545
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ === Родитель ===
+PID родителя: 9545
+Ошибка запуска son: No such file or directory
+Дочерний процесс завершён. Родитель завершает выполнение.
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000    9305    9279  0  80   0 -  3095 do_wai pts/0    00:00:00 bash
+4 R  1000    9550    9305  0  80   0 -  3258 -      pts/0    00:00:00 ps
+[1]+  Завершён        ./a.out
+
+#2.3. Выполните создание процессов с использованием различных функций семейства exec() с разными параметрами функций семейства, приведите результаты эксперимента, меняя значения переменных окружения и передавая массив входных параметров.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 2_3.c && ./a.out
+Выберите функцию exec для выполнения:
+1 - execl
+2 - execv
+3 - execvp
+4 - execve
+Введите номер (1-4): 1
+Выбрана функция execl()
+итого 61168
+drwxrwxr-x 2 mazer mazer     4096 апр  7 00:08 .
+drwxrwxr-x 4 mazer mazer     4096 апр  6 14:13 ..
+-rw-rw-r-- 1 mazer mazer     1429 апр  6 23:13 1_1.c
+-rw-rw-r-- 1 mazer mazer     1643 апр  6 23:31 2_1.c
+-rw-rw-r-- 1 mazer mazer     1460 апр  6 23:25 2_2_father.c
+-rw-rw-r-- 1 mazer mazer      605 апр  6 23:23 2_2_son.c
+-rw-rw-r-- 1 mazer mazer     2152 апр  6 23:29 2_3.c
+-rw-rw-r-- 1 mazer mazer     3345 апр  6 23:43 2_4.c
+-rwxrwxr-x 1 mazer mazer    16496 апр  7 00:08 a.out
+-rwxrwxr-x 1 mazer mazer     1411 мар 26 18:02 create_log.sh
+-rw-rw-r-- 1 mazer mazer      457 апр  7 00:08 father_ps.txt
+-rw-rw-r-- 1 mazer mazer    45284 апр  7 00:05 lab_report.log
+-rw-rw-r-- 1 mazer mazer 62512057 апр  6 23:57 output.txt
+-rw-rw-r-- 1 mazer mazer      543 апр  6 23:48 ps_zombie.txt
+-rw-rw-r-- 1 mazer mazer        0 апр  6 23:57 testfile.txt
+-rw-rw-r-- 1 mazer mazer       12 апр  6 23:54 test.txt
+-rw-rw-r-- 1 mazer mazer      557 апр  6 23:44 план.txt
+-rw-rw-r-- 1 mazer mazer        0 мар 26 18:02 пояснения.txt
+# Можно выбирать другие опции для вывода других команд
+
+#2.4. Изменяя длительности выполнения родственных процессов и параметры системных вызовов, рассмотрите 3 ситуации с нормальным завершением процесса, со сменой родителя и фиксацией состояния zombie (м.б. иные названия состояния в системе):
+#а) процесс-отец запускает процесс-сын и ожидает его завершения;
+#б) процесс-отец запускает процесс-сын и, не ожидая его завершения, завершается сам. Зафиксируйте изменение родительского идентификатора процесса-сына, каков pid нового родителя, что это за процесс, и каково его назначение в системе;
+#в) процесс-отец запускает процесс-сын и не ожидает его завершения; процесс-сын завершает свое выполнение. Зафиксируйте появление процесса-зомби, для этого включите команду ps в программу father.c
+#Организуйте программу многопроцессного функционирования так, чтобы результатом ее работы была демонстрация всех трех ситуаций с отображением в итоговом файле соответствующих таблиц процессов (направьте вывод как на терминал, так и в файл).
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 2_4.c && ./a.out
+----- Нормальное завершение -----
+[Сценарий A] [Отец] Ожидаю завершения сына. PID сына: 9609
+[Сценарий A] [Сын] PID: 9609, PPID: 9608 (Нормальное завершение)
+[Сценарий A] [Сын] Завершение работы.
+[Сценарий A] [Отец] Сын завершился. Продолжаю работу.
+----- Зомби-процесс -----
+----- Смена родителя (сирота) -----
+[Сценарий C] [Отец] Не жду сына. PID сына: 9611
+[Сценарий B] [Отец] Завершаюсь, не ожидая сына. PID сына: 9612
+[Сценарий C] [Сын] PID: 9611, PPID: 9608 (Стану зомби)
+[Сценарий B] [Сын] PID: 9612, PPID: 9610 (Стану сиротой)
+[Сценарий B] [Сын] После завершения отца, мой новый родитель - PID: 1034
+[Сценарий C] [Отец] Проверка зомби-состояния...
+[Сценарий C] [Отец] Состояние процессов сохранено в файл ps_zombie.txt
+Завершение программы main().
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ cat ps_zombie.txt
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000    9305    9279  0  80   0 -  3095 do_wai pts/0    00:00:00 bash
+0 S  1000    9608    9305  0  80   0 -   694 do_wai pts/0    00:00:00 a.out
+1 Z  1000    9610    9608  0  80   0 -     0 -      pts/0    00:00:00 a.out <defunct>
+1 Z  1000    9611    9608  0  80   0 -     0 -      pts/0    00:00:00 a.out <defunct>
+0 S  1000    9613    9608  0  80   0 -   723 do_wai pts/0    00:00:00 sh
+4 R  1000    9614    9613  0  80   0 -  3258 -      pts/0    00:00:00 ps
+
+#3. Управление процессами посредством сигналов (Linux)
+#3.1. С помощью команды kill -l ознакомьтесь с перечнем сигналов, поддерживаемых процессами, а также с системными вызовами kill(2), signal(2). Создайте программу, демонстрирующую все возможные реакции процесса* (или процессов) на поступление сигнала.
+#Например, подготовьте программы следующего содержания:  а.) процесс father порождает процессы son1, son2, son3 и запускает на исполнение программные коды из соответствующих исполняемых файлов;  б.) далее родительский процесс осуществляет управление потомками, для этого он генерирует сигнал каждому пользовательскому процессу;  в.) в пользовательских процессах-потомках необходимо обеспечить:  для son1 - реакцию на сигнал по умолчанию;  для son2 - реакцию игнорирования;  для son3 - перехватывание и обработку сигнала.  Сформируйте файл-проект из четырех файлов, скомпилируйте, запустите программу.  Проанализируйте таблицу процессов до и после отправки сигналов с помощью вызова 
+#system("ps -s >> file");. Обратите особое внимание на реакцию для последнего потомка.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 3_1_father.c && ./a.out
+son2 (PID: 9802) игнорирует сигнал SIGUSR1
+son1 (PID: 9801) ждет сигнала (реакция по умолчанию)...
+son3 (PID: 9803) ждет сигнал SIGUSR1 для обработки...
+Отец отправляет SIGUSR1 всем потомкам
+son3 (PID: 9803) перехватил сигнал 10
+son3 завершает выполнение после обработки сигнала
+#son2 (PID: 9802) игнорирует сигнал SIGUSR1 
+#Процесс son2 получил сигнал, но проигнорировал его и продолжил работать без изменений.
+#son1 (PID: 9801) ждет сигнала (реакция по умолчанию)...
+#Процесс son1 ожидает сигнал. При получении сигнала SIGUSR1 завершит своё выполнение, так как действует стандартная реакция.
+#son3 (PID: 9803) ждет сигнал SIGUSR1 для обработки...
+#Процесс son3 устанавливает пользовательский обработчик для сигнала SIGUSR1 и готов к его перехвату.
+#Отец отправляет SIGUSR1 всем потомкам
+#Родительский процесс отправляет сигнал SIGUSR1 всем трём потомкам.
+#son3 (PID: 9803) перехватил сигнал 10
+#Процесс son3 получил сигнал, перехватил его с помощью обработчика и выполнил заданные действия (например, вывод сообщения).
+#son3 завершает выполнение после обработки сигнала
+#После обработки сигнала son3 корректно завершает свою работу.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ cat processes.txt 
+UID          PID    PPID  C STIME TTY          TIME CMD
+mazer       9305    9279  0 апр06 pts/0 00:00:00 bash
+mazer       9800    9305  0 00:21 pts/0    00:00:00 ./a.out
+mazer       9801    9800  0 00:21 pts/0    00:00:00 [son1] <defunct>
+mazer       9802    9800  0 00:21 pts/0    00:00:00 son2
+mazer       9803    9800  0 00:21 pts/0    00:00:00 [son3] <defunct>
+mazer       9804    9800  0 00:21 pts/0    00:00:00 sh -c ps -f >> processes.txt
+mazer       9805    9804  0 00:21 pts/0    00:00:00 ps -f
+
+#3.2. Проанализируйте значение, возвращаемое функцией wait(&status). Как связана wait() с SIGCHLD. Предложите эксперимент, позволяющий родителю отслеживать подмножество порожденных потомков, используя функции waitpid() (для ожидания завершения процесса с указанным pid).
+# kill -l показывает список сигналов.
+# fork() + signal() позволяет управлять процессами.
+# kill(pid, SIGTERM) отправляет сигнал процессу.
+# wait(&status) помогает родителю ждать завершения детей.
+# waitpid(pid, NULL, 0) позволяет обрабатывать конкретные процессы.
+# Если не вызывать wait(), процесс станет зомби (Z).
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 3_2.c && ./a.out
+Father (PID: 9848) ожидает завершение потомков...
+Son 1 (PID: 9849) работает...
+Son 2 (PID: 9850) работает...
+Son 1 завершен
+Процесс завершен с кодом: 0
+Son 2 завершен
+Процесс завершен с кодом: 0
+Отец завершил выполнение.
+
+#4. Многонитевое функционирование
+#4.1. Подготовьте программу, формирующую несколько нитей (потоков). Нити для эксперимента могут быть практически идентичны. Используйте различные функции pthread_create(), clone().
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 4_1.c && ./a.out
+Главный процесс: PID = 5888
+[pthread] Поток: ID потока (pthread_self) = 135519820318272, PID процесса = 5888
+[pthread] Поток: ID потока (pthread_self) = 135519809832512, PID процесса = 5888
+[pthread] Поток: ID потока (pthread_self) = 135519799346752, PID процесса = 5888
+[clone] Клон-поток: PID процесса = 5892
+Главный процесс завершает работу.
+#pthread_create() - высокоуровневый POSIX-метод, который управляет ресурсами и упрощает многопоточное программирование
+#clone() - низкоуровневый системный вызов Linux, который позволяет создавать потоки и процессы с точным контролем над ресурсами
+
+#4.2. После запуска программы проанализируйте выполнение нитей, их идентификацию, распределение во времени, наследуемые (от процесса) параметры (например, используя ps с ключами и/или др. способы).
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 4_2.c -o 4_2 && ./4_2
+Главный процесс (PID=5955) запускает потоки...
+
+Состояние потоков процесса:
+Поток 0 запущен (TID=135260295661120, PID=5955)
+Поток 0 выполняет итерацию 1
+Поток 1 запущен (TID=135260285175360, PID=5955)
+Поток 1 выполняет итерацию 1
+Поток 2 запущен (TID=135260274689600, PID=5955)
+Поток 2 выполняет итерацию 1
+Поток 3 запущен (TID=135260264203840, PID=5955)
+Поток 3 выполняет итерацию 1
+    PID     LWP TTY          TIME CMD
+   5955    5955 pts/0    00:00:00 a.out
+   5955    5956 pts/0    00:00:00 a.out
+   5955    5957 pts/0    00:00:00 a.out
+   5955    5958 pts/0    00:00:00 a.out
+   5955    5959 pts/0    00:00:00 a.out
+
+Поток 2 выполняет итерацию 2
+Поток 0 выполняет итерацию 2
+Поток 3 выполняет итерацию 2
+Поток 1 выполняет итерацию 2
+Поток 2 выполняет итерацию 3
+Поток 1 выполняет итерацию 3
+Поток 0 выполняет итерацию 3
+Поток 3 выполняет итерацию 3
+Поток 1 завершен
+Поток 2 завершен
+Поток 0 завершен
+Поток 3 завершен
+Главный процесс завершен
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eLf | grep 4_2
+mazer       6121    6105    6121  0    5 13:19 pts/1    00:00:00 ./4_2
+mazer       6121    6105    6122  0    5 13:19 pts/1    00:00:00 ./4_2
+mazer       6121    6105    6123  0    5 13:19 pts/1    00:00:00 ./4_2
+mazer       6121    6105    6124  0    5 13:19 pts/1    00:00:00 ./4_2
+mazer       6121    6105    6125  0    5 13:19 pts/1    00:00:00 ./4_2
+mazer       6129    5872    6129  0    1 13:19 pts/0    00:00:00 grep --color=auto 4_2
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo pid,lwp,pcpu,pri,ni,comm | grep 4_2
+   6112    6112  0.0  19   0 4_2
+
+#4.3. Проанализируйте ресурсы, разделяемые нитями одного процесса, подтвердите экспериментально.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 4_3.c && ./a.out
+Главный процесс (PID=6149) создает потоки...
+Поток 0 запущен (TID=128814887732800, PID=6149)
+Поток 0 читает shared_counter = 0
+Поток 2 запущен (TID=128814866761280, PID=6149)
+Поток 2 читает shared_counter = 0
+Поток 1 запущен (TID=128814877247040, PID=6149)
+Поток 1 читает shared_counter = 0
+Поток 3 запущен (TID=128814856275520, PID=6149)
+Поток 3 читает shared_counter = 0
+Поток 0 увеличивает shared_counter до 1
+Поток 0 читает shared_counter = 1
+Поток 1 увеличивает shared_counter до 1
+Поток 2 увеличивает shared_counter до 1
+Поток 2 читает shared_counter = 1
+Поток 1 читает shared_counter = 1
+Поток 3 увеличивает shared_counter до 1
+Поток 3 читает shared_counter = 1
+Поток 0 увеличивает shared_counter до 2
+Поток 0 читает shared_counter = 2
+Поток 2 увеличивает shared_counter до 2
+Поток 2 читает shared_counter = 2
+Поток 3 увеличивает shared_counter до 2
+Поток 3 читает shared_counter = 2
+Поток 1 увеличивает shared_counter до 2
+Поток 1 читает shared_counter = 2
+Поток 0 увеличивает shared_counter до 3
+Поток 0 читает shared_counter = 3
+Поток 3 увеличивает shared_counter до 3
+Поток 3 читает shared_counter = 3
+Поток 2 увеличивает shared_counter до 3
+Поток 2 читает shared_counter = 3
+Поток 1 увеличивает shared_counter до 3
+Поток 1 читает shared_counter = 3
+Поток 0 увеличивает shared_counter до 4
+Поток 0 читает shared_counter = 4
+Поток 2 увеличивает shared_counter до 4
+Поток 2 читает shared_counter = 4
+Поток 3 увеличивает shared_counter до 4
+Поток 3 читает shared_counter = 4
+Поток 1 увеличивает shared_counter до 4
+Поток 1 читает shared_counter = 4
+Поток 0 увеличивает shared_counter до 5
+Поток 0 завершен
+Поток 1 увеличивает shared_counter до 5
+Поток 1 завершен
+Поток 3 увеличивает shared_counter до 5
+Поток 3 завершен
+Поток 2 увеличивает shared_counter до 5
+Поток 2 завершен
+Главный процесс завершен. Итоговое значение shared_counter = 5
+#Это показывает, что потоки разделяют память 
+
+#4.4. Попробуйте удалить одну из нитей, зная ее идентификатор, командой kill.  Приведите и прокомментируйте результат.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 4_4.c -o 4_4 && ./4_4
+Главный процесс (PID=6334) создает потоки...
+Поток 1 запущен (pthread_self=138342104565312, LWP TID=6336, PID=6334)
+Поток 2 запущен (pthread_self=138342094079552, LWP TID=6337, PID=6334)
+Поток 3 запущен (pthread_self=138342083593792, LWP TID=6338, PID=6334)
+Поток 0 запущен (pthread_self=138342115051072, LWP TID=6335, PID=6334)
+Пытаемся завершить поток 1 (LWP TID=6336) через kill()...
+Завершено
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eLf | grep 4_4
+mazer       6334    6105    6334  0    5 13:30 pts/1    00:00:00 ./4_4
+mazer       6334    6105    6335  0    5 13:30 pts/1    00:00:00 ./4_4
+mazer       6334    6105    6336  0    5 13:30 pts/1    00:00:00 ./4_4
+mazer       6334    6105    6337  0    5 13:30 pts/1    00:00:00 ./4_4
+mazer       6334    6105    6338  0    5 13:30 pts/1    00:00:00 ./4_4
+mazer       6340    5872    6340  0    1 13:30 pts/0    00:00:00 grep --color=auto 4_4
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 4_4.c -o 4_4 && ./4_4
+Главный процесс (PID=6406) создает потоки...
+Поток 1 запущен (pthread_self=139526383076928, LWP TID=6408, PID=6406)
+Поток 2 запущен (pthread_self=139526372591168, LWP TID=6409, PID=6406)
+Поток 3 запущен (pthread_self=139526362105408, LWP TID=6410, PID=6406)
+Поток 0 запущен (pthread_self=139526393562688, LWP TID=6407, PID=6406)
+Убито
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ kill -9 6353
+# Всё работает корректно: kill -9 убил только указанный поток, а не весь процесс.
+
+#5. Планирование
+#Для упорядочивания экспериментов и упрощения восприятия результатов сначала имеет смысл сосредоточиться на одноядерном (однопроцессорном) выполнении однонитевых процессов при наблюдении за планированием. А затем при желании добавить многопроссорность/многоядерность.
+#5.1. Определите политику планирования и приоритет, установленные по умолчанию, для процессов и потоков, запускаемых пользователем из shell (сначала из таблицы процессов, а затем программно). Проанализируйте очередность исполнения процессов, проведя соответствующий эксперимент
+#(например, в программах, созданных ранее, можно предусмотреть вывод условных идентификаторов процессов/нитей (без перевода строки) так, чтобы последовательность предоставления им процессора была очевидна на длительном интервале времени (множество квантов).
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ ps -eo pid,comm,pri,ni,policy
+    PID COMMAND         PRI  NI POL
+      1 systemd          19   0 TS
+      2 kthreadd         19   0 TS
+      3 pool_workqueue_  19   0 TS
+      4 kworker/R-rcu_g  39 -20 TS
+      5 kworker/R-rcu_p  39 -20 TS
+      6 kworker/R-slub_  39 -20 TS
+      7 kworker/R-netns  39 -20 TS
+      9 kworker/0:1-eve  19   0 TS
+     10 kworker/0:0H-ev  39 -20 TS
+     11 kworker/u12:0-e  19   0 TS
+     12 kworker/R-mm_pe  39 -20 TS
+     13 rcu_tasks_kthre  19   0 TS
+     14 rcu_tasks_rude_  19   0 TS
+     15 rcu_tasks_trace  19   0 TS
+     16 ksoftirqd/0      19   0 TS
+     17 rcu_preempt      19   0 TS
+     18 migration/0     139   - FF
+     19 idle_inject/0    90   - FF
+     20 cpuhp/0          19   0 TS
+     21 cpuhp/1          19   0 TS
+     22 idle_inject/1    90   - FF
+     23 migration/1     139   - FF
+     24 ksoftirqd/1      19   0 TS
+     25 kworker/1:0-mm_  19   0 TS
+     26 kworker/1:0H-ev  39 -20 TS
+     27 cpuhp/2          19   0 TS
+     28 idle_inject/2    90   - FF
+     29 migration/2     139   - FF
+     30 ksoftirqd/2      19   0 TS
+     32 kworker/2:0H-ev  39 -20 TS
+     33 cpuhp/3          19   0 TS
+     34 idle_inject/3    90   - FF
+     35 migration/3     139   - FF
+     36 ksoftirqd/3      19   0 TS
+     38 kworker/3:0H-kb  39 -20 TS
+     39 cpuhp/4          19   0 TS
+     40 idle_inject/4    90   - FF
+     41 migration/4     139   - FF
+     42 ksoftirqd/4      19   0 TS
+     43 kworker/4:0-mm_  19   0 TS
+     44 kworker/4:0H-kb  39 -20 TS
+     45 cpuhp/5          19   0 TS
+     46 idle_inject/5    90   - FF
+     47 migration/5     139   - FF
+     48 ksoftirqd/5      19   0 TS
+     50 kworker/5:0H-ev  39 -20 TS
+     52 kworker/u14:0-e  19   0 TS
+     55 kworker/u17:0-e  19   0 TS
+     56 kworker/u18:0-f  19   0 TS
+     57 kdevtmpfs        19   0 TS
+     58 kworker/R-inet_  39 -20 TS
+     59 kauditd          19   0 TS
+     61 khungtaskd       19   0 TS
+     62 oom_reaper       19   0 TS
+     64 kworker/R-write  39 -20 TS
+     65 kcompactd0       19   0 TS
+     66 ksmd             14   5 TS
+     68 khugepaged        0  19 TS
+     69 kworker/R-kinte  39 -20 TS
+     70 kworker/R-kbloc  39 -20 TS
+     71 kworker/R-blkcg  39 -20 TS
+     72 irq/9-acpi       90   - FF
+     73 kworker/R-tpm_d  39 -20 TS
+     74 kworker/R-ata_s  39 -20 TS
+     75 kworker/R-md     39 -20 TS
+     76 kworker/R-md_bi  39 -20 TS
+     77 kworker/R-edac-  39 -20 TS
+     78 kworker/R-devfr  39 -20 TS
+     79 watchdogd        90   - FF
+     80 kworker/1:1-cgr  19   0 TS
+     81 kworker/2:1H-kb  39 -20 TS
+     82 kswapd0          19   0 TS
+     83 ecryptfs-kthrea  19   0 TS
+     84 kworker/R-kthro  39 -20 TS
+     85 kworker/R-acpi_  39 -20 TS
+     87 scsi_eh_0        19   0 TS
+     88 kworker/R-scsi_  39 -20 TS
+     89 scsi_eh_1        19   0 TS
+     90 kworker/R-scsi_  39 -20 TS
+     92 kworker/R-mld    39 -20 TS
+     94 kworker/R-ipv6_  39 -20 TS
+    100 kworker/4:1H-kb  39 -20 TS
+    106 kworker/R-kstrp  39 -20 TS
+    107 kworker/5:1-eve  19   0 TS
+    109 kworker/u19:0-h  39 -20 TS
+    110 kworker/u20:0    39 -20 TS
+    111 kworker/u21:0    39 -20 TS
+    112 kworker/u22:0    39 -20 TS
+    113 kworker/u23:0    39 -20 TS
+    114 kworker/u24:0    39 -20 TS
+    115 kworker/u25:0    39 -20 TS
+    129 kworker/R-charg  39 -20 TS
+    151 kworker/1:1H-kb  39 -20 TS
+    179 kworker/5:1H-kb  39 -20 TS
+    183 kworker/0:1H-kb  39 -20 TS
+    187 scsi_eh_2        19   0 TS
+    188 kworker/R-scsi_  39 -20 TS
+    189 kworker/4:3-rcu  19   0 TS
+    208 kworker/2:2-cgr  19   0 TS
+    256 jbd2/sda3-8      19   0 TS
+    257 kworker/R-ext4-  39 -20 TS
+    292 kworker/u16:1-e  19   0 TS
+    297 systemd-journal  20  -1 TS
+    314 kworker/u14:3-e  19   0 TS
+    329 irq/18-vmwgfx    90   - FF
+    330 kworker/R-ttm    39 -20 TS
+    362 kworker/u12:1    19   0 TS
+    368 systemd-udevd    19   0 TS
+    369 kworker/u17:2-e  19   0 TS
+    406 kworker/3:2-eve  19   0 TS
+    446 kworker/u16:3-e  19   0 TS
+    451 kworker/u18:3-e  19   0 TS
+    492 kworker/u13:4-e  19   0 TS
+    500 kworker/u13:6-e  19   0 TS
+    508 kworker/R-crypt  39 -20 TS
+    539 kworker/3:2H-kb  39 -20 TS
+    638 systemd-oomd     19   0 TS
+    653 systemd-resolve  19   0 TS
+    655 systemd-timesyn  19   0 TS
+    836 accounts-daemon  19   0 TS
+    837 acpid            19   0 TS
+    840 avahi-daemon     19   0 TS
+    841 cron             19   0 TS
+    842 dbus-daemon      19   0 TS
+    844 NetworkManager   19   0 TS
+    850 irqbalance       19   0 TS
+    852 networkd-dispat  19   0 TS
+    854 polkitd          19   0 TS
+    855 power-profiles-  19   0 TS
+    856 rsyslogd         19   0 TS
+    860 snapd            19   0 TS
+    862 switcheroo-cont  19   0 TS
+    865 systemd-logind   19   0 TS
+    866 udisksd          19   0 TS
+    868 wpa_supplicant   19   0 TS
+    873 avahi-daemon     19   0 TS
+    935 cupsd            19   0 TS
+    937 run-cups-browse  19   0 TS
+    938 run-cupsd        19   0 TS
+    940 unattended-upgr  19   0 TS
+    942 ModemManager     19   0 TS
+    956 containerd       19   0 TS
+    975 gdm3             19   0 TS
+    990 gdm-session-wor  19   0 TS
+    991 dbus             19   0 TS
+    992 dbus             19   0 TS
+    993 dbus             19   0 TS
+    995 dbus             19   0 TS
+    996 dbus             19   0 TS
+   1032 systemd          19   0 TS
+   1038 (sd-pam)         19   0 TS
+   1048 pipewire         30 -11 TS
+   1049 pipewire-media-  19   0 TS
+   1050 pulseaudio       30 -11 TS
+   1051 snapd-desktop-i  19   0 TS
+   1064 gnome-keyring-d  19   0 TS
+   1068 rtkit-daemon     18   1 TS
+   1079 gdm-wayland-ses  19   0 TS
+   1080 dbus-daemon      19   0 TS
+   1084 gnome-session-b  19   0 TS
+   1129 gnome-session-c  19   0 TS
+   1141 gvfsd            19   0 TS
+   1148 gvfsd-fuse       19   0 TS
+   1149 gnome-session-b  19   0 TS
+   1178 at-spi-bus-laun  19   0 TS
+   1187 dbus-daemon      19   0 TS
+   1189 gnome-shell      19   0 TS
+   1216 xdg-document-po  19   0 TS
+   1219 xdg-permission-  19   0 TS
+   1227 fusermount3      19   0 TS
+   1420 cupsd            19   0 TS
+   1436 gnome-shell-cal  19   0 TS
+   1437 upowerd          19   0 TS
+   1443 evolution-sourc  19   0 TS
+   1451 dconf-service    19   0 TS
+   1457 goa-daemon       19   0 TS
+   1460 gvfs-udisks2-vo  19   0 TS
+   1462 snapd-desktop-i  19   0 TS
+   1467 gvfsd-metadata   19   0 TS
+   1470 gvfs-afc-volume  19   0 TS
+   1478 gvfs-goa-volume  19   0 TS
+   1488 goa-identity-se  19   0 TS
+   1489 evolution-calen  19   0 TS
+   1499 gvfs-gphoto2-vo  19   0 TS
+   1507 cups-browsed     19   0 TS
+   1510 gvfs-mtp-volume  19   0 TS
+   1511 dockerd          19   0 TS
+   1525 kerneloops       19   0 TS
+   1540 kerneloops       19   0 TS
+   1587 packagekitd      19   0 TS
+   1599 evolution-addre  19   0 TS
+   1720 nautilus         19   0 TS
+   1721 gvfsd-trash      19   0 TS
+   1734 gjs              19   0 TS
+   1736 at-spi2-registr  19   0 TS
+   1751 sh               19   0 TS
+   1752 gsd-a11y-settin  19   0 TS
+   1753 gsd-color        19   0 TS
+   1755 gsd-datetime     19   0 TS
+   1756 gsd-housekeepin  19   0 TS
+   1758 gsd-keyboard     19   0 TS
+   1760 gsd-media-keys   19   0 TS
+   1761 gsd-power        19   0 TS
+   1762 ibus-daemon      19   0 TS
+   1764 gsd-print-notif  19   0 TS
+   1767 gsd-rfkill       19   0 TS
+   1772 gsd-screensaver  19   0 TS
+   1775 gsd-sharing      19   0 TS
+   1777 gsd-smartcard    19   0 TS
+   1779 gsd-sound        19   0 TS
+   1786 gsd-wacom        19   0 TS
+   1815 evolution-alarm  19   0 TS
+   1854 ibus-memconf     19   0 TS
+   1857 gnome-software   19   0 TS
+   1858 ibus-extension-  19   0 TS
+   1867 gsd-disk-utilit  19   0 TS
+   1870 ibus-portal      19   0 TS
+   1919 snap-store       19   0 TS
+   1939 run-cups-browse  19   0 TS
+   1940 sleep            19   0 TS
+   1967 ibus-engine-sim  19   0 TS
+   2044 gsd-printer      19   0 TS
+   2132 xdg-desktop-por  19   0 TS
+   2139 colord           19   0 TS
+   2164 fwupd            19   0 TS
+   2196 tracker-miner-f   0   - IDL
+   2202 xdg-desktop-por  19   0 TS
+   2214 gjs              19   0 TS
+   2734 gjs              19   0 TS
+   2772 xdg-desktop-por  19   0 TS
+   2995 gvfsd-burn       19   0 TS
+   3411 gnome-terminal-  19   0 TS
+   3439 bash             19   0 TS
+   3623 update-notifier  19   0 TS
+   3751 yandex_browser   19   0 TS
+   3757 cat              19   0 TS
+   3758 cat              19   0 TS
+   3760 chrome_crashpad  19   0 TS
+   3762 chrome_crashpad  19   0 TS
+   3768 yandex_browser   19   0 TS
+   3769 yandex_browser   19   0 TS
+   3771 yandex_browser   19   0 TS
+   3783 Xwayland         19   0 TS
+   3790 gsd-xsettings    19   0 TS
+   3813 ibus-x11         19   0 TS
+   3829 yandex_browser   19   0 TS
+   3834 yandex_browser   19   0 TS
+   3858 yandex_browser   19   0 TS
+   3927 yandex_browser   19   0 TS
+   3934 yandex_browser   19   0 TS
+   3940 yandex_browser   19   0 TS
+   3960 yandex_browser   19   0 TS
+   4265 yandex_browser   19   0 TS
+   4374 yandex_browser   19   0 TS
+   5294 yandex_browser   19   0 TS
+   5315 yandex_browser   19   0 TS
+   5414 kworker/u15:1-e  19   0 TS
+   5415 kworker/2:0-eve  19   0 TS
+   5432 kworker/u19:1-h  39 -20 TS
+   5441 bluetoothd       19   0 TS
+   5452 kworker/u17:1-e  19   0 TS
+   5461 kworker/u16:0-e  19   0 TS
+   5462 yandex_browser   19   0 TS
+   5472 yandex_browser   19   0 TS
+   5505 kworker/0:0-cgr  19   0 TS
+   5511 kworker/u13:0-e  19   0 TS
+   5515 gedit            19   0 TS
+   5556 kworker/u15:3-e  19   0 TS
+   5563 kworker/u18:1-e  19   0 TS
+   5567 kworker/3:1-eve  19   0 TS
+   5568 kworker/u15:0-e  19   0 TS
+   5572 kworker/5:0      19   0 TS
+   5649 kworker/u14:1-e  19   0 TS
+   5671 ps               19   0 TS
+
+# PRI — приоритет.
+# NI — "niceness" (от -20 до +1
+# POLICY — политика планирования:
+# SCHED_OTHER (обычное планирование).
+# SCHED_FIFO (реального времени, фиксированный приоритет).
+# SCHED_RR (реального времени, циклический алгоритм).
+   
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_1.c && ./a.out
+Parent: PID=5678, policy=0, priority=0
+Child: PID=5679, policy=0, priority=0
+# Ожидаемый результат: приоритет 0 (по умолчанию). Где policy=0 означает SCHED_OTHER (обычное планирование).
+
+#5.2. Ознакомьтесь с выполнением команды nice(1) и системного вызова getpriority(2). Попытайтесь изменить приоритет, зафиксируйте реакцию системы, есть ли разница в приоритетах для системных и пользовательских процессов.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_2.c && ./a.out
+Старый приоритет: 0
+Новый приоритет: 10
+mazer@Ubuntu:~$ ps -eo pid,comm,ni,time | grep a.out
+   6055 a.out            10 00:00:35
+#Приоритет <0 имеют системные процессы (повышенный приоритет)
+#Пользовательские NI=0, но так же могут быть понижены (1,...,19), для повышения нужны root-права
+
+#5.3. Измените процедуру планирования на FIFO, 5.3.1. задайте при этом одинаковый приоритет процессам, повторите эксперимент п.5.1 для определения порядка (очередности) предоставления процессора процессам. 5.3.2. Определите границы приоритетов (создайте для этого программу). 5.3.3. Задайте разные приоритеты процессам: как это повлияло на очередность исполнения процессов, подтвердите экспериментально.
+#5.3.1
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_3_1.c && ./a.out
+Процесс PID=6594 стартует
+Процесс PID=6593 стартует
+Процесс PID=6595 стартует
+Процесс PID=6593 завершился
+Процесс PID=6595 завершился
+Процесс PID=6594 завершился
+Главный процесс завершает работу.
+#Процессы выполняются последовательно с одинаковым приоритетом, так как первый захвотивший процесс не освобождает его 
+
+#5.3.2
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_3_2.c && ./a.out
+SCHED_FIFO: минимальный приоритет = 1, максимальный приоритет = 99
+
+#5.3.3
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_3_3.c && ./a.out
+Процесс с низким приоритетом 1 PID=6695 стартует
+Процесс с высоким приоритетом PID=6696 стартует
+Процесс с низким приоритетом 2 PID=6697 стартует
+Процесс с высоким приоритетом PID=6696 завершился
+Процесс с низким приоритетом 2 PID=6697 завершился
+Процесс с низким приоритетом 1 PID=6695 завершился
+Главный процесс завершает работу.
+#Процесс с более высоким приоритетом завершается раньше, даже если был запущен позже
+
+
+#5.4. Измените процедуру планирования на RR и полностью повторите эксперименты п.5.3 (очередность, приоритеты).
+#Определите величину кванта.
+#Поменяйте порядок очереди в RR-процедуре, используя функцию sched_yield().
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_4.c && sudo ./a.out
+[sudo] пароль для mazer: 
+Процесс 2 с PID=6850 выполняется с политикой SCHED_RR
+Процесс 1 с PID=6849 выполняется с политикой SCHED_RR
+Процесс 3 с PID=6851 выполняется с политикой SCHED_RR
+Процесс 1 с PID=6849 завершен
+Процесс 2 с PID=6850 завершен
+Процесс 3 с PID=6851 завершен
+Главный процесс завершает работу.
+#Процессы с одинаковым приритетом переключаются через quantum.
+#Процессы с высоким приоритетом выполняются чаще.
+
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_4_quantum.c && ./a.out
+Квант времени для процесса 6888: 0.002000000 секунд
+
+#5.5. Можно ли задать разные процедуры планирования разным процессам с одинаковыми приоритетами. Как они будут конкурировать, подтвердите экспериментально. Существует ли понятие приоритетности по отношению к политике планирования?
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_5.c && ./a.out
+Родительский процесс: PID=7474
+Процесс SCHED_FIFO: PID=7476, политика=0
+Процесс SCHED_OTHER: PID=7475, политика=0
+Процесс SCHED_RR: PID=7477, политика=0
+SCHED_RR итерация 1
+SCHED_OTHER итерация 1
+SCHED_FIFO итерация 1
+SCHED_RR итерация 2
+SCHED_OTHER итерация 2
+SCHED_FIFO итерация 2
+SCHED_RR итерация 3
+SCHED_OTHER итерация 3
+SCHED_FIFO итерация 3
+SCHED_OTHER итерация 4
+SCHED_RR итерация 4
+SCHED_FIFO итерация 4
+SCHED_OTHER итерация 5
+SCHED_RR итерация 5
+SCHED_FIFO итерация 5
+Родительский процесс завершает работу.
+
+#Все процессы получили политику SCHED_OTHER (код 0), так как без sudo сменить политику не удалось.
+#Процессы выполнялись равномерно, без приоритета.
+#Для реальной проверки политик нужно запускать программу с правами суперпользователя (sudo).
+#Примечание: При запуске без sudo попытка изменить политику планирования завершается неудачей. Реальное изменение политики (например, на SCHED_FIFO) требует прав суперпользователя. При запуске программы через sudo (команда sudo ./a.out) политики планирования успешно изменяются, что подтверждается выводом системных вызовов sched_getscheduler.
+
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_5.c && sudo ./a.out
+[sudo] пароль для mazer: 
+Родительский процесс: PID=6203
+Процесс SCHED_OTHER: PID=6204, политика=0
+SCHED_OTHER итерация 1
+Процесс SCHED_FIFO: PID=6205, политика=1
+SCHED_FIFO итерация 1
+Процесс SCHED_RR: PID=6206, политика=2
+SCHED_RR итерация 1
+SCHED_OTHER итерация 2
+SCHED_FIFO итерация 2
+SCHED_RR итерация 2
+SCHED_FIFO итерация 3
+SCHED_OTHER итерация 3
+SCHED_RR итерация 3
+SCHED_FIFO итерация 4
+SCHED_OTHER итерация 4
+SCHED_RR итерация 4
+SCHED_FIFO итерация 5
+SCHED_RR итерация 5
+SCHED_OTHER итерация 5
+Родительский процесс завершает работу.
+#Запуск с правами суперпользователя (sudo)
+
+#5.6. Для потоков одного процесса определите политику планирования по умолчанию.
+#5.6.1. Приведите эксперименты с изменением политики для всех потоков одного процесса при условии их равных приоритетов. Измените политику только для одного или нескольких потоков из множества всех равноприоритетных потоков одного процесса.
+#Совпадают ли результаты с результатами предыдущих пунктов этого раздела, обоснуйте.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_6_1.c && sudo ./a.out
+[sudo] пароль для mazer: 
+Главный процесс: PID = 8322
+Поток 0 запущен. PID = 8322, TID = 8323
+Поток 0: итерация 1
+Поток 2 запущен. PID = 8322, TID = 8325
+Поток 2: итерация 1
+Поток 1 запущен. PID = 8322, TID = 8324
+Поток 1: итерация 1
+Поток 2: итерация 2
+Поток 0: итерация 2
+Поток 1: итерация 2
+Поток 2: итерация 3
+Поток 0: итерация 3
+Поток 1: итерация 3
+Поток 2: итерация 4
+Поток 1: итерация 4
+Поток 0: итерация 4
+Поток 2: итерация 5
+Поток 0: итерация 5
+Поток 1: итерация 5
+Поток 2 завершает работу.
+Поток 0 завершает работу.
+Поток 1 завершает работу.
+Главный процесс завершает работу.
+
+#Главный процесс (PID = 8322) запускает 3 потока с помощью pthread_create.
+#Каждый поток выполняет 5 итераций, выводя информацию о своем идентификаторе и процессе:
+#Потоки 0, 1, 2 выполняются параллельно с разными TID (но одинаковым PID).
+#Потоки работают параллельно с использованием политики SCHED_FIFO.
+#После завершения потоков, главный процесс завершает выполнение.
+
+#5.6.2. В каких случаях (при каких политиках) установка разных приоритетов повлияет на очередность исполнения потоков одного процесса. Сравните с результатами по независимым потокам.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 5_6_2.c &&  ./a.out
+Поток 1 запущен. PID = 8637, TID = 8639
+Поток 1: итерация 1
+Поток 2 запущен. PID = 8637, TID = 8640
+Поток 2: итерация 1
+Поток 0 запущен. PID = 8637, TID = 8638
+Поток 0: итерация 1
+Поток 0: итерация 2
+Поток 1: итерация 2
+Поток 2: итерация 2
+Поток 0: итерация 3
+Поток 2: итерация 3
+Поток 1: итерация 3
+Поток 0: итерация 4
+Поток 1: итерация 4
+Поток 2: итерация 4
+Поток 0: итерация 5
+Поток 1: итерация 5
+Поток 2: итерация 5
+Поток 2 завершает работу.
+Поток 0 завершает работу.
+Поток 1 завершает работу.
+Главный процесс завершает работу.
+
+#Политика планирования: Все потоки используют политику SCHED_FIFO.
+#Приоритеты: Потоки получают приоритеты от 10 до 12, с тем, чтобы поток с наивысшим приоритетом (приоритет 12) выполнялся первым, а поток с самым низким приоритетом (приоритет 10) — последним.
+#Ожидание и вывод: Каждый поток выводит сообщения о своем идентификаторе и выполняет 5 итераций с задержкой.
+#Вывод:
+#Потоки с более высоким приоритетом (в данном случае, с приоритетом 12) начинают выполнение раньше.
+#Порядок выполнения потоков зависит от приоритетов в SCHED_FIFO, где поток с наивысшим приоритетом выполняется первым.
+#Потоки, имеющие одинаковую политику планирования (SCHED_FIFO), но разные приоритеты, выполняются в порядке убывания приоритета.
+
+#6. Наследование
+#Проанализируйте наследование на этапах fork() и exec(). Проведите эксперименты с родителем и потомками:
+#6.1. по доступу к одним и тем же файлам, открытым родителем.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 6_1.c && ./a.out
+Файл открыт в процессе PID=6516, файловый дескриптор = 3
+Родительский процесс PID=6516 записывает в файл...
+Дочерний процесс PID=6517 записывает в файл...
+Родительский процесс завершен
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ cat shared_file.txt 
+Родительский процесс PID=6516 записал строку
+Дочерний процесс PID=6517 записал строку
+#Родительский процесс записал текст
+#Дочерний читает и добавляет свой текст, оба имеют доступ к файлу
+
+#6.2. наследованию приоритетов и политике планирования,
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 6_2.c && ./a.out
+Родительский процесс перед fork():
+Родитель (PID=6545): Политика планирования = 0, Приоритет (nice) = 0
+Дочерний процесс после fork():
+Потомок (PID=6546): Политика планирования = 0, Приоритет (nice) = 0
+#fork() сохраняет политику и приоретет
+#exec() так же сохраняет, если не меняют явно
+
+#6.3. диспозиции и наследованию сигналов.
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 6_3.c && ./a.out
+Родительский процесс посылает сигнал дочернему
+Дочерний процесс ожидает сигнал
+Получен сигнал 10
+#В данной программе родительский процесс устанавливает обработчик для сигнала SIGUSR1 с помощью функции signal(). После этого родитель создаёт дочерний процесс и посылает ему сигнал SIGUSR1, который тот обрабатывает. Родительский процесс ожидает завершения дочернего с помощью wait().
+
+#6.4. Уточните наследование для функции clone().
+mazer@Ubuntu:~/os/Tukalkin_Vladimir_lb2$ gcc 6_4.c && ./a.out
+Родительский процесс PID=6587
+Родительский процесс PID=6587
+Дочерний процесс PID=6588, TID=6588
+#clone() позволяет гибко настроить, что разделять
+#pthread_create используют clone() с флагами CLONE_VM | CLONE_FILES | CLONE_SIGHAND
+
+# Наследуется?         fork() exec()  clone()
+# Файлы                 да     нет     нет
+# Политика планирования да     нет     да
+# Приоритеты            да     нет     да
+# Адресное пространство нет    нет     да
+# Обработчики сигналов  да     нет     да
+# Маска сигналов        нет    нет     да
+
+
