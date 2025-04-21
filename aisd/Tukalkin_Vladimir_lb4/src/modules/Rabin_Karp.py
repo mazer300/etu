@@ -1,0 +1,1 @@
+def Rabin_Karp(pattern, text): return list(map(str, [i for i in range(len(text) - len(pattern) + 1) if hash(text[i:i + len(pattern)]) == hash(pattern) and text[i:i + len(pattern)] == pattern]))
