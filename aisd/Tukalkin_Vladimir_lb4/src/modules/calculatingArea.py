@@ -1,0 +1,1 @@
+def calculatingArea(array): return abs(sum([array[i][0] * array[(i + 1) % len(array)][1] - array[i][1] * array[(i + 1) % len(array)][0] for i in range(len(array))])) / 2
