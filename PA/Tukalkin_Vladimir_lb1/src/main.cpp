@@ -75,9 +75,6 @@ Matrix commonMultiply(Matrix &a, Matrix &b) {
             c[i][j]=sum;
         }
     }
-
-
-
     return c;
 }
 
