@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  tetris:
+    image: tetris-game
+    build: .
+    container_name: tetris-game
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/usr/share/nginx/html
+    restart:
+      unless-stopped
