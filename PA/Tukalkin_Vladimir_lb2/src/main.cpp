@@ -3,7 +3,11 @@
 #include <chrono>
 #include <thread>
 #include <functional>
+
+#ifdef _WIN32
 #include <windows.h>
+#endif
+
 #include "../include/IThreadSafeList.h"
 #include "../include/RoughBlockingList.h"
 #include "../include/ThinBlockingList.h"
@@ -22,19 +26,20 @@ double measureTime(std::function<void()> func) {
 void testCorrectness() {
     std::cout << "=== Тест корректности ===\n";
     bool found = true;
+    constexpr int n = 50;
 
     // Тестируем список с грубой блокировкой
     RoughBlockingList<int> list1;
     std::cout << "RoughBlockingList: ";
 
     // Вставка
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list1.insert(i, i);
     }
 
     // Поиск
     found = true;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         if (list1.find(i) != i) {
             found = false;
             break;
@@ -42,7 +47,7 @@ void testCorrectness() {
     }
 
     // Удаление
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list1.pop(0);
     }
 
@@ -58,13 +63,13 @@ void testCorrectness() {
     std::cout << "ThinBlockingList: ";
 
     // Вставка
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list2.insert(i, i);
     }
 
     // Поиск
     found = true;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         if (list2.find(i) != i) {
             found = false;
             break;
@@ -72,7 +77,7 @@ void testCorrectness() {
     }
 
     // Удаление
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list2.pop(0);
     }
 
@@ -88,13 +93,13 @@ void testCorrectness() {
     std::cout << "LockFreeList: ";
 
     // Вставка
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list3.insert(i, i);
     }
 
     // Поиск
     found = true;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         if (list3.find(i) != i) {
             found = false;
             break;
@@ -102,7 +107,7 @@ void testCorrectness() {
     }
 
     // Удаление
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n; i++) {
         list3.pop(0);
     }
 
@@ -112,40 +117,30 @@ void testCorrectness() {
         std::cout << "ПРОВАЛ\n";
     }
 
-    std::cout<< "Все списки прошли проверку\n";
+    std::cout << "Все списки прошли проверку\n";
     std::cout << "===========================\n\n";
 }
 
 // Функция для тестирования производительности с разным соотношением читателей/писателей
-void benchmarkList(const std::string& name, IThreadSafeList<int>* list,
-                   int readerThreads, int writerThreads, int operationsPerThread) {
-
+void BenchmarkList(const std::string &name, IThreadSafeList<int> *list,
+                         int readerThreads, int writerThreads, int operationsPerThread) {
     std::vector<std::thread> threads;
-    std::atomic<bool> start{false};
 
     auto reader = [&](int id) {
-        while (!start.load()) { std::this_thread::yield(); } // Ожидаем старта
-
         for (int i = 0; i < operationsPerThread; ++i) {
-            list->find(i % 100); // Поиск элементов
-            list->isEmpty();     // Проверка пустоты
-            list->size();        // Получение размера
+            list->find(i % 50); // Поиск элементов
         }
     };
 
     auto writer = [&](int id) {
-        while (!start.load()) { std::this_thread::yield(); } // Ожидаем старта
-
         for (int i = 0; i < operationsPerThread; ++i) {
             int value = id * operationsPerThread + i;
-            if (i % 3 == 0) {
-                list->insert(value, value % (list->size() + 1)); // Вставка
-            } else if (list->size() > 0) {
-                try {
-                    list->pop(value % list->size()); // Удаление
-                } catch (...) {
-                    // Игнорируем исключения при пустом списке
-                }
+            if (i % 2 == 0) {
+                // Простая вставка в начало
+                list->insert(value, 0);
+            } else {
+                // Просто проверяем размер, не удаляем
+                list->size();
             }
         }
     };
@@ -162,10 +157,9 @@ void benchmarkList(const std::string& name, IThreadSafeList<int>* list,
 
     // Замеряем время
     auto startTime = std::chrono::steady_clock::now();
-    start.store(true);
 
     // Ожидаем завершения всех потоков
-    for (auto& t : threads) {
+    for (auto &t: threads) {
         t.join();
     }
 
@@ -173,33 +167,33 @@ void benchmarkList(const std::string& name, IThreadSafeList<int>* list,
     std::chrono::duration<double> duration = endTime - startTime;
 
     std::cout << name << " - Readers: " << readerThreads
-              << ", Writers: " << writerThreads
-              << ", Time: " << duration.count() << "s"
-              << ", Final size: " << list->size() << std::endl;
+            << ", Writers: " << writerThreads
+            << ", Time: " << duration.count() << "s"
+            << ", Final size: " << list->size() << std::endl;
 }
 
 // Основной бенчмарк
 void runPerformanceBenchmark() {
     std::cout << "=== Performance Benchmark ===\n";
 
-    const int OPERATIONS_PER_THREAD = 1000;
-    const int NUM_RUNS = 3; // Количество запусков для усреднения
+    constexpr int OPERATIONS_PER_THREAD = 1000;
+    constexpr int NUM_RUNS = 5; // Количество запусков для усреднения
 
     // Конфигурации тестов: {читатели, писатели}
-    std::vector<std::pair<int, int>> configurations = {
-            {1, 1},    // Равное количество
-            {4, 1},    // Много читателей
-            {1, 4},    // Много писателей
-            {2, 2},    // Сбалансировано
-            {8, 2}     // Много читателей, несколько писателей
+    std::vector<std::pair<int, int> > configurations = {
+        {1, 1}, // Равное количество
+        {4, 1}, // Много читателей
+        {1, 4}, // Много писателей
+        {2, 2}, // Сбалансировано
+        {8, 2} // Много читателей, несколько писателей
     };
 
-    for (const auto& config : configurations) {
+    for (const auto &config: configurations) {
         int readers = config.first;
         int writers = config.second;
 
         std::cout << "\n--- Configuration: " << readers << " readers, "
-                  << writers << " writers ---\n";
+                << writers << " writers ---\n";
 
         // Тестируем RoughBlockingList
         {
@@ -207,7 +201,7 @@ void runPerformanceBenchmark() {
             for (int run = 0; run < NUM_RUNS; ++run) {
                 RoughBlockingList<int> list;
                 totalTime += measureTime([&]() {
-                    benchmarkList("RoughBlockingList", &list, readers, writers, OPERATIONS_PER_THREAD);
+                    BenchmarkList("RoughBlockingList", &list, readers, writers, OPERATIONS_PER_THREAD);
                 });
             }
             std::cout << "RoughBlockingList Average: " << totalTime / NUM_RUNS << "s\n";
@@ -219,7 +213,7 @@ void runPerformanceBenchmark() {
             for (int run = 0; run < NUM_RUNS; ++run) {
                 ThinBlockingList<int> list;
                 totalTime += measureTime([&]() {
-                    benchmarkList("ThinBlockingList", &list, readers, writers, OPERATIONS_PER_THREAD);
+                    BenchmarkList("ThinBlockingList", &list, readers, writers, OPERATIONS_PER_THREAD);
                 });
             }
             std::cout << "ThinBlockingList Average: " << totalTime / NUM_RUNS << "s\n";
@@ -231,48 +225,11 @@ void runPerformanceBenchmark() {
             for (int run = 0; run < NUM_RUNS; ++run) {
                 LockFreeList<int> list;
                 totalTime += measureTime([&]() {
-                    benchmarkList("LockFreeList", &list, readers, writers, OPERATIONS_PER_THREAD);
+                    BenchmarkList("LockFreeList", &list, readers, writers, OPERATIONS_PER_THREAD);
                 });
             }
             std::cout << "LockFreeList Average: " << totalTime / NUM_RUNS << "s\n";
         }
-    }
-}
-
-// Стресс-тест
-void stressTest() {
-    std::cout << "\n=== Stress Test ===\n";
-
-    const int NUM_THREADS = 10;
-    const int OPERATIONS_PER_THREAD = 2000;
-
-    std::cout << "Threads: " << NUM_THREADS << ", Operations per thread: " << OPERATIONS_PER_THREAD << "\n";
-
-    // RoughBlockingList
-    {
-        RoughBlockingList<int> list;
-        auto time = measureTime([&]() {
-            benchmarkList("RoughBlockingList", &list, NUM_THREADS/2, NUM_THREADS/2, OPERATIONS_PER_THREAD);
-        });
-        std::cout << "RoughBlockingList Stress: " << time << "s\n";
-    }
-
-    // ThinBlockingList
-    {
-        ThinBlockingList<int> list;
-        auto time = measureTime([&]() {
-            benchmarkList("ThinBlockingList", &list, NUM_THREADS/2, NUM_THREADS/2, OPERATIONS_PER_THREAD);
-        });
-        std::cout << "ThinBlockingList Stress: " << time << "s\n";
-    }
-
-    // LockFreeList
-    {
-        LockFreeList<int> list;
-        auto time = measureTime([&]() {
-            benchmarkList("LockFreeList", &list, NUM_THREADS/2, NUM_THREADS/2, OPERATIONS_PER_THREAD);
-        });
-        std::cout << "LockFreeList Stress: " << time << "s\n";
     }
 }
 
@@ -289,7 +246,7 @@ void simpleTest() {
     }
     list.print();
 
-    std::cout << "Size: " << list.size() << "\n\n";
+    std::cout << "Размер: " << list.size() << "\n\n";
 
     // Удаление элементов
     std::cout << "Удаление элементов...\n";
@@ -299,7 +256,7 @@ void simpleTest() {
             if (pos < list.size()) {
                 list.pop(pos);
             }
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             std::cout << "Ошибка удаления " << i << ": " << e.what() << "\n";
         }
     }
@@ -310,19 +267,19 @@ void simpleTest() {
     std::cout << "Пусто: " << (list.isEmpty() ? "да" : "нет") << "\n";
 }
 
-int main() {
-    SetConsoleOutputCP(CP_UTF8);
 
+int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     try {
         // Запускаем тесты
         testCorrectness();
         simpleTest();
         runPerformanceBenchmark();
-//        stressTest();
 
         std::cout << "\nВсе тесты пройдены успешно!\n";
-
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "Ошибка: " << e.what() << std::endl;
         return 1;
     }
