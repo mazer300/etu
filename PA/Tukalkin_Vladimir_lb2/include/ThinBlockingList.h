@@ -195,6 +195,11 @@ public:
         return length;
     }
 
+    NodeWithLock<T> getHead(){
+        return head;
+    }
+
+
     void print() {
         if (!head) {
             std::cout << "nullptr" << std::endl;
