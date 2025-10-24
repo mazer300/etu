@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header class="library-header">
+        <h1><i class="fas fa-book"></i> Карточка книги</h1>
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Назад к списку
+        </a>
+    </header>
+
+    <div class="book-detail-card">
+        <div class="book-detail-header">
+            <h2><%= book.title %></h2>
+            <span class="book-year"><%= book.year %></span>
+        </div>
+
+        <div class="book-detail-content">
+            <div class="book-info">
+                <div class="info-row">
+                    <span class="info-label">Автор:</span>
+                    <span class="info-value"><%= book.author %></span>
+                </div>
+
+                <% if (book.description) { %>
+                    <div class="info-row">
+                        <span class="info-label">Описание:</span>
+                        <span class="info-value"><%= book.description %></span>
+                    </div>
+                <% } %>
+
+                <div class="info-row">
+                    <span class="info-label">Статус:</span>
+                    <span class="status <%= book.status %>">
+                            <%= book.status === 'available' ? 'В наличии' :
+                                    book.status === 'borrowed' ? 'Выдана' : 'Просрочена' %>
+                        </span>
+                </div>
+
+                <% if (book.borrowedBy) { %>
+                    <div class="info-row">
+                        <span class="info-label">Читатель:</span>
+                        <span class="info-value"><%= book.borrowedBy %></span>
+                    </div>
+                <% } %>
+
+                <% if (book.dueDate) { %>
+                    <div class="info-row">
+                        <span class="info-label">Вернуть до:</span>
+                        <span class="info-value <%= book.status === 'overdue' ? 'overdue' : '' %>">
+                            <%= new Date(book.dueDate).toLocaleDateString('ru-RU') %>
+                        </span>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="book-detail-actions">
+            <% if (book.status === 'available') { %>
+                <button class="btn btn-success" id="borrowBtn">
+                    <i class="fas fa-hand-holding"></i> Выдать книгу
+                </button>
+            <% } else { %>
+                <button class="btn btn-warning" id="returnBtn">
+                    <i class="fas fa-undo"></i> Вернуть книгу
+                </button>
+            <% } %>
+
+            <button class="btn btn-danger" id="deleteBtn" data-title="<%= book.title %>">
+                <i class="fas fa-trash"></i> Удалить книгу
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выдачи книги -->
+<dialog class="dialog" id="borrowDialog">
+    <div class="dialog-header">
+        <span>Выдать книгу</span>
+        <button class="dialog-close" id="closeBorrowDialog">&times;</button>
+    </div>
+    <div class="dialog-content">
+        <form id="borrowForm">
+            <div class="form-group">
+                <label for="borrowerName">Имя читателя *</label>
+                <input type="text" id="borrowerName" required>
+            </div>
+            <div class="form-group">
+                <label for="dueDate">Дата возврата *</label>
+                <input type="date" id="dueDate" required>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="btn btn-primary" id="cancelBorrowBtn">Отмена</button>
+                <button type="submit" class="btn btn-warning">Выдать</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- Модальное окно подтверждения удаления -->
+<dialog class="dialog" id="deleteDialog">
+    <div class="dialog-header">
+        <span>Подтверждение удаления</span>
+        <button class="dialog-close" id="closeDeleteDialog">&times;</button>
+    </div>
+    <div class="dialog-content">
+        <p>Вы уверены, что хотите удалить книгу "<span id="deleteBookTitle"></span>"?</p>
+        <div class="dialog-actions">
+            <button type="button" class="btn btn-primary" id="cancelDeleteBtn">Отмена</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
+        </div>
+    </div>
+</dialog>
+
+<script>
+    const bookId = <%= book.id %>;
+</script>
+<script src="/js/detail.js"></script>
+</body>
+</html>
