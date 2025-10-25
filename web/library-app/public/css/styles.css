@@ -938,3 +938,75 @@ body {
         font-size: 1.1rem;
     }
 }
+
+/* Стили для режима редактирования */
+.book-edit-mode {
+    animation: fadeIn 0.3s ease;
+}
+
+.edit-mode-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gold);
+    flex-wrap: wrap;
+}
+
+.view-mode-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gold);
+    flex-wrap: wrap;
+}
+
+.book-edit-mode .form-group {
+    margin-bottom: 20px;
+}
+
+.book-edit-mode .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dark-leather);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.book-edit-mode .form-group input,
+.book-edit-mode .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--aged-paper);
+    border-radius: 6px;
+    background: var(--parchment);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.book-edit-mode .form-group input:focus,
+.book-edit-mode .form-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2);
+}
+
+.book-edit-mode .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Адаптивность для кнопок редактирования */
+@media (max-width: 768px) {
+    .edit-mode-actions,
+    .view-mode-actions {
+        flex-direction: column;
+    }
+
+    .edit-mode-actions .btn,
+    .view-mode-actions .btn {
+        min-width: auto;
+    }
+}

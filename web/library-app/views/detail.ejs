@@ -17,65 +17,107 @@
     </header>
 
     <div class="book-detail-card">
-        <div class="book-detail-header">
-            <h2><%= book.title %></h2>
-            <span class="book-year"><%= book.year %></span>
-        </div>
+        <!-- Режим просмотра -->
+        <div class="book-view-mode" id="bookViewMode">
+            <div class="book-detail-header">
+                <h2 id="bookTitleView"><%= book.title %></h2>
+                <span class="book-year" id="bookYearView"><%= book.year %></span>
+            </div>
 
-        <div class="book-detail-content">
-            <div class="book-info">
-                <div class="info-row">
-                    <span class="info-label">Автор:</span>
-                    <span class="info-value"><%= book.author %></span>
+            <div class="book-detail-content">
+                <div class="book-info">
+                    <div class="info-row">
+                        <span class="info-label">Автор:</span>
+                        <span class="info-value" id="bookAuthorView"><%= book.author %></span>
+                    </div>
+
+                    <% if (book.description) { %>
+                        <div class="info-row">
+                            <span class="info-label">Описание:</span>
+                            <span class="info-value" id="bookDescriptionView"><%= book.description %></span>
+                        </div>
+                    <% } %>
+
+                    <div class="info-row">
+                        <span class="info-label">Статус:</span>
+                        <span class="status <%= book.status %>" id="bookStatusView">
+                                <%= book.status === 'available' ? 'В наличии' :
+                                        book.status === 'borrowed' ? 'Выдана' : 'Просрочена' %>
+                            </span>
+                    </div>
+
+                    <% if (book.borrowedBy) { %>
+                        <div class="info-row">
+                            <span class="info-label">Читатель:</span>
+                            <span class="info-value" id="bookBorrowedByView"><%= book.borrowedBy %></span>
+                        </div>
+                    <% } %>
+
+                    <% if (book.dueDate) { %>
+                        <div class="info-row">
+                            <span class="info-label">Вернуть до:</span>
+                            <span class="info-value <%= book.status === 'overdue' ? 'overdue' : '' %>" id="bookDueDateView">
+                                <%= new Date(book.dueDate).toLocaleDateString('ru-RU') %>
+                            </span>
+                        </div>
+                    <% } %>
                 </div>
-
-                <% if (book.description) { %>
-                    <div class="info-row">
-                        <span class="info-label">Описание:</span>
-                        <span class="info-value"><%= book.description %></span>
-                    </div>
-                <% } %>
-
-                <div class="info-row">
-                    <span class="info-label">Статус:</span>
-                    <span class="status <%= book.status %>">
-                            <%= book.status === 'available' ? 'В наличии' :
-                                    book.status === 'borrowed' ? 'Выдана' : 'Просрочена' %>
-                        </span>
-                </div>
-
-                <% if (book.borrowedBy) { %>
-                    <div class="info-row">
-                        <span class="info-label">Читатель:</span>
-                        <span class="info-value"><%= book.borrowedBy %></span>
-                    </div>
-                <% } %>
-
-                <% if (book.dueDate) { %>
-                    <div class="info-row">
-                        <span class="info-label">Вернуть до:</span>
-                        <span class="info-value <%= book.status === 'overdue' ? 'overdue' : '' %>">
-                            <%= new Date(book.dueDate).toLocaleDateString('ru-RU') %>
-                        </span>
-                    </div>
-                <% } %>
             </div>
         </div>
 
-        <div class="book-detail-actions">
-            <% if (book.status === 'available') { %>
-                <button class="btn btn-success" id="borrowBtn">
-                    <i class="fas fa-hand-holding"></i> Выдать книгу
-                </button>
-            <% } else { %>
-                <button class="btn btn-warning" id="returnBtn">
-                    <i class="fas fa-undo"></i> Вернуть книгу
-                </button>
-            <% } %>
+        <!-- Режим редактирования -->
+        <div class="book-edit-mode" id="bookEditMode" style="display: none;">
+            <form id="editBookForm">
+                <div class="form-group">
+                    <label for="editTitle">Название книги *</label>
+                    <input type="text" id="editTitle" name="title" value="<%= book.title %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAuthor">Автор *</label>
+                    <input type="text" id="editAuthor" name="author" value="<%= book.author %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="editYear">Год издания *</label>
+                    <input type="number" id="editYear" name="year" value="<%= book.year %>" min="0" max="<%= new Date().getFullYear() %>" required>
+                    <small class="form-hint">Год должен быть от 0 до <%= new Date().getFullYear() %></small>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Описание</label>
+                    <textarea id="editDescription" name="description"><%= book.description || '' %></textarea>
+                </div>
+            </form>
+        </div>
 
-            <button class="btn btn-danger" id="deleteBtn" data-title="<%= book.title %>">
-                <i class="fas fa-trash"></i> Удалить книгу
-            </button>
+        <div class="book-detail-actions">
+            <!-- Кнопки для режима просмотра -->
+            <div class="view-mode-actions" id="viewModeActions">
+                <button class="btn btn-primary" id="editBtn">
+                    <i class="fas fa-edit"></i> Карточка
+                </button>
+                <% if (book.status === 'available') { %>
+                    <button class="btn btn-success" id="borrowBtn">
+                        <i class="fas fa-hand-holding"></i> Выдать книгу
+                    </button>
+                <% } else { %>
+                    <button class="btn btn-warning" id="returnBtn">
+                        <i class="fas fa-undo"></i> Вернуть книгу
+                    </button>
+                <% } %>
+
+                <button class="btn btn-danger" id="deleteBtn" data-title="<%= book.title %>">
+                    <i class="fas fa-trash"></i> Удалить книгу
+                </button>
+            </div>
+
+            <!-- Кнопки для режима редактирования -->
+            <div class="edit-mode-actions" id="editModeActions" style="display: none;">
+                <button class="btn btn-success" id="saveBtn">
+                    <i class="fas fa-save"></i> Сохранить
+                </button>
+                <button class="btn btn-primary" id="cancelEditBtn">
+                    <i class="fas fa-times"></i> Отмена
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -121,6 +163,7 @@
 
 <script>
     const bookId = <%= book.id %>;
+    const bookData = <%- JSON.stringify(book) %>;
 </script>
 <script src="/js/detail.js"></script>
 </body>
