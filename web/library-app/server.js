@@ -25,7 +25,12 @@ const booksPath = path.join(__dirname, 'data', 'books.json');
 const readBooks = () => {
     try {
         const data = fs.readFileSync(booksPath, 'utf8');
-        return JSON.parse(data);
+        let books = JSON.parse(data);
+
+        // Автоматически проверяем просрочку при каждой загрузке
+        books = checkOverdueBooks(books);
+
+        return books;
     } catch (error) {
         // Если файла нет, создаем начальные данные
         const initialBooks = [
@@ -48,7 +53,7 @@ const readBooks = () => {
                 description: "Психологический роман о бывшем студенте Родионе Раскольникове.",
                 status: "borrowed",
                 borrowedBy: "Иван Петров",
-                dueDate: "2024-02-15",
+                dueDate: "2024-01-15", // Прошедшая дата для теста
                 createdAt: new Date().toISOString()
             },
             {
@@ -57,9 +62,9 @@ const readBooks = () => {
                 author: "Михаил Булгаков",
                 year: 1967,
                 description: "Роман, сочетающий в себе элементы сатиры, фантастики и философии.",
-                status: "overdue",
+                status: "borrowed",
                 borrowedBy: "Мария Сидорова",
-                dueDate: "2024-01-10",
+                dueDate: "2024-12-31", // Будущая дата
                 createdAt: new Date().toISOString()
             }
         ];
@@ -76,7 +81,42 @@ const writeBooks = (books) => {
     fs.writeFileSync(booksPath, JSON.stringify(books, null, 2));
 };
 
+// Функция проверки просроченных книг
+const checkOverdueBooks = (books) => {
+    const now = new Date();
+    let changed = false;
+
+    const updatedBooks = books.map(book => {
+        if (book.status === 'borrowed' && book.dueDate) {
+            const dueDate = new Date(book.dueDate);
+            if (dueDate < now) {
+                // Книга просрочена
+                changed = true;
+                return {
+                    ...book,
+                    status: 'overdue'
+                };
+            }
+        }
+        return book;
+    });
+
+    // Сохраняем только если были изменения
+    if (changed) {
+        writeBooks(updatedBooks);
+    }
+
+    return updatedBooks;
+};
+
 const generateId = () => Date.now();
+
+// Middleware для проверки просрочки при каждом запросе к API
+app.use('/api/books', (req, res, next) => {
+    // Проверяем просрочку при каждом обращении к API книг
+    const books = readBooks();
+    next();
+});
 
 // Маршруты
 
@@ -218,7 +258,12 @@ app.post('/api/books/:id/borrow', (req, res) => {
         return res.status(400).json({ error: 'Имя читателя и дата возврата обязательны' });
     }
 
-    book.status = 'borrowed';
+    // Проверяем, не просрочена ли книга сразу при выдаче
+    const dueDateObj = new Date(dueDate);
+    const now = new Date();
+    const status = dueDateObj < now ? 'overdue' : 'borrowed';
+
+    book.status = status;
     book.borrowedBy = borrowerName;
     book.dueDate = dueDate;
 
@@ -246,4 +291,5 @@ app.post('/api/books/:id/return', (req, res) => {
 // Запуск сервера
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
+    console.log('✅ Автоматическая проверка просроченных книг активна');
 });
