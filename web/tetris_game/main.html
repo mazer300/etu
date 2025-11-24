@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris - Игра</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="game-container">
+    <div class="header">
+        <h1>Игра Tetris</h1>
+        <div class="player-info">
+            Игрок: <span id="player-name">Player</span>
+        </div>
+        <div class="game-info">
+            Уровень: <span id="level">1</span> |
+            Очки: <span id="score">0</span> |
+            Линии: <span id="lines">0</span>
+        </div>
+    </div>
+
+    <div class="game-area">
+        <div class="left-panel">
+            <div class="hold-piece">
+                <h3>Удержание</h3>
+                <canvas id="hold-canvas" width="100" height="100"></canvas>
+            </div>
+        </div>
+
+        <div class="main-game">
+            <canvas id="game-canvas" width="300" height="600"></canvas>
+        </div>
+
+        <div class="right-panel">
+            <div class="next-piece">
+                <h3>Следующая фигура</h3>
+                <canvas id="next-canvas" width="100" height="100"></canvas>
+            </div>
+            <div class="controls">
+                <h3>Управление</h3>
+                <p>← → - перемещение</p>
+                <p>↑ - поворот</p>
+                <p>↓ - ускорить падение</p>
+                <p>Пробел - мгновенное падение</p>
+                <p>C - удержание фигуры</p>
+                <p>P - пауза</p>
+                <button onclick="pauseGame()" id="pause-btn">Пауза</button>
+                <button onclick="showHighscores()">Рекорды</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="game-over" class="modal hidden">
+    <div class="modal-content">
+        <h2>Игра окончена!</h2>
+        <p>Ваш счет: <span id="final-score">0</span></p>
+        <button onclick="restartGame()">Новая игра</button>
+        <button onclick="showHighscores()">Таблица рекордов</button>
+    </div>
+</div>
+
+<div id="highscores-modal" class="modal hidden">
+    <div class="modal-content">
+        <!-- Контент будет добавляться через JavaScript -->
+    </div>
+</div>
+
+<script src="tetris.js"></script>
+</body>
+</html>

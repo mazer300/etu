@@ -12,13 +12,13 @@
   },
   {
     "id": 2,
-    "title": "Преступление и наказание",
+    "title": "Преступление и наказаниеsdad",
     "author": "Фёдор Достоевский",
     "year": 1866,
     "description": "Психологический роман о бывшем студенте Родионе Раскольникове.",
-    "status": "borrowed",
-    "borrowedBy": "Владимир",
-    "dueDate": "2025-12-02",
+    "status": "available",
+    "borrowedBy": null,
+    "dueDate": null,
     "createdAt": "2024-01-01T00:00:00.000Z"
   },
   {

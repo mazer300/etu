@@ -40,31 +40,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const borrowedByElement = document.getElementById('bookBorrowedByView');
         const dueDateElement = document.getElementById('bookDueDateView');
 
-        if (data.borrowedBy) {
+        const borrowedByRow = borrowedByElement ? borrowedByElement.closest('.info-row') : null;
+        const dueDateRow = dueDateElement ? dueDateElement.closest('.info-row') : null;
+
+        if (data.borrowedBy && borrowedByRow) {
             borrowedByElement.textContent = data.borrowedBy;
-            borrowedByElement.parentElement.style.display = 'flex';
-        } else {
-            borrowedByElement.parentElement.style.display = 'none';
+            borrowedByRow.style.display = 'flex';
+        } else if (borrowedByRow) {
+            borrowedByRow.style.display = 'none';
         }
 
-        if (data.dueDate) {
+        if (data.dueDate && dueDateRow) {
             dueDateElement.textContent = new Date(data.dueDate).toLocaleDateString('ru-RU');
             dueDateElement.className = `info-value ${data.status === 'overdue' ? 'overdue' : ''}`;
-            dueDateElement.parentElement.style.display = 'flex';
-        } else {
-            dueDateElement.parentElement.style.display = 'none';
+            dueDateRow.style.display = 'flex';
+        } else if (dueDateRow) {
+            dueDateRow.style.display = 'none';
         }
 
         // Обновление кнопок действий
         const borrowBtn = document.getElementById('borrowBtn');
         const returnBtn = document.getElementById('returnBtn');
 
-        if (data.status === 'available') {
-            borrowBtn.style.display = 'block';
-            returnBtn.style.display = 'none';
-        } else {
-            borrowBtn.style.display = 'none';
-            returnBtn.style.display = 'block';
+        if (borrowBtn && returnBtn) {
+            if (data.status === 'available') {
+                borrowBtn.style.display = 'block';
+                returnBtn.style.display = 'none';
+            } else {
+                borrowBtn.style.display = 'none';
+                returnBtn.style.display = 'block';
+            }
         }
     }
 
