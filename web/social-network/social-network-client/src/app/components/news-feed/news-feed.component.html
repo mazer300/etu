@@ -1,0 +1,56 @@
+<div class="news-feed">
+    <div class="vk-card">
+        <div class="card-header">
+            <h3><i class="fas fa-newspaper me-2"></i>Лента новостей</h3>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="vk-card text-center py-4">
+        <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+        <p class="mt-2 text-muted">Загрузка новостей...</p>
+    </div>
+
+    <div *ngIf="!isLoading && posts.length === 0" class="vk-card text-center py-5">
+        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Нет новостей</h4>
+        <p class="text-muted">Здесь будут появляться новости от вас и ваших друзей</p>
+        <a routerLink="/add-post" class="vk-btn btn-primary mt-2">
+            <i class="fas fa-edit me-1"></i>Добавить первый пост
+        </a>
+    </div>
+
+    <div *ngFor="let post of posts" class="vk-card post">
+        <div class="card-body">
+            <div class="post-header">
+                <!-- Используем общий компонент аватарки -->
+                <app-avatar [user]="post.author!" size="md"></app-avatar>
+                <div>
+                    <div class="post-author">{{ post.author?.name || 'Неизвестный пользователь' }}</div>
+                    <div class="post-date">{{ formatDate(post.createdAt) }}</div>
+                </div>
+            </div>
+
+            <div class="post-content">
+                {{ post.content }}
+            </div>
+
+            <!-- Контейнер для изображения с фиксированными размерами -->
+            <div *ngIf="post.image" class="post-image-container">
+                <img [src]="post.image"
+                     [alt]="'Изображение к посту ' + post.author?.name"
+                     class="post-image"
+                     (error)="onImageError($event, post)"
+                     loading="lazy">
+            </div>
+
+            <div class="post-actions">
+                <div class="post-action"
+                     [class.liked]="post.isLiked"
+                     (click)="likePost(post)">
+                    <i class="fas fa-heart"></i>
+                    <span>{{ post.likes || 0 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

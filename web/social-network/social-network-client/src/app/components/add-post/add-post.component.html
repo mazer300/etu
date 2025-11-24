@@ -1,0 +1,49 @@
+<div class="add-post-page">
+    <div class="vk-card">
+        <div class="card-header">
+            <h3><i class="fas fa-edit me-2"></i>Новая запись</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="post-editor">
+                <div class="user-info mb-3">
+                    <!-- Используем общий компонент аватарки -->
+                    <app-avatar [user]="authService.getCurrentUser()!" size="md"></app-avatar>
+                    <span class="user-name ms-2">{{ authService.getCurrentUser()?.name }}</span>
+                </div>
+
+                <textarea
+                        [(ngModel)]="postContent"
+                        placeholder="Что у вас нового?"
+                        class="post-textarea"
+                        rows="4"
+                        maxlength="1000"></textarea>
+
+                <div class="char-counter" [class.limit-exceeded]="postContent.length > 1000">
+                    {{ postContent.length }}/1000
+                </div>
+
+                <!-- Сообщение об ошибке -->
+                <div *ngIf="errorMessage" class="error-message mt-2">
+                    {{ errorMessage }}
+                </div>
+
+                <div class="post-actions-bar">
+                    <div class="action-buttons">
+                        <!-- Убрана кнопка прикрепления картинки -->
+                    </div>
+
+                    <button
+                            class="vk-btn btn-primary"
+                            [disabled]="!postContent.trim() || isSubmitting || postContent.length > 1000"
+                            (click)="onSubmit()">
+                        <i class="fas fa-paper-plane me-1"></i>
+                        {{ isSubmitting ? 'Публикация...' : 'Опубликовать' }}
+                    </button>
+                </div>
+
+                <!-- Убрана секция превью изображения -->
+            </div>
+        </div>
+    </div>
+</div>

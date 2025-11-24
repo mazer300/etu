@@ -1,0 +1,124 @@
+<div class="chat-page">
+    <div class="chat-container">
+        <!-- Список чатов -->
+        <div class="chat-list">
+            <div class="chat-header">
+                <h4><i class="fas fa-comments me-2"></i>Сообщения</h4>
+            </div>
+
+            <div *ngIf="isLoading" class="text-center py-4">
+                <i class="fas fa-spinner fa-spin text-muted"></i>
+                <p class="text-muted mt-2">Загрузка чатов...</p>
+            </div>
+
+            <div *ngFor="let chat of chats"
+                 class="chat-item"
+                 [class.active]="selectedChat && getPartnerId(selectedChat) === getPartnerId(chat)"
+                 (click)="selectChat(chat)">
+                <!-- Используем общий компонент аватарки -->
+                <app-avatar [user]="chat.partner" size="sm"></app-avatar>
+                <div class="chat-info">
+                    <div class="chat-partner">{{ chat.partner.name || 'Неизвестный' }}</div>
+                    <div class="last-message" *ngIf="chat.lastMessage">
+                        {{ chat.lastMessage.content }}
+                    </div>
+                    <div class="last-message text-muted" *ngIf="!chat.lastMessage">
+                        Нет сообщений
+                    </div>
+                </div>
+                <div class="chat-meta">
+                    <div class="chat-time" *ngIf="chat.lastMessage">
+                        {{ formatDate(chat.lastMessage.createdAt) }}
+                    </div>
+                    <div class="unread-count" *ngIf="chat.unreadCount > 0">
+                        {{ chat.unreadCount }}
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoading && chats.length === 0" class="text-center py-4">
+                <i class="fas fa-comments fa-2x text-muted mb-3"></i>
+                <p class="text-muted">Нет сообщений</p>
+            </div>
+        </div>
+
+        <!-- Область переписки -->
+        <div class="chat-conversation">
+            <div *ngIf="!selectedChat" class="no-chat-selected">
+                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Выберите чат</h4>
+                <p class="text-muted">Выберите собеседника из списка чтобы начать общение</p>
+            </div>
+
+            <div *ngIf="selectedChat" class="conversation-container">
+                <!-- Заголовок чата -->
+                <div class="conversation-header">
+                    <div class="conversation-partner">
+                        <!-- Используем общий компонент аватарки -->
+                        <app-avatar [user]="selectedChat.partner" size="sm"></app-avatar>
+                        <span class="partner-name">{{ selectedChat.partner.name || 'Неизвестный' }}</span>
+                    </div>
+                </div>
+
+                <!-- Сообщения -->
+                <div class="messages-container">
+                    <div *ngFor="let message of messages"
+                         class="message"
+                         [class.outgoing]="message.senderId === currentUser?.id"
+                         [class.incoming]="message.senderId !== currentUser?.id">
+                        <div class="message-content">
+                            {{ message.content }}
+                        </div>
+                        <div class="message-time">
+                            {{ formatDate(message.createdAt) }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="messages.length === 0" class="no-messages text-center py-5">
+                        <i class="fas fa-comment-slash fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">Нет сообщений</p>
+                        <p class="text-muted small">Начните общение первым</p>
+                    </div>
+                </div>
+
+                <!-- Форма отправки сообщения -->
+                <div class="message-input-container">
+                    <div class="input-group">
+                        <input type="text"
+                               [(ngModel)]="newMessage"
+                               (keyup.enter)="sendMessage()"
+                               placeholder="Введите сообщение..."
+                               class="form-control message-input">
+                        <button class="btn btn-primary send-button"
+                                (click)="sendMessage()"
+                                [disabled]="!newMessage.trim() || !selectedChat">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список пользователей для нового чата -->
+        <div class="users-list">
+            <div class="users-header">
+                <h4><i class="fas fa-users me-2"></i>Пользователи</h4>
+            </div>
+
+            <div *ngFor="let user of users"
+                 class="user-item"
+                 (click)="startNewChat(user)">
+                <!-- Используем общий компонент аватарки -->
+                <app-avatar [user]="user" size="sm"></app-avatar>
+                <div class="user-info">
+                    <div class="user-name">{{ user.name }}</div>
+                    <div class="user-email text-muted">{{ user.email }}</div>
+                </div>
+            </div>
+
+            <div *ngIf="users.length === 0" class="text-center py-4">
+                <p class="text-muted">Нет пользователей</p>
+            </div>
+        </div>
+    </div>
+</div>

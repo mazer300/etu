@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  social-network-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social-network-admin
+    ports:
+      - "3000:3000"   # HTTP порт
+      - "3443:3443"   # HTTPS порт
+    volumes:
+      - ./data:/app/data
+      - ./public:/app/public
+      - ./ssl:/app/ssl
+    environment:
+      - NODE_ENV=production
+      - HTTPS_PORT=3443
+    restart: unless-stopped
+    networks:
+      - social-network
+
+networks:
+  social-network:
+    driver: bridge

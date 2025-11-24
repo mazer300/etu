@@ -1,0 +1,108 @@
+<div class="registration-page">
+    <div class="vk-card" style="max-width: 400px; margin: 40px auto;">
+        <div class="card-header text-center">
+            <h3>Регистрация в Social Network</h3>
+        </div>
+
+        <div class="card-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="vk-form">
+
+                <div class="form-group">
+                    <label for="name">ФИО *</label>
+                    <input
+                            type="text"
+                            id="name"
+                            formControlName="name"
+                            class="form-control"
+                            [class.is-invalid]="name?.invalid && name?.touched"
+                            placeholder="Введите ваше полное имя">
+                    <div *ngIf="name?.invalid && name?.touched" class="invalid-feedback">
+                        <div *ngIf="name?.errors?.['required']">Введите имя</div>
+                        <div *ngIf="name?.errors?.['minlength']">Имя должно содержать минимум 2 символа</div>
+                        <div *ngIf="name?.errors?.['maxlength']">Имя не должно превышать 50 символов</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input
+                            type="email"
+                            id="email"
+                            formControlName="email"
+                            class="form-control"
+                            [class.is-invalid]="email?.invalid && email?.touched"
+                            placeholder="example@mail.ru">
+                    <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+                        <div *ngIf="email?.errors?.['required']">Введите email</div>
+                        <div *ngIf="email?.errors?.['email']">Введите корректный email адрес</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль *</label>
+                    <input
+                            type="password"
+                            id="password"
+                            formControlName="password"
+                            class="form-control"
+                            [class.is-invalid]="password?.invalid && password?.touched"
+                            placeholder="Не менее 6 символов">
+                    <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
+                        <div *ngIf="password?.errors?.['required']">Введите пароль</div>
+                        <div *ngIf="password?.errors?.['minlength']">Пароль должен содержать минимум 6 символов</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate">Дата рождения *</label>
+                    <input
+                            type="date"
+                            id="birthDate"
+                            formControlName="birthDate"
+                            class="form-control"
+                            [class.is-invalid]="birthDate?.invalid && birthDate?.touched"
+                            [max]="today">
+                    <div *ngIf="birthDate?.invalid && birthDate?.touched" class="invalid-feedback">
+                        <div *ngIf="birthDate?.errors?.['required']">Введите дату рождения</div>
+                    </div>
+                    <div class="form-text text-muted">
+                        <i class="fas fa-birthday-cake me-1"></i>
+                        Минимальный возраст: 13 лет
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="agreeTerms">
+                        Я согласен с условиями использования и политикой конфиденциальности
+                    </label>
+                    <div *ngIf="agreeTerms?.invalid && agreeTerms?.touched" class="invalid-feedback">
+                        Необходимо принять условия использования
+                    </div>
+                </div>
+
+                <div *ngIf="errorMessage" class="error-message">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ errorMessage }}
+                </div>
+
+                <button
+                        type="submit"
+                        class="vk-btn btn-primary"
+                        [disabled]="registerForm.invalid || isSubmitting"
+                        style="width: 100%;">
+                    <i class="fas fa-user-plus" *ngIf="!isSubmitting"></i>
+                    <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+                    {{ isSubmitting ? 'Регистрация...' : 'Зарегистрироваться' }}
+                </button>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        Уже есть аккаунт?
+                        <a routerLink="/login" class="text-primary">Войти</a>
+                    </small>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

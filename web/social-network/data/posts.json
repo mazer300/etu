@@ -1,0 +1,88 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "content": "Привет! Это моя первая новость в социальной сети! Рад присоединиться к этому сообществу.",
+    "image": "/shared-public/news1.jpg",
+    "createdAt": "2023-10-20T10:30:00Z",
+    "likes": 15,
+    "comments": 3,
+    "blocked": false
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "content": "Отличная погода сегодня! Кто на прогулку? Предлагаю собраться в парке в 18:00.",
+    "createdAt": "2023-10-19T15:45:00Z",
+    "likes": 8,
+    "comments": 5,
+    "blocked": false
+  },
+  {
+    "id": 3,
+    "userId": 3,
+    "content": "Поделюсь интересной статьей о новейших технологиях в веб-разработке. Очень познавательно!",
+    "createdAt": "2023-10-18T09:15:00Z",
+    "likes": 12,
+    "comments": 2,
+    "blocked": false
+  },
+  {
+    "id": 4,
+    "userId": 4,
+    "content": "Только что зарегистрировалась в этой социальной сети. Надеюсь найти здесь интересных людей!",
+    "createdAt": "2023-10-17T14:20:00Z",
+    "likes": 6,
+    "comments": 1,
+    "blocked": false
+  },
+  {
+    "id": 5,
+    "userId": 1,
+    "content": "Hello world!",
+    "createdAt": "2023-10-16T14:20:00Z",
+    "likes": 7,
+    "comments": 10,
+    "blocked": false
+  },
+  {
+    "id": 6,
+    "userId": 5,
+    "content": "фывфыф",
+    "image": null,
+    "createdAt": "2025-11-08T17:24:01.121Z",
+    "likes": 0,
+    "comments": 0,
+    "blocked": false
+  },
+  {
+    "id": 7,
+    "userId": 5,
+    "content": "ывмпвыпм",
+    "image": null,
+    "createdAt": "2025-11-08T17:29:17.695Z",
+    "likes": 0,
+    "comments": 0,
+    "blocked": false
+  },
+  {
+    "id": 8,
+    "userId": 5,
+    "content": "фывмафы",
+    "image": null,
+    "createdAt": "2025-11-08T17:30:55.535Z",
+    "likes": 0,
+    "comments": 0,
+    "blocked": false
+  },
+  {
+    "id": 9,
+    "userId": 5,
+    "content": "яЧс",
+    "image": null,
+    "createdAt": "2025-11-08T17:50:11.856Z",
+    "likes": 0,
+    "comments": 0,
+    "blocked": false
+  }
+]

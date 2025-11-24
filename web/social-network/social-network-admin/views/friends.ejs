@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Social Network Admin</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <% if (buildType === 'gulp') { %>
+        <link href="/dist-gulp/css/main.min.css" rel="stylesheet">
+    <% } else { %>
+        <link href="/dist-webpack/css/main.min.css" rel="stylesheet">
+    <% } %>
+
+    <style>
+        /* ДОПОЛНИТЕЛЬНЫЙ СБРОС СТИЛЕЙ */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-x: hidden;
+        }
+        .vk-layout {
+            min-height: 100vh;
+            background: #EDEEF0;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+    </style>
+</head>
+<body class="vk-layout friends-page">
+<!-- Навигация VK -->
+<nav class="navbar navbar-expand-lg navbar-vk">
+    <div class="container-vk">
+        <a class="navbar-brand" href="/?build=<%= buildType %>" title="Social Network Admin">
+            <i class="fas fa-users me-2"></i>Social Network Admin
+        </a>
+
+        <!-- Выбор сборки -->
+        <div class="navbar-nav">
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false" title="Выбор сборки">
+                    <i class="fas fa-tools me-2"></i>
+                    <span class="build-text">Сборка: <span class="fw-bold"><%= buildType %></span></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="?build=gulp">
+                            <i class="fas fa-cube me-2"></i>Gulp сборка
+                        </a></li>
+                    <li><a class="dropdown-item" href="?build=webpack">
+                            <i class="fas fa-cogs me-2"></i>Webpack сборка
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-vk">
+    <!-- Основной контент -->
+    <div class="main-content">
+        <!-- Заголовок и кнопки -->
+        <div class="card-vk mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <a href="/?build=<%= buildType %>" class="btn btn-vk btn-secondary me-3">
+                            <i class="fas fa-arrow-left me-1"></i>Назад
+                        </a>
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-friends me-2 text-primary"></i>
+                            <%= title %>
+                        </h4>
+                    </div>
+                    <div class="header-actions">
+                        <span class="badge-vk badge-primary">
+                            <i class="fas fa-user-friends me-1"></i>
+                            <%= friends.length %> друзей
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка текущего пользователя -->
+        <div class="current-user-card">
+            <div class="friend-avatar <%= !user.avatar || user.avatarBlocked ? 'default-avatar' : '' %> <%= user.avatarBlocked ? 'blocked-avatar' : '' %>">
+                <% if (user.avatar && !user.avatarBlocked) { %>
+                    <img src="<%= user.avatar %>" alt="<%= user.name %>">
+                <% } else { %>
+                    <%= getInitials(user.name) %>
+                <% } %>
+            </div>
+            <div>
+                <h5 class="card-title mb-1"><%= user.name %></h5>
+                <p class="card-text text-muted mb-0"><%= user.email %></p>
+                <div class="mt-2">
+                    <span class="badge-vk <%= user.role === 'admin' ? 'badge-danger' :
+                            user.role === 'moderator' ? 'badge-warning' : 'badge-primary' %>">
+                        <%= user.role === 'admin' ? 'Администратор' :
+                                user.role === 'moderator' ? 'Модератор' : 'Пользователь' %>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список друзей в ПЛИТОЧНОМ отображении -->
+        <div class="friends-grid-centered">
+            <% if (friends.length > 0) { %>
+                <% friends.forEach(friend => { %>
+                    <div class="friend-card-centered">
+                        <div class="card-body">
+                            <!-- Аватарка -->
+                            <div class="friend-avatar <%= !friend.avatar || friend.avatarBlocked ? 'default-avatar' : '' %> <%= friend.avatarBlocked ? 'blocked-avatar' : '' %>">
+                                <% if (friend.avatar && !friend.avatarBlocked) { %>
+                                    <img src="<%= friend.avatar %>" alt="<%= friend.name %>">
+                                <% } else { %>
+                                    <%= getInitials(friend.name) %>
+                                <% } %>
+                            </div>
+
+                            <!-- Информация о друге -->
+                            <div class="friend-info">
+                                <h6 class="friend-name"><%= friend.name %></h6>
+                                <p class="friend-email"><%= friend.email %></p>
+                                <span class="badge-vk <%= friend.status === 'active' ? 'badge-success' :
+                                        friend.status === 'blocked' ? 'badge-danger' : 'badge-warning' %>">
+                                    <%= friend.status === 'active' ? 'Активный' :
+                                            friend.status === 'blocked' ? 'Заблокирован' : 'Не подтвержден' %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="col-12">
+                    <div class="card-vk text-center py-5">
+                        <div class="card-body">
+                            <i class="fas fa-user-friends fa-3x text-muted mb-3"></i>
+                            <h3 class="text-muted">Нет друзей</h3>
+                            <p class="text-muted">У этого пользователя пока нет друзей</p>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<% if (buildType === 'gulp') { %>
+    <script src="/dist-gulp/js/main.min.js"></script>
+<% } else { %>
+    <script src="/dist-webpack/js/main.min.js"></script>
+<% } %>
+</body>
+</html>

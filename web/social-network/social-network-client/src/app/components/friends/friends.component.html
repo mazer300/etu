@@ -1,0 +1,80 @@
+<div class="friends-page">
+    <div class="vk-card">
+        <div class="card-header">
+            <h3><i class="fas fa-user-friends me-2"></i>Мои друзья</h3>
+        </div>
+    </div>
+
+    <!-- Поиск -->
+    <div class="vk-card">
+        <div class="card-body">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                        type="text"
+                        [(ngModel)]="searchQuery"
+                        (input)="onSearch()"
+                        placeholder="Поиск пользователей..."
+                        class="search-input">
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="vk-card text-center py-4">
+        <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+        <p class="mt-2 text-muted">Загрузка друзей...</p>
+    </div>
+
+    <!-- Список друзей -->
+    <div *ngIf="friends.length > 0" class="vk-card">
+        <div class="card-body">
+            <h5 class="mb-3">Друзья ({{ friends.length }})</h5>
+            <div class="friends-grid">
+                <div *ngFor="let friend of friends" class="friend-card vk-card">
+                    <div class="card-body">
+                        <!-- Используем общий компонент аватарки -->
+                        <app-avatar [user]="friend" size="lg"></app-avatar>
+                        <div class="friend-name">{{ friend.name }}</div>
+                        <div class="friend-email">{{ friend.email }}</div>
+                        <button
+                                class="vk-btn btn-danger btn-sm mt-2"
+                                (click)="removeFriend(friend.id)">
+                            <i class="fas fa-user-times me-1"></i>
+                            Удалить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Предложения друзей -->
+    <div *ngIf="allUsers.length > 0" class="vk-card">
+        <div class="card-body">
+            <h5 class="mb-3">Люди, которых вы можете знать</h5>
+            <div class="friends-grid">
+                <div *ngFor="let user of allUsers" class="friend-card vk-card">
+                    <div class="card-body">
+                        <!-- Используем общий компонент аватарки -->
+                        <app-avatar [user]="user" size="lg"></app-avatar>
+                        <div class="friend-name">{{ user.name }}</div>
+                        <div class="friend-email">{{ user.email }}</div>
+                        <button
+                                class="vk-btn btn-success btn-sm mt-2"
+                                (click)="addFriend(user.id)">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Добавить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && friends.length === 0 && allUsers.length === 0"
+         class="vk-card text-center py-5">
+        <i class="fas fa-user-friends fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Пользователи не найдены</h4>
+        <p class="text-muted">Попробуйте изменить поисковый запрос</p>
+    </div>
+</div>

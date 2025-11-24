@@ -1,0 +1,17 @@
+<div class="avatar-container">
+    <div *ngIf="user.avatar && !user.avatarBlocked"
+         class="user-avatar"
+         [class]="'avatar-' + size">
+        <img [src]="user.avatar"
+             [alt]="user.name"
+             class="user-avatar-img"
+             (error)="onAvatarError($event)">
+    </div>
+    <div *ngIf="!user.avatar || user.avatarBlocked"
+         class="user-avatar"
+         [class]="'avatar-' + size"
+         [class.default-avatar]="!user.avatarBlocked"
+         [class.blocked-avatar]="user.avatarBlocked">
+        {{ getInitials(user.name) }}
+    </div>
+</div>

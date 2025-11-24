@@ -1,0 +1,1196 @@
+// Основные стили приложения социальной сети
+@import 'variables';
+
+// СБРОС ВСЕХ СТИЛЕЙ
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Базовые стили страницы
+body {
+  font-family: @font-family-base;
+  background: @body-bg;
+  color: @text-color;
+  line-height: @line-height-base;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  font-size: @font-size-base;
+}
+
+// Навигационная панель в стиле VK - КОМПАКТНАЯ
+.navbar-vk {
+  background: @vk-blue !important;
+  height: 50px;
+  box-shadow: @shadow-sm;
+  border: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+
+  .container-vk {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 12px;
+    width: 100%;
+    flex-wrap: nowrap;
+
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 16px;
+      color: white !important;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 140px;
+      max-width: 140px;
+      flex-shrink: 0;
+      padding: 0;
+      margin: 0;
+
+      i {
+        color: white;
+        margin-right: 6px;
+        flex-shrink: 0;
+        font-size: 14px;
+      }
+    }
+
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      margin: 0;
+      padding: 0;
+
+      .nav-item {
+        margin: 0;
+        padding: 0;
+
+        .nav-link {
+          color: rgba(255, 255, 255, 0.9) !important;
+          font-weight: 500;
+          padding: 6px 10px;
+          border-radius: 6px;
+          transition: background-color 0.2s ease;
+          text-decoration: none;
+          white-space: nowrap;
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          margin: 0;
+          line-height: 1;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white !important;
+          }
+
+          .build-text {
+            @media (max-width: 480px) {
+              display: none;
+            }
+          }
+
+          i {
+            margin-right: 4px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .dropdown-menu {
+        background: @vk-white;
+        border: 1px solid @vk-border;
+        border-radius: 8px;
+        box-shadow: @shadow-lg;
+        margin-top: 6px;
+        min-width: 150px;
+        padding: 4px 0;
+
+        .dropdown-item {
+          color: @text-color;
+          padding: 6px 12px;
+          font-size: 13px;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          line-height: 1.2;
+
+          &:hover {
+            background: @vk-gray-bg;
+            color: @text-color;
+          }
+
+          i {
+            width: 14px;
+            margin-right: 6px;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  // Адаптивность для мобильных
+  @media (max-width: 768px) {
+    height: 48px;
+
+    .container-vk {
+      padding: 0 10px;
+
+      .navbar-brand {
+        font-size: 15px;
+        min-width: 130px;
+        max-width: 130px;
+
+        i {
+          margin-right: 4px;
+          font-size: 13px;
+        }
+      }
+
+      .nav-link {
+        font-size: 12px !important;
+        padding: 5px 8px !important;
+
+        i {
+          margin-right: 3px;
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    height: 46px;
+
+    .container-vk {
+      .navbar-brand {
+        font-size: 14px;
+        min-width: 120px;
+        max-width: 120px;
+
+        i {
+          margin-right: 3px;
+          font-size: 12px;
+        }
+      }
+
+      .nav-link {
+        font-size: 11px !important;
+        padding: 4px 6px !important;
+
+        .build-text {
+          display: none !important;
+        }
+
+        i {
+          margin-right: 0 !important;
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 400px) {
+    .container-vk {
+      .navbar-brand {
+        font-size: 13px;
+        min-width: 110px;
+        max-width: 110px;
+
+        i {
+          margin-right: 2px !important;
+          font-size: 11px;
+        }
+      }
+
+      .nav-link {
+        padding: 3px 5px !important;
+      }
+    }
+  }
+}
+
+// Основной контейнер приложения - УМЕНЬШАЕМ ОТСТУП
+.container-vk {
+  max-width: 1200px;
+  margin: 62px auto 20px auto;
+  padding: 0 16px;
+
+  @media (max-width: 768px) {
+    margin: 60px auto 16px auto;
+    padding: 0 12px;
+  }
+
+  @media (max-width: 576px) {
+    margin: 58px auto 12px auto;
+    padding: 0 10px;
+  }
+}
+
+// Карточки для отображения контента
+.card-vk {
+  background: @vk-white;
+  border-radius: @border-radius;
+  box-shadow: @shadow-sm;
+  border: 1px solid @vk-border;
+  margin-bottom: @spacing-lg;
+  transition: box-shadow 0.2s ease;
+
+  &:hover { box-shadow: @shadow-md; }
+
+  .card-header {
+    background: transparent;
+    border-bottom: 1px solid @vk-border;
+    padding: @spacing-lg @spacing-xl;
+    font-weight: 600;
+
+    &.no-border { border-bottom: none; }
+  }
+
+  .card-body { padding: @spacing-xl; }
+  .card-footer {
+    background: transparent;
+    border-top: 1px solid @vk-border;
+    padding: @spacing-md @spacing-xl;
+  }
+}
+
+// Карточка пользователя с аватаркой и информацией
+.user-card-vk {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .card-body {
+    padding: @spacing-lg;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: @spacing-lg;
+
+    .user-avatar-vk {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid @vk-border;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      width: 100%;
+
+      .user-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: @text-color;
+        word-break: break-word;
+      }
+
+      .user-meta {
+        color: @text-muted;
+        font-size: 13px;
+        line-height: 1.4;
+
+        .meta-item {
+          margin-bottom: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          i {
+            width: 16px;
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+  }
+
+  .user-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: @spacing-lg;
+
+    .stat-item {
+      text-align: center;
+
+      .stat-number {
+        font-size: 14px;
+        font-weight: 600;
+        color: @text-color;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: @text-muted;
+        display: block;
+      }
+    }
+  }
+}
+
+// Кнопки в стиле VK
+.btn-vk {
+  border-radius: @border-radius;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.btn-primary {
+    background: @vk-blue;
+    color: white;
+
+    &:hover {
+      background: @vk-blue-hover;
+      transform: translateY(-1px);
+    }
+  }
+
+  &.btn-secondary {
+    background: @vk-gray-bg;
+    color: @text-color;
+
+    &:hover { background: darken(@vk-gray-bg, 5%); }
+  }
+
+  &.btn-success {
+    background: @success-color;
+    color: white;
+
+    &:hover { background: darken(@success-color, 5%); }
+  }
+
+  &.btn-danger {
+    background: @danger-color;
+    color: white;
+
+    &:hover { background: darken(@danger-color, 5%); }
+  }
+}
+
+// Действия с пользователем (блокировка, удаление)
+.user-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+
+  .btn-action {
+    flex: 1;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 8px;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    i {
+      margin-right: 3px;
+      font-size: 10px;
+    }
+
+    &.btn-block {
+      background: #FFA000;
+      color: white;
+
+      &:hover {
+        background: darken(#FFA000, 10%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-success {
+      background: #4BB34B;
+      color: white;
+
+      &:hover {
+        background: darken(#4BB34B, 10%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-delete {
+      background: #FF3347;
+      color: white;
+
+      &:hover {
+        background: darken(#FF3347, 10%);
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+// Стили для аватарок пользователей
+.user-avatar-vk,
+.friend-avatar,
+.post-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid @vk-border;
+  flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+// Сетка для отображения пользователей
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1200px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 992px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 576px) { grid-template-columns: 1fr; }
+}
+
+// Действия в заголовке страницы
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  .btn-add-user {
+    background: #4BB34B;
+    color: white;
+    border: none;
+    border-radius: @border-radius;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: darken(#4BB34B, 10%);
+      transform: translateY(-1px);
+    }
+
+    i { margin-right: 6px; }
+  }
+}
+
+// Бейджи для статусов и ролей
+.badge-vk {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  display: inline-block;
+
+  &.badge-primary {
+    background: @vk-blue;
+    color: white;
+  }
+
+  &.badge-success {
+    background: @success-color;
+    color: white;
+  }
+
+  &.badge-warning {
+    background: @warning-color;
+    color: white;
+  }
+
+  &.badge-danger {
+    background: @danger-color;
+    color: white;
+  }
+}
+
+// Стили для аватарок по умолчанию
+.default-avatar {
+  background: linear-gradient(135deg, #4680C2, #5A93E0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+}
+
+// Стили для заблокированных аватарок
+.blocked-avatar {
+  background: linear-gradient(135deg, #FF3347, #FF5C6C);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+
+  &::after {
+    content: '🚫';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #FF3347;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border: 2px solid white;
+  }
+}
+
+// Аватарка на странице редактирования профиля
+.edit-profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid @vk-border;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 150px;
+
+  &.default-avatar,
+  &.blocked-avatar { font-size: 36px; }
+}
+
+// Контейнер для формы редактирования
+.edit-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+
+  .form-section {
+    background: @vk-white;
+    border-radius: @border-radius;
+    padding: @spacing-xl;
+    margin-bottom: @spacing-lg;
+    box-shadow: @shadow-sm;
+    border: 1px solid @vk-border;
+  }
+}
+
+// Заголовки страниц
+.page-title { color: #000000 !important; font-weight: 600; }
+
+// Стили для страницы друзей
+.friends-page .sidebar-vk { display: none; }
+.friends-page .row-vk { grid-template-columns: 1fr; }
+
+// Валидация форм
+.form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+.invalid-feedback { display: none; }
+
+// Стили для заблокированных аватарок в списке друзей
+.friend-avatar.blocked-avatar {
+  margin-left: -10px;
+  position: relative;
+  z-index: 1;
+
+  & + .friend-avatar.blocked-avatar { margin-left: -15px; }
+}
+
+.friends-avatars-stack {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+
+  .friend-avatar {
+    transition: margin-left 0.3s ease;
+
+    &.blocked-avatar {
+      margin-left: -15px;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #FF3347;
+    }
+  }
+}
+
+// Карточка друга с центрированным контентом
+.friend-card-centered {
+  text-align: center;
+
+  .friend-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid @vk-border;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.default-avatar,
+    &.blocked-avatar { font-size: 20px; }
+  }
+
+  .friend-info {
+    text-align: center;
+
+    .friend-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .friend-email {
+      font-size: 13px;
+      color: @text-muted;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+// Сетка для друзей с центрированным отображением
+.friends-grid-centered {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .friend-card-centered {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #D7D8D9;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+
+      .friend-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #4680C2;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+
+        &.default-avatar,
+        &.blocked-avatar {
+          font-size: 24px;
+          font-weight: 600;
+        }
+
+        &.default-avatar {
+          background: linear-gradient(135deg, #4680C2, #5A93E0);
+          color: white;
+        }
+
+        &.blocked-avatar {
+          background: linear-gradient(135deg, #FF3347, #FF5C6C);
+          color: white;
+          position: relative;
+
+          &::after {
+            content: '🚫';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF3347;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid white;
+          }
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+
+      .friend-info {
+        width: 100%;
+
+        .friend-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: #000;
+          margin-bottom: 6px;
+          line-height: 1.3;
+          word-break: break-word;
+        }
+
+        .friend-email {
+          font-size: 13px;
+          color: #656565;
+          margin-bottom: 12px;
+          line-height: 1.3;
+          word-break: break-word;
+        }
+
+        .badge-vk {
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 500;
+
+          &.badge-success {
+            background: #4BB34B;
+            color: white;
+          }
+
+          &.badge-danger {
+            background: #FF3347;
+            color: white;
+          }
+
+          &.badge-warning {
+            background: #FFA000;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Карточка текущего пользователя на странице друзей
+.current-user-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #D7D8D9;
+  margin-bottom: 24px;
+
+  .friend-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4680C2;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+
+    &.default-avatar,
+    &.blocked-avatar {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    &.default-avatar {
+      background: linear-gradient(135deg, #4680C2, #5A93E0);
+      color: white;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 4px;
+  }
+
+  .card-text {
+    font-size: 14px;
+    color: #656565;
+    margin-bottom: 8px;
+  }
+
+  .badge-vk {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+
+    &.badge-danger {
+      background: #FF3347;
+      color: white;
+    }
+
+    &.badge-warning {
+      background: #FFA000;
+      color: white;
+    }
+
+    &.badge-primary {
+      background: #4680C2;
+      color: white;
+    }
+  }
+}
+
+// Адаптивность для текущего пользователя
+@media (max-width: 576px) {
+  .current-user-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+
+    .friend-avatar {
+      margin-right: 0;
+      margin-bottom: 12px;
+    }
+  }
+}
+
+// Состояние "нет друзей"
+.friends-page .friends-grid-centered .col-12 {
+  grid-column: 1 / -1;
+
+  .card-vk {
+    text-align: center;
+    padding: 40px 20px;
+
+    .fa-user-friends {
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #999;
+    }
+  }
+}
+
+// Стили для заблокированных постов
+.news-post.blocked {
+  opacity: 0.6;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-left: 5px solid #FF3347;
+
+  .post-content {
+    position: relative;
+
+    &::before {
+      content: '🚫 ЗАБЛОКИРОВАНО';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 51, 71, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 2;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 1;
+    }
+  }
+}
+
+// Действия с постами (блокировка, удаление)
+.post-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: flex-end;
+
+  .btn-post-action {
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    i {
+      margin-right: 4px;
+      font-size: 11px;
+    }
+
+    &.btn-post-block {
+      background: #FFA000;
+      color: white;
+
+      &:hover {
+        background: #e69100;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-post-unblock {
+      background: #4BB34B;
+      color: white;
+
+      &:hover {
+        background: #3d9c3d;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-post-delete {
+      background: #FF3347;
+      color: white;
+
+      &:hover {
+        background: #e62e40;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+// Бейдж статуса поста
+.post-status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  margin-left: 8px;
+
+  &.status-blocked {
+    background: #FF3347;
+    color: white;
+  }
+
+  &.status-active {
+    background: #4BB34B;
+    color: white;
+  }
+}
+
+// Модальные окна в стиле VK
+.modal-vk {
+  .modal-content {
+    background: @vk-white;
+    border-radius: @border-radius;
+    border: 1px solid @vk-border;
+    box-shadow: @shadow-lg;
+  }
+
+  .modal-header {
+    background: @vk-blue;
+    color: white;
+    border-bottom: 1px solid @vk-border;
+    border-radius: @border-radius @border-radius 0 0;
+
+    .modal-title { font-weight: 600; }
+    .btn-close { filter: invert(1); }
+  }
+
+  .modal-body { padding: @spacing-xl; }
+  .modal-footer {
+    border-top: 1px solid @vk-border;
+    padding: @spacing-md @spacing-xl;
+  }
+}
+
+// Форма добавления пользователя
+.add-user-form {
+  .form-group {
+    margin-bottom: @spacing-lg;
+
+    label {
+      font-weight: 500;
+      color: @text-color;
+      margin-bottom: @spacing-sm;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid @vk-border;
+      border-radius: @border-radius;
+      padding: 10px 12px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        border-color: @vk-blue;
+        box-shadow: 0 0 0 2px rgba(70, 128, 194, 0.1);
+      }
+    }
+  }
+
+  .form-text {
+    font-size: 12px;
+    color: @text-muted;
+    margin-top: 4px;
+  }
+}
+
+// Адаптивность для мобильных устройств
+@media (max-width: 768px) {
+  .container-vk {
+    margin-top: 64px;
+    padding: 0 12px;
+  }
+  .user-avatar-vk { width: 60px !important; height: 60px !important; }
+  .navbar-vk { height: 52px; }
+
+  .navbar-vk .container-vk {
+    padding: 0 12px;
+  }
+}
+
+// Состояние пустого списка
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+
+  i { opacity: 0.5; }
+}
+
+// Исправление отступов для фиксированной навигации
+.vk-layout {
+  min-height: 100vh;
+  background: #EDEEF0;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+// Убираем все возможные отступы у body и html
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Адаптивность для очень маленьких экранов
+@media (max-width: 576px) {
+  .navbar-vk .container-vk {
+    padding: 0 12px;
+
+    .navbar-brand {
+      font-size: 15px;
+      max-width: 120px;
+    }
+
+    .nav-link {
+      font-size: 12px !important;
+      padding: 4px 8px !important;
+    }
+  }
+}
+
+// Исправление отступов для всех страниц
+.main-content {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+// Секция аватарки в редактировании
+.avatar-section {
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+.avatar-container {
+  text-align: center;
+}
+

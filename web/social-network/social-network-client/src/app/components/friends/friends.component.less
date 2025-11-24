@@ -1,0 +1,77 @@
+.friends-page {
+  .friends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+
+    .friend-card {
+      text-align: center;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      .friend-avatar {
+        margin: 0 auto 12px;
+      }
+
+      .friend-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+        word-break: break-word;
+      }
+
+      .friend-email {
+        color: #656565;
+        font-size: 13px;
+        margin-bottom: 8px;
+        word-break: break-word;
+      }
+    }
+  }
+}
+
+.text-muted {
+  color: #656565 !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.ms-2 { margin-left: 8px; }
+.py-4 { padding-top: 16px; padding-bottom: 16px; }
+.py-5 { padding-top: 20px; padding-bottom: 20px; }
+
+.search-container {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #656565;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid #D7D8D9;
+  border-radius: 8px;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #4680C2;
+    box-shadow: 0 0 0 2px rgba(70, 128, 194, 0.1);
+  }
+}

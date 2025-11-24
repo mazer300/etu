@@ -1,0 +1,73 @@
+<nav class="vk-navbar">
+    <div class="navbar-content">
+        <a routerLink="/news" class="logo">
+            <i class="fas fa-users"></i>
+            Social Network
+        </a>
+
+        <div class="nav-links" *ngIf="currentUser">
+            <a routerLink="/news" routerLinkActive="active" class="nav-link">
+                <i class="fas fa-newspaper"></i>
+                Новости
+            </a>
+            <a routerLink="/friends" routerLinkActive="active" class="nav-link">
+                <i class="fas fa-user-friends"></i>
+                Друзья
+            </a>
+            <a routerLink="/chat" routerLinkActive="active" class="nav-link">
+                <i class="fas fa-comments"></i>
+                Сообщения
+            </a>
+            <a routerLink="/add-post" routerLinkActive="active" class="nav-link">
+                <i class="fas fa-edit"></i>
+                Добавить пост
+            </a>
+        </div>
+
+        <div class="user-menu" *ngIf="currentUser">
+            <!-- Используем общий компонент аватарки -->
+            <app-avatar [user]="currentUser" size="sm"></app-avatar>
+
+            <div class="user-info">
+                <span class="user-name">{{ currentUser.name }}</span>
+                <span class="role-badge" [class]="'role-' + currentUser.role">
+                    {{ getRoleDisplayName(currentUser.role) }}
+                </span>
+            </div>
+
+            <!-- Выпадающее меню пользователя -->
+            <div class="dropdown">
+                <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <!-- Пункт админки только для администраторов -->
+                    <li *ngIf="currentUser.role === 'admin'">
+                        <a class="dropdown-item" href="https://localhost:3443" target="_blank">
+                            <i class="fas fa-cog me-2"></i>
+                            Панель администратора
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" (click)="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            Выйти
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Кнопки входа/регистрации для неавторизованных -->
+        <div class="auth-links" *ngIf="!currentUser">
+            <a routerLink="/login" class="nav-link">
+                <i class="fas fa-sign-in-alt"></i>
+                Войти
+            </a>
+            <a routerLink="/register" class="nav-link">
+                <i class="fas fa-user-plus"></i>
+                Регистрация
+            </a>
+        </div>
+    </div>
+</nav>

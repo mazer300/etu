@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  social-network-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: social-network-client
+    ports:
+      - "4200:4200"
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - ADMIN_API_URL=http://social-network-admin:3443
+    networks:
+      - social-network
+
+networks:
+  social-network:
+    external: true
+    name: social-network-admin_social-network

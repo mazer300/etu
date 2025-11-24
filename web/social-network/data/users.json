@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Иван Иванов",
+    "email": "ivan@mail.ru",
+    "password": "password123",
+    "birthDate": "1990-05-15",
+    "avatar": "../shared-public/avatar1.jpg",
+    "role": "admin",
+    "status": "active",
+    "avatarBlocked": false,
+    "stats": {
+      "friends": 125,
+      "photos": 42,
+      "posts": 17
+    },
+    "createdAt": "2023-01-15T10:00:00Z",
+    "updatedAt": "2025-11-08T14:16:19.557Z"
+  },
+  {
+    "id": 2,
+    "name": "Петр Петров",
+    "email": "petr@mail.ru",
+    "password": "password123",
+    "birthDate": "1985-08-22",
+    "avatar": "/shared-public/default-avatar.jpg",
+    "role": "user",
+    "status": "active",
+    "avatarBlocked": true,
+    "stats": {
+      "friends": 89,
+      "photos": 23,
+      "posts": 8
+    },
+    "createdAt": "2023-02-20T14:15:00Z",
+    "updatedAt": "2025-11-09T14:48:03.889Z"
+  },
+  {
+    "id": 3,
+    "name": "Мария Сидорова",
+    "email": "maria@mail.ru",
+    "password": "password123",
+    "birthDate": "1995-12-10",
+    "avatar": "/shared-public/avatar3.jpg",
+    "role": "user",
+    "status": "blocked",
+    "avatarBlocked": false,
+    "stats": {
+      "friends": 67,
+      "photos": 15,
+      "posts": 12
+    },
+    "createdAt": "2023-03-10T09:30:00Z",
+    "updatedAt": "2025-11-07T18:18:40.577Z"
+  },
+  {
+    "id": 4,
+    "name": "Анна Кузнецова",
+    "email": "anna@mail.ru",
+    "password": "password123",
+    "birthDate": "1992-03-25",
+    "avatar": "/shared-public/avatar4.jpg",
+    "role": "user",
+    "status": "pending",
+    "avatarBlocked": false,
+    "stats": {
+      "friends": 34,
+      "photos": 8,
+      "posts": 5
+    },
+    "createdAt": "2023-10-01T07:00:00Z",
+    "updatedAt": "2023-10-18T07:00:00Z"
+  }
+]

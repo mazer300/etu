@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Админка
+  social-network-admin:
+    build:
+      context: ./social-network-admin
+      dockerfile: Dockerfile
+    container_name: social-network-admin
+    ports:
+      - "3000:3000"   # HTTP порт
+      - "3443:3443"   # HTTPS порт
+    volumes:
+      - ./data:/app/data
+      - ./public:/app/public
+      - ./social-network-admin/ssl:/app/ssl
+    environment:
+      - NODE_ENV=production
+      - HTTPS_PORT=3443
+    restart: unless-stopped
+    networks:
+      - social-network
+
+  # Клиент
+  social-network-client:
+    build:
+      context: ./social-network-client
+      dockerfile: Dockerfile
+    container_name: social-network-client
+    ports:
+      - "4200:4200"
+      - "3001:3001"
+    volumes:
+      - ./data:/app/data
+      - ./public:/app/public
+    environment:
+      - NODE_ENV=production
+      - ADMIN_API_URL=http://social-network-admin:3443
+    depends_on:
+      - social-network-admin
+    restart: unless-stopped
+    networks:
+      - social-network
+
+networks:
+  social-network:
+    driver: bridge
