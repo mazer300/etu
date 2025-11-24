@@ -1,0 +1,20 @@
+{
+  "name": "trading-app-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest --config=jest.config.js",
+    "test:auth": "jest --config=jest.config.js broker-auth.test.js",
+    "test:main": "jest --config=jest.config.js main-trading.test.js",
+    "test:basic": "jest --config=jest.config.js basic-setup.test.js",
+    "test:charts": "jest --config=jest.config.js chart-tests.test.js",
+    "test:websocket": "jest --config=jest.config.js websocket-tests.test.js",
+    "test:all": "jest --config=jest.config.js --passWithNoTests",
+    "test:debug": "jest --config=jest.config.js --verbose --runInBand --detectOpenHandles",
+    "test:coverage": "jest --config=jest.config.js --coverage"
+  },
+  "devDependencies": {
+    "jest": "^27.0.0",
+    "jest-puppeteer": "^6.0.0",
+    "puppeteer": "^13.0.0"
+  }
+}

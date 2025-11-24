@@ -1,0 +1,115 @@
+{
+  "brokers": [
+    {
+      "id": 1,
+      "name": "Иван Петров",
+      "initialBalance": 100000,
+      "currentBalance": 98768.42,
+      "createdAt": "2025-11-24T18:20:04.724Z",
+      "portfolio": {
+        "MSFT": {
+          "quantity": 7,
+          "averagePrice": 175.94000000000003,
+          "totalCost": 1231.5800000000002
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "АО 'Инвест'",
+      "initialBalance": 500000,
+      "currentBalance": 500000,
+      "createdAt": "2025-11-24T18:20:04.724Z",
+      "portfolio": {}
+    },
+    {
+      "id": 1764008791293,
+      "name": "USER1",
+      "initialBalance": 1000000,
+      "currentBalance": 978206.19,
+      "createdAt": "2025-11-24T18:26:31.293Z",
+      "portfolio": {
+        "AAPL": {
+          "quantity": 100,
+          "averagePrice": 159.35,
+          "totalCost": 15935
+        },
+        "SBUX": {
+          "quantity": 11,
+          "averagePrice": 168.44545454545457,
+          "totalCost": 1852.9
+        },
+        "QCOM": {
+          "quantity": 23,
+          "averagePrice": 174.17,
+          "totalCost": 4005.91
+        }
+      }
+    }
+  ],
+  "stocks": [
+    {
+      "symbol": "AAPL",
+      "isActive": true,
+      "price": 144.71,
+      "change": -29.51,
+      "changePercent": -16.94
+    },
+    {
+      "symbol": "MSFT",
+      "isActive": true,
+      "price": 194.69,
+      "change": 55.36,
+      "changePercent": 39.73
+    },
+    {
+      "symbol": "SBUX",
+      "isActive": true,
+      "price": 152.64,
+      "change": -3.54,
+      "changePercent": -2.27
+    },
+    {
+      "symbol": "CSCO",
+      "isActive": true,
+      "price": 181.48,
+      "change": -0.86,
+      "changePercent": -0.47
+    },
+    {
+      "symbol": "QCOM",
+      "isActive": true,
+      "price": 125.6,
+      "change": -37.77,
+      "changePercent": -23.12
+    },
+    {
+      "symbol": "AMZN",
+      "isActive": true,
+      "price": 165.58,
+      "change": -20.08,
+      "changePercent": -10.82
+    },
+    {
+      "symbol": "TSLA",
+      "isActive": true,
+      "price": 129.86,
+      "change": 21.31,
+      "changePercent": 19.64
+    },
+    {
+      "symbol": "AMD",
+      "isActive": true,
+      "price": 142.72,
+      "change": 15.34,
+      "changePercent": 12.04
+    }
+  ],
+  "exchangeConfig": {
+    "startDate": null,
+    "speed": 1,
+    "isTrading": false,
+    "currentDateIndex": 260,
+    "currentDate": "12/29/2023"
+  }
+}

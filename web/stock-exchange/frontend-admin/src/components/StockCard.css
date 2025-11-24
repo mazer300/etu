@@ -1,0 +1,465 @@
+.stock-card {
+    background: #1e1e1e;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.2);
+    border-left: 6px solid #FF8C00;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.stock-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+}
+
+.stock-card.active {
+    border-left-color: #4CAF50;
+}
+
+.stock-card.active::before {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+}
+
+.stock-card.inactive {
+    border-left-color: #666;
+    opacity: 0.9;
+}
+
+.stock-card.inactive::before {
+    background: #666;
+}
+
+.stock-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(255, 140, 0, 0.3);
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.stock-symbol h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.company-name {
+    color: #b0b0b0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.price-info {
+    text-align: right;
+}
+
+.price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ffffff;
+    display: block;
+}
+
+.price-change {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.price-change.positive {
+    color: #4CAF50;
+}
+
+.price-change.negative {
+    color: #f44336;
+}
+
+.stock-info {
+    margin-bottom: 1.5rem;
+}
+
+.stock-description {
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.stock-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.sector {
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status.active {
+    background: #1B5E20;
+    color: #A5D6A7;
+    border: 1px solid #2E7D32;
+}
+
+.status.inactive {
+    background: #B71C1C;
+    color: #EF9A9A;
+    border: 1px solid #C62828;
+}
+
+.stock-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.toggle-btn, .history-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 200px;
+    font-size: 0.9rem;
+}
+
+.toggle-btn.activate {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+}
+
+.toggle-btn.deactivate {
+    background: linear-gradient(135deg, #f44336 0%, #C62828 100%);
+    color: white;
+}
+
+.history-btn {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    color: white;
+}
+
+.toggle-btn:hover, .history-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.history-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #444;
+}
+
+.chart-container {
+    height: 400px;
+    margin-bottom: 2rem;
+    background: #2d2d2d;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #444;
+}
+
+.history-details h4 {
+    margin-bottom: 1rem;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.history-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat {
+    background: #2d2d2d;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #b0b0b0;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.recent-trades h5 {
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+}
+
+.trades-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.trade-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border-radius: 6px;
+    border-left: 4px solid #FF8C00;
+}
+
+.trade-date {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+}
+
+.trade-price {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.trade-change.positive {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.trade-change.negative {
+    color: #f44336;
+    font-weight: 600;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #b0b0b0;
+    font-size: 1.1rem;
+}
+
+/* Стили для графика */
+.chart-container {
+    height: 400px;
+    margin-bottom: 2rem;
+    background: #2d2d2d;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #444;
+}
+
+.custom-tooltip {
+    background: #1e1e1e;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+    color: #ffffff;
+}
+
+.custom-tooltip .label {
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.custom-tooltip .price {
+    color: #FF8C00;
+    font-weight: bold;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: #444;
+}
+
+.recharts-text {
+    font-size: 0.8rem;
+    fill: #b0b0b0;
+}
+
+.recharts-line-curve {
+    stroke: #FF8C00;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.history-header h4 {
+    margin: 0;
+    color: #ffffff;
+}
+
+.view-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.view-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #444;
+    background: #2d2d2d;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    color: #b0b0b0;
+}
+
+.view-btn.active {
+    background: #FF8C00;
+    color: white;
+    border-color: #FF8C00;
+}
+
+.view-btn:hover:not(.active) {
+    border-color: #FF8C00;
+    color: #FF8C00;
+}
+
+.time-range-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.time-range-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #444;
+    background: #2d2d2d;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    color: #b0b0b0;
+}
+
+.time-range-btn.active {
+    background: #FF8C00;
+    color: white;
+    border-color: #FF8C00;
+}
+
+.time-range-btn:hover:not(.active) {
+    border-color: #FF8C00;
+    color: #FF8C00;
+}
+
+.view-type-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.stat.positive {
+    color: #4CAF50;
+}
+
+.stat.negative {
+    color: #f44336;
+}
+
+/* Responsive для кнопок переключения */
+@media (max-width: 768px) {
+    .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .view-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .time-range-controls,
+    .view-type-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .time-range-btn,
+    .view-btn {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stock-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .price-info {
+        text-align: left;
+    }
+
+    .stock-actions {
+        flex-direction: column;
+    }
+
+    .toggle-btn, .history-btn {
+        min-width: auto;
+    }
+
+    .history-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .trade-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

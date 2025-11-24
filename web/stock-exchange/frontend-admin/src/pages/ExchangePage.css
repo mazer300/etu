@@ -1,0 +1,316 @@
+.exchange-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.exchange-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.control-section, .trading-info {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    border: 1px solid #333;
+}
+
+.control-section h3, .trading-info h3 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.control-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border: 2px solid #444;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.control-group input:focus {
+    border-color: #FF8C00;
+    outline: none;
+}
+
+.speed-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.speed-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #444;
+    background: #2d2d2d;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #b0b0b0;
+}
+
+.speed-btn.active {
+    background: #FF8C00;
+    color: white;
+    border-color: #FF8C00;
+}
+
+.speed-btn:hover:not(.active) {
+    border-color: #FF8C00;
+}
+
+.speed-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.trading-controls {
+    margin-top: 2rem;
+}
+
+.start-trading-btn, .stop-trading-btn {
+    width: 100%;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-trading-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+}
+
+.stop-trading-btn {
+    background: linear-gradient(135deg, #f44336 0%, #C62828 100%);
+    color: white;
+}
+
+.start-trading-btn:hover, .stop-trading-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.status-display {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #2d2d2d;
+    border-radius: 8px;
+}
+
+.status-label {
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.status-value {
+    font-weight: bold;
+}
+
+.status-value.trading {
+    color: #f44336;
+}
+
+.status-value.stopped {
+    color: #4CAF50;
+}
+
+.real-time-prices {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    border: 1px solid #333;
+}
+
+.real-time-prices h3 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.prices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.price-card {
+    background: #2d2d2d;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #FF8C00;
+    text-align: center;
+}
+
+.stock-symbol {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #e0e0e0;
+    margin-bottom: 0.5rem;
+}
+
+.change {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.change.positive {
+    color: #4CAF50;
+}
+
+.change.negative {
+    color: #f44336;
+}
+
+.date {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+}
+
+.no-data {
+    text-align: center;
+    padding: 3rem;
+    color: #b0b0b0;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .exchange-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .speed-controls {
+        flex-direction: column;
+    }
+
+    .prices-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-item {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+.status-value.connected {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.status-value.disconnected {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    background: #1e1e1e;
+    padding: 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #FF8C00;
+    border: 1px solid #333;
+}
+
+.status-value.connected {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.status-value.disconnected {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.start-trading-btn:disabled,
+.stop-trading-btn:disabled,
+.speed-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.control-group input:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .open-exchange-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+    }
+}

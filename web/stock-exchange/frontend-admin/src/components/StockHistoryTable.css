@@ -1,0 +1,128 @@
+.history-table-container {
+    margin-top: 1rem;
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #333;
+}
+
+.history-table-container h4 {
+    margin-bottom: 1rem;
+    color: #ffffff;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #444;
+    border-radius: 6px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background: #2d2d2d;
+}
+
+.history-table th {
+    background: #1e1e1e;
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #ffffff;
+    border-bottom: 2px solid #444;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.history-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #444;
+    color: #e0e0e0;
+}
+
+.history-table tr:hover {
+    background: #3d3d3d;
+}
+
+.date-cell {
+    font-weight: 500;
+    color: #b0b0b0;
+    white-space: nowrap;
+}
+
+.price-cell {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.change-cell.positive {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.change-cell.negative {
+    color: #f44336;
+    font-weight: 600;
+}
+
+.volume-cell {
+    color: #b0b0b0;
+    text-align: right;
+}
+
+.table-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #444;
+}
+
+.stat {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.stat span {
+    color: #b0b0b0;
+}
+
+.stat strong {
+    color: #ffffff;
+}
+
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #b0b0b0;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .history-table-container {
+        padding: 1rem;
+    }
+
+    .history-table {
+        font-size: 0.8rem;
+    }
+
+    .history-table th,
+    .history-table td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .table-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  backend-admin:
+    build: ./backend-admin
+    ports:
+      - "3011:3011"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - stock-network
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+
+  backend-exchange:
+    build: ./backend-exchange
+    ports:
+      - "3013:3013"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - backend-admin
+    networks:
+      - stock-network
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - ADMIN_URL=http://backend-admin:3011
+
+  frontend-admin:
+    build:
+      context: ./frontend-admin
+      dockerfile: Dockerfile
+    ports:
+      - "3010:80"
+    depends_on:
+      - backend-admin
+    networks:
+      - stock-network
+    restart: unless-stopped
+
+  frontend-exchange:
+    build:
+      context: ./frontend-exchange
+      dockerfile: Dockerfile
+    ports:
+      - "3012:80"
+    depends_on:
+      - backend-admin
+      - backend-exchange
+    networks:
+      - stock-network
+    restart: unless-stopped
+
+networks:
+  stock-network:
+    driver: bridge

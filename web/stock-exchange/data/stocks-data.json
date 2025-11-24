@@ -1,0 +1,84 @@
+{
+  "stocks": [
+    {
+      "symbol": "AAPL",
+      "companyName": "Apple, Inc.",
+      "description": "Американская корпорация",
+      "sector": "Technology",
+      "isActive": true,
+      "price": 150.25,
+      "change": 1.25,
+      "changePercent": 0.84
+    },
+    {
+      "symbol": "MSFT",
+      "companyName": "Microsoft, Inc.",
+      "description": "Американская технологическая компания",
+      "sector": "Technology",
+      "isActive": true,
+      "price": 335.15,
+      "change": -2.35,
+      "changePercent": -0.7
+    },
+    {
+      "symbol": "SBUX",
+      "companyName": "Starbucks, Inc.",
+      "description": "Американская компания, крупнейшая в мире сеть кофеен",
+      "sector": "Consumer Discretionary",
+      "isActive": true,
+      "price": 95.4,
+      "change": 0.65,
+      "changePercent": 0.68
+    },
+    {
+      "symbol": "CSCO",
+      "companyName": "Cisco Systems, Inc.",
+      "description": "Американская транснациональная компания",
+      "sector": "Technology",
+      "isActive": true,
+      "price": 52.8,
+      "change": -0.3,
+      "changePercent": -0.57
+    },
+    {
+      "symbol": "QCOM",
+      "companyName": "QUALCOMM Incorporated",
+      "description": "Американская компания, разработчик полупроводников",
+      "sector": "Technology",
+      "isActive": true,
+      "price": 128.75,
+      "change": 1.2,
+      "changePercent": 0.94
+    },
+    {
+      "symbol": "AMZN",
+      "companyName": "Amazon.com, Inc.",
+      "description": "Американская компания, крупнейшая в мире по обороту интернет-ритейла",
+      "sector": "Consumer Discretionary",
+      "isActive": true,
+      "price": 145.6,
+      "change": 2.15,
+      "changePercent": 1.5
+    },
+    {
+      "symbol": "TSLA",
+      "companyName": "Tesla, Inc.",
+      "description": "Американская компания, производитель электромобилей",
+      "sector": "Consumer Discretionary",
+      "isActive": true,
+      "price": 210.3,
+      "change": -5.2,
+      "changePercent": -2.41
+    },
+    {
+      "symbol": "AMD",
+      "companyName": "Advanced Micro Devices, Inc.",
+      "description": "Американская компания, производитель полупроводниковой продукции",
+      "sector": "Technology",
+      "isActive": true,
+      "price": 112.45,
+      "change": 3.15,
+      "changePercent": 2.88
+    }
+  ]
+}
