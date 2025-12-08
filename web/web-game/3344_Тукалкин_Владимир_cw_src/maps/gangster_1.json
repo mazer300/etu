@@ -1,0 +1,14 @@
+{ "columns":28,
+ "image":"..\/assets\/Gangsters_1\/Idle.png",
+ "imageheight":128,
+ "imagewidth":896,
+ "margin":0,
+ "name":"gangster_1",
+ "spacing":0,
+ "tilecount":112,
+ "tiledversion":"1.8.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.8"
+}

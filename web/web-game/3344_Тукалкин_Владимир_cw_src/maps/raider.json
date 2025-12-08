@@ -1,0 +1,14 @@
+{ "columns":24,
+ "image":"..\/assets\/Raider\/Idle.png",
+ "imageheight":128,
+ "imagewidth":768,
+ "margin":0,
+ "name":"raider",
+ "spacing":0,
+ "tilecount":96,
+ "tiledversion":"1.8.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.8"
+}

@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"..\/assets\/textures.png",
+ "imageheight":96,
+ "imagewidth":192,
+ "margin":0,
+ "name":"textures",
+ "spacing":0,
+ "tilecount":18,
+ "tiledversion":"1.8.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.8"
+}

@@ -1,0 +1,342 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #000000 0%, #000000 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Главное меню */
+#main-menu {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.95);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgba(40, 40, 60, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    border: 3px solid #00b4d8;
+    box-shadow: 0 0 30px rgba(0, 180, 216, 0.3);
+    max-width: 500px;
+    width: 90%;
+}
+
+h1 {
+    color: #00b4d8;
+    margin-bottom: 30px;
+    font-size: 2.8em;
+    text-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
+    font-weight: bold;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.menu-buttons button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background: linear-gradient(45deg, #00b4d8, #0077b6);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.menu-buttons button:hover {
+    background: linear-gradient(45deg, #0077b6, #00b4d8);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 180, 216, 0.4);
+}
+
+/* Игровой контейнер */
+#game-container {
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    gap: 20px;
+}
+
+#game-area {
+    flex: 1;
+    position: relative;
+}
+
+#game-canvas {
+    width: 1000px;
+    height: 500px;
+    border: 4px solid #00b4d8;
+    border-radius: 10px;
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0, 180, 216, 0.5);
+}
+
+/* Упрощенная панель управления */
+#control-panel {
+    width: 250px;
+    background: rgba(30, 30, 46, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    border: 2px solid #00b4d8;
+}
+
+#control-panel h2 {
+    color: #00b4d8;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #00b4d8;
+    padding-bottom: 8px;
+}
+
+/* Отображение информации */
+.info-display {
+    background: rgba(0, 180, 216, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #00b4d8;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+
+.info-value {
+    color: #90e0ef;
+    font-weight: bold;
+}
+
+/* Управление */
+.control-section {
+    margin-bottom: 20px;
+}
+
+.control-section h3 {
+    color: #90e0ef;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: rgba(0, 180, 216, 0.08);
+    margin-bottom: 6px;
+    border-radius: 6px;
+}
+
+.control-label {
+    font-size: 0.95em;
+}
+
+.key {
+    background: #0077b6;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    min-width: 50px;
+    text-align: center;
+}
+
+.key.esc {
+    background: #ff4444;
+}
+
+/* Статус здоровья */
+.health-status {
+    background: rgba(0, 180, 216, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: center;
+    border: 1px solid #00b4d8;
+}
+
+.health-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(255, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+    border: 2px solid #00b4d8;
+}
+
+.health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff0000, #ff8800);
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Подсказка для ESC */
+.esc-hint {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #aaa;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+/* Загрузочный экран */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: #00b4d8;
+    z-index: 2000;
+}
+
+/* Экран победы */
+#win-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+}
+
+.win-content {
+    background: rgba(40, 40, 60, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    border: 3px solid #4CAF50;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
+    max-width: 450px;
+    width: 90%;
+}
+
+.win-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.win-buttons button {
+    padding: 12px 25px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.restart-btn {
+    background: linear-gradient(45deg, #00b4d8, #0077b6);
+    color: white;
+}
+
+.menu-btn {
+    background: linear-gradient(45deg, #666, #444);
+    color: white;
+}
+
+#win-screen, #lose-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.win-content, .lose-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 3px solid #4CAF50;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+    max-width: 500px;
+    width: 80%;
+}
+
+.lose-content {
+    border: 3px solid #ff4444;
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+}
+
+.win-buttons, .lose-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #FF9800, #FF5722);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.restart-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.7);
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Платформер</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для авторизации */
+        #auth-screen {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.95);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .auth-form {
+            background: rgba(40, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid #00b4d8;
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00b4d8;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #90e0ef;
+            box-shadow: 0 0 10px rgba(144, 224, 239, 0.5);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #00b4d8, #0077b6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .auth-button:hover {
+            background: linear-gradient(45deg, #0077b6, #00b4d8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 216, 0.4);
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* Стили для таблицы рекордов в меню */
+        .player-info {
+            margin-bottom: 20px;
+            color: #90e0ef;
+            font-size: 1.2em;
+            padding: 10px;
+            background: rgba(0, 180, 216, 0.1);
+            border-radius: 8px;
+        }
+
+        #scores-btn {
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+        }
+
+        #scores-btn:hover {
+            background: linear-gradient(45deg, #2E7D32, #4CAF50);
+        }
+
+        #logout-btn {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+        }
+
+        #logout-btn:hover {
+            background: linear-gradient(45deg, #cc0000, #ff4444);
+        }
+
+        /* Модальное окно с таблицей рекордов */
+        #scores-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .scores-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            max-width: 600px;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .scores-table {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .scores-table th {
+            background: rgba(0, 180, 216, 0.3);
+            padding: 12px;
+            border-bottom: 2px solid #00b4d8;
+        }
+
+        .scores-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .rank-1 { background: rgba(255, 215, 0, 0.2); }
+        .rank-2 { background: rgba(192, 192, 192, 0.2); }
+        .rank-3 { background: rgba(205, 127, 50, 0.2); }
+
+        /* Обновление кнопок меню */
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .menu-buttons button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: linear-gradient(45deg, #00b4d8, #0077b6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .menu-buttons button:hover {
+            background: linear-gradient(45deg, #0077b6, #00b4d8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 216, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Экран авторизации -->
+<div id="auth-screen">
+    <div class="auth-form">
+        <h1>ПЛАТФОРМЕР</h1>
+        <input type="text" id="username" class="auth-input" placeholder="Введите ваш никнейм" maxlength="20">
+        <div id="auth-error" class="error-message"></div>
+        <button id="login-btn" class="auth-button">ВОЙТИ В ИГРУ</button>
+    </div>
+</div>
+
+<!-- Главное меню -->
+<div id="main-menu" class="hidden">
+    <div class="modal-content">
+        <h1>ПЛАТФОРМЕР</h1>
+        <div class="player-info">
+            Игрок: <span id="current-player">Гость</span>
+        </div>
+        <div class="menu-buttons">
+            <button id="level1-btn">Уровень 1</button>
+            <button id="level2-btn">Уровень 2</button>
+            <button id="instructions-btn">Инструкция</button>
+            <button id="scores-btn">Таблица рекордов</button>
+            <button id="logout-btn">Сменить игрока</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно с таблицей рекордов -->
+<div id="scores-modal" class="hidden">
+    <div class="scores-content">
+        <h2>🏆 ТАБЛИЦА РЕКОРДОВ 🏆</h2>
+        <div id="highscores-list">
+            <!-- Таблица будет заполнена JavaScript -->
+        </div>
+        <button id="close-scores" style="margin-top: 20px;">ЗАКРЫТЬ</button>
+    </div>
+</div>
+
+<!-- Игровой контейнер -->
+<div id="game-container" class="hidden">
+    <!-- Основная игровая область -->
+    <div id="game-area">
+        <canvas id="game-canvas" width="1000" height="500"></canvas>
+    </div>
+
+    <!-- Упрощенная панель управления -->
+    <div id="control-panel">
+        <h2>ИНФОРМАЦИЯ</h2>
+
+        <!-- Отображение информации -->
+        <div class="info-display">
+            <div class="info-item">
+                <span>Игрок:</span>
+                <span id="player-name-display" class="info-value">Гость</span>
+            </div>
+            <div class="info-item">
+                <span>Очки:</span>
+                <span id="score-display" class="info-value">0</span>
+            </div>
+            <div class="info-item">
+                <span>Врагов:</span>
+                <span id="enemies-display" class="info-value">0</span>
+            </div>
+            <div class="info-item">
+                <span>Патроны:</span>
+                <span id="ammo-display" class="info-value">30</span>
+            </div>
+        </div>
+
+        <!-- Управление -->
+        <div class="control-section">
+            <h3>УПРАВЛЕНИЕ</h3>
+            <div class="control-row">
+                <span class="control-label">Движение влево</span>
+                <div class="key">A</div>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Движение вправо</span>
+                <div class="key">D</div>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Прыжок</span>
+                <div class="key">ПРОБЕЛ</div>
+            </div>
+            <!--<div class="control-row">
+                <span class="control-label">Атака</span>
+                <div class="key">E</div>
+            </div>-->
+            <div class="control-row">
+                <span class="control-label">Выстрел</span>
+                <div class="key">→</div>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Выход в меню</span>
+                <div class="key esc">ESC</div>
+            </div>
+        </div>
+
+        <!-- Статус здоровья -->
+        <div class="health-status">
+            <div>ЗДОРОВЬЕ</div>
+            <div class="health-bar">
+                <div id="health-fill" class="health-fill" style="width: 100%"></div>
+            </div>
+            <div id="health-text" style="margin-top: 8px; font-weight: bold; font-size: 1.1em;">100 HP</div>
+        </div>
+
+        <!-- Подсказка для ESC -->
+        <div class="esc-hint">
+            Нажмите ESC для возврата в главное меню
+        </div>
+    </div>
+</div>
+
+<!-- Загрузочный экран -->
+<div id="loading-screen" class="hidden">
+    <div>ЗАГРУЗКА...</div>
+</div>
+
+<!-- Экран победы -->
+<div id="win-screen" class="hidden">
+    <div class="win-content">
+        <h2>УРОВЕНЬ ПРОЙДЕН!</h2>
+        <div id="win-stats" style="margin: 25px 0; font-size: 1.1em;">
+            <div>Игрок: <span id="win-player" style="color: #90e0ef;">Гость</span></div>
+            <div>Очки: <span id="final-score" style="color: #FFD700; font-weight: bold;">0</span></div>
+            <div>Здоровье: <span id="final-health" style="color: #4CAF50;">100</span></div>
+            <div>Уровень: <span id="final-level" style="color: #2196F3;">1</span></div>
+        </div>
+        <div class="win-buttons">
+            <button class="restart-btn">ПОВТОРИТЬ</button>
+            <button class="menu-btn">В МЕНЮ</button>
+            <button class="next-btn" id="next-level-btn" style="display: block;">СЛЕДУЮЩИЙ УРОВЕНЬ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Экран поражения -->
+<div id="lose-screen" class="hidden">
+    <div class="lose-content">
+        <h2 style="color: #ff4444;">ВЫ ПРОИГРАЛИ!</h2>
+        <div id="lose-stats" style="margin: 25px 0; font-size: 1.1em;">
+            <div>Игрок: <span id="lose-player" style="color: #90e0ef;">Гость</span></div>
+            <div>Очки: <span id="lose-score" style="color: #FFD700; font-weight: bold;">0</span></div>
+            <div>Врагов осталось: <span id="lose-enemies" style="color: #ff4444;">0</span></div>
+        </div>
+        <div class="lose-buttons">
+            <button class="restart-btn">ПОВТОРИТЬ</button>
+            <button class="menu-btn">В МЕНЮ</button>
+        </div>
+    </div>
+</div>
+
+<script src="gameManager.js"></script>
+<script src="mapManager.js"></script>
+<script src="spriteManager.js"></script>
+<script src="entityManager.js"></script>
+<script src="physicsManager.js"></script>
+<script src="eventsManager.js"></script>
+<script src="soundManager.js"></script>
+
+<script>
+    // =============== СИСТЕМА АВТОРИЗАЦИИ И РЕКОРДОВ ===============
+    class AuthManager {
+        constructor() {
+            this.currentUser = null;
+            this.highscores = this.loadHighscores();
+            this.initEventListeners();
+            this.checkSavedUser();
+        }
+
+        // Загрузка рекордов из localStorage
+        loadHighscores() {
+            try {
+                const scores = localStorage.getItem('platformer_highscores');
+                return scores ? JSON.parse(scores) : [];
+            } catch (e) {
+                console.error('Ошибка загрузки рекордов:', e);
+                return [];
+            }
+        }
+
+        // Сохранение рекордов в localStorage
+        saveHighscores() {
+            try {
+                localStorage.setItem('platformer_highscores', JSON.stringify(this.highscores));
+            } catch (e) {
+                console.error('Ошибка сохранения рекордов:', e);
+            }
+        }
+
+        // Проверка сохраненного пользователя
+        checkSavedUser() {
+            const savedUser = localStorage.getItem('platformer_current_user');
+            if (savedUser) {
+                this.currentUser = savedUser;
+                document.getElementById('username').value = savedUser;
+            }
+        }
+
+        // Авторизация пользователя
+        login(username) {
+            if (!username || username.trim() === '') {
+                this.showError('Введите никнейм!');
+                return false;
+            }
+
+            username = username.trim();
+            if (username.length < 2) {
+                this.showError('Никнейм должен быть не менее 2 символов');
+                return false;
+            }
+
+            if (username.length > 20) {
+                this.showError('Никнейм должен быть не более 20 символов');
+                return false;
+            }
+
+            // Сохраняем пользователя
+            this.currentUser = username;
+            localStorage.setItem('platformer_current_user', username);
+
+            this.clearError();
+            return true;
+        }
+
+        // Выход из системы
+        logout() {
+            this.currentUser = null;
+            localStorage.removeItem('platformer_current_user');
+            this.showAuthScreen();
+        }
+
+        // Добавление нового рекорда
+        addHighscore(level, score, health) {
+            if (!this.currentUser) return;
+
+            const newScore = {
+                username: this.currentUser,
+                level: level,
+                score: score,
+                health: Math.floor(health),
+                date: new Date().toISOString()
+            };
+
+            // Добавляем результат
+            this.highscores.push(newScore);
+
+            // Сортируем по очкам (по убыванию)
+            this.highscores.sort((a, b) => b.score - a.score);
+
+            // Оставляем только топ-10
+            if (this.highscores.length > 10) {
+                this.highscores = this.highscores.slice(0, 10);
+            }
+
+            // Сохраняем
+            this.saveHighscores();
+
+            console.log(`Добавлен рекорд: ${this.currentUser}, уровень ${level}, очки: ${score}`);
+        }
+
+        // Получение таблицы рекордов
+        getHighscores() {
+            return this.highscores;
+        }
+
+        // Показать ошибку
+        showError(message) {
+            const errorElement = document.getElementById('auth-error');
+            errorElement.textContent = message;
+            errorElement.style.color = '#ff4444';
+        }
+
+        // Очистить ошибку
+        clearError() {
+            document.getElementById('auth-error').textContent = '';
+        }
+
+        // Инициализация обработчиков событий
+        initEventListeners() {
+            // Кнопка входа
+            document.getElementById('login-btn').addEventListener('click', () => {
+                const username = document.getElementById('username').value;
+                if (this.login(username)) {
+                    this.showMainMenu();
+                }
+            });
+
+            // Enter для входа
+            document.getElementById('username').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('login-btn').click();
+                }
+            });
+
+            // Кнопка выхода
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                this.logout();
+            });
+
+            // Кнопка таблицы рекордов
+            document.getElementById('scores-btn').addEventListener('click', () => {
+                this.showHighscores();
+            });
+
+            // Закрыть таблицу рекордов
+            document.getElementById('close-scores').addEventListener('click', () => {
+                this.hideHighscores();
+            });
+        }
+
+        // Показать экран авторизации
+        showAuthScreen() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('scores-modal').classList.add('hidden');
+        }
+
+        // Показать главное меню
+        showMainMenu() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('scores-modal').classList.add('hidden');
+
+            // Обновляем имя игрока
+            const playerName = this.currentUser || 'Гость';
+            const playerElements = [
+                'current-player',
+                'player-name-display',
+                'win-player',
+                'lose-player'
+            ];
+
+            playerElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = playerName;
+                }
+            });
+        }
+
+        // Показать таблицу рекордов
+        showHighscores() {
+            const highscoresList = document.getElementById('highscores-list');
+            const highscores = this.getHighscores();
+
+            if (highscores.length === 0) {
+                highscoresList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888; font-size: 1.1em;">Рекордов пока нет</div>';
+            } else {
+                let html = '<table class="scores-table">';
+                html += '<thead><tr>';
+                html += '<th>#</th>';
+                html += '<th>Игрок</th>';
+                html += '<th>Уровень</th>';
+                html += '<th>Очки</th>';
+                html += '<th>Здоровье</th>';
+                html += '<th>Дата</th>';
+                html += '</tr></thead><tbody>';
+
+                highscores.forEach((score, index) => {
+                    const rankClass = index === 0 ? 'rank-1' :
+                        index === 1 ? 'rank-2' :
+                            index === 2 ? 'rank-3' : '';
+
+                    const date = new Date(score.date);
+                    const dateStr = date.toLocaleDateString('ru-RU');
+
+                    html += `<tr class="${rankClass}">`;
+                    html += `<td>${index + 1}</td>`;
+                    html += `<td style="font-weight: bold;">${score.username}</td>`;
+                    html += `<td>${score.level}</td>`;
+                    html += `<td style="color: #FFD700; font-weight: bold;">${score.score}</td>`;
+                    html += `<td style="color: #4CAF50;">${score.health} HP</td>`;
+                    html += `<td>${dateStr}</td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                highscoresList.innerHTML = html;
+            }
+
+            document.getElementById('scores-modal').classList.remove('hidden');
+        }
+
+        // Скрыть таблицу рекордов
+        hideHighscores() {
+            document.getElementById('scores-modal').classList.add('hidden');
+        }
+    }
+
+    // =============== ИНТЕГРАЦИЯ С ИГРОЙ ===============
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Игра загружается');
+
+        // Инициализируем менеджер авторизации
+        window.authManager = new AuthManager();
+
+        // Показываем экран авторизации
+        authManager.showAuthScreen();
+
+        // Кнопки меню (переназначаем для работы с авторизацией)
+        document.getElementById('level1-btn').addEventListener('click', function() {
+            if (authManager.currentUser) {
+                gameManager.startGame(1);
+            } else {
+                alert('Сначала войдите в игру!');
+                authManager.showAuthScreen();
+            }
+        });
+
+        document.getElementById('level2-btn').addEventListener('click', function() {
+            if (authManager.currentUser) {
+                gameManager.startGame(2);
+            } else {
+                alert('Сначала войдите в игру!');
+                authManager.showAuthScreen();
+            }
+        });
+
+        document.getElementById('instructions-btn').addEventListener('click', function() {
+            alert('Управление: A/D - движение, ПРОБЕЛ - прыжок, E - атака, → - выстрел, ESC - меню');
+        });
+
+        // Делегирование событий для кнопок
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('restart-btn')) {
+                gameManager.restartLevel();
+            } else if (e.target.classList.contains('menu-btn')) {
+                gameManager.returnToMenu();
+            } else if (e.target.id === 'next-level-btn' || e.target.closest('#next-level-btn')) {
+                gameManager.nextLevel();
+            }
+        });
+
+        // Обработчик ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 27) { // ESC
+                e.preventDefault();
+                if (gameManager.gameState === "PLAYING") {
+                    gameManager.returnToMenu();
+                } else if (document.getElementById('scores-modal').classList.contains('hidden') === false) {
+                    authManager.hideHighscores();
+                }
+            }
+        });
+
+        // Модифицируем gameManager для работы с авторизацией
+        const originalMethods = {
+            showWinScreen: gameManager.showWinScreen,
+            showLoseScreen: gameManager.showLoseScreen,
+            returnToMenu: gameManager.returnToMenu,
+            showScreen: gameManager.showScreen
+        };
+
+        // Сохранение рекорда при победе
+        gameManager.showWinScreen = function() {
+            originalMethods.showWinScreen.call(this);
+
+            // Добавляем рекорд
+            if (this.player && authManager.currentUser) {
+                authManager.addHighscore(this.currentLevel, this.score, this.player.health);
+            }
+
+            // Обновляем имя игрока на экране победы
+            if (authManager.currentUser) {
+                document.getElementById('win-player').textContent = authManager.currentUser;
+            }
+        };
+
+        // Сохранение рекорда при поражении (если есть очки)
+        gameManager.showLoseScreen = function() {
+            originalMethods.showLoseScreen.call(this);
+
+            // Добавляем рекорд если есть очки
+            if (this.score > 0 && authManager.currentUser) {
+                const health = this.player ? this.player.health : 0;
+                authManager.addHighscore(this.currentLevel, this.score, health);
+            }
+
+            // Обновляем имя игрока на экране поражения
+            if (authManager.currentUser) {
+                document.getElementById('lose-player').textContent = authManager.currentUser;
+            }
+        };
+
+        // Возврат в меню с авторизацией
+        gameManager.returnToMenu = function() {
+            originalMethods.returnToMenu.call(this);
+            authManager.showMainMenu();
+        };
+
+        // Обновление имени игрока при переключении экранов
+        gameManager.showScreen = function(screenId) {
+            originalMethods.showScreen.call(this, screenId);
+
+            // Обновляем имя игрока
+            if (authManager.currentUser && screenId === 'game-container') {
+                document.getElementById('player-name-display').textContent = authManager.currentUser;
+            }
+        };
+    });
+</script>
+
+</body>
+</html>
