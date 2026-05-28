@@ -1,0 +1,81 @@
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+
+// common elements
+import {LoginPage} from "./pages/CommonPages/LoginPage/LoginPage.tsx";
+import {RegisterPage} from "./pages/CommonPages/RegisterPage/RegisterPage.tsx";
+import {PasswordRecoverPage} from "./pages/CommonPages/PasswordRecoverPage/PasswordRecoverPage.tsx";
+import {ProtectedRoute} from "./components/ProtectedRoute/ProtectedRoute.tsx";
+import { EmployeeProfilePage } from "./pages/CommonPages/EmployeeProfilePage/EmployeeProfilePage.tsx";
+
+// client elements
+import {ClientLayout} from "./layouts/ClientLayout/ClientLayout.tsx";
+import {ProductsPage} from "./pages/ClientPages/ProductsPage/ProductsPage.tsx";
+import {CreateOrderPage} from "./pages/ClientPages/CreateOrderPage/CreateOrderPage.tsx";
+import {OrdersPage} from "./pages/ClientPages/OrdersPage/OrdersPage.tsx";
+import {OrderDetailsPage} from "./pages/CommonPages/OrderDatailsPage/OrderDatailsPage.tsx";
+
+// worker elements
+import {WorkerLayout} from "./layouts/WorkerLayout/WorkerLayout.tsx";
+import {TasksPage} from "./pages/WorkerPages/TasksPage/TasksPage.tsx";
+
+// admin elements
+import { AdminLayout } from "./layouts/AdminLayout/AdminLayout.tsx";
+import { AdminEmployeesPage } from "./pages/AdminPages/AdminEmployeesPage/AdminEmployeesPage.tsx";
+import {AdminOrdersPage} from "./pages/AdminPages/AdminOrdersPage/AdminOrdersPage.tsx";
+import { AdminFinancePage } from "./pages/AdminFinancePage/AdminFinancePage.tsx";
+
+function AppRoutes() {
+    return (
+        <Routes>
+            <Route path="/"                 element={<Navigate to="/login" replace />} />
+            <Route path="/login"            element={<LoginPage />} />
+            <Route path="/logout"           element={<LoginPage />} />
+            <Route path="/register"         element={<RegisterPage />} />
+            <Route path="/password_recover" element={<PasswordRecoverPage />} />
+
+            <Route element={<ClientLayout />}>
+                <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
+            </Route>
+
+            <Route element={
+                <ProtectedRoute allowedRoles={['client']}>
+                    <ClientLayout />
+                </ProtectedRoute>
+            }>
+                <Route path="/products"         element={<ProductsPage />}/>
+                <Route path="/orders/create"    element={<CreateOrderPage />}/>
+                <Route path="/orders"           element={<OrdersPage />}/>
+            </Route>
+
+            <Route element={
+                <ProtectedRoute allowedRoles={['worker']}>
+                    <WorkerLayout />
+                </ProtectedRoute>
+            }>
+                <Route path="/worker/tasks"             element={<TasksPage />}/>
+            </Route>
+
+            <Route element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminLayout />
+                </ProtectedRoute>
+            }>
+                <Route path="/admin/orders"     element={<AdminOrdersPage />}/>
+                <Route path="/admin/finances"   element={<AdminFinancePage />}/>
+                <Route path="/admin/employees"  element={<AdminEmployeesPage />}/>
+                <Route path="/admin/employees/:id" element={<EmployeeProfilePage />}/>
+            </Route>
+
+        </Routes>
+    );
+}
+
+function App() {
+    return (
+        <BrowserRouter>
+            <AppRoutes />
+        </BrowserRouter>
+    )
+}
+
+export default App
