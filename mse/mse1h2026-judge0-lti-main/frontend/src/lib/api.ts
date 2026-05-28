@@ -1,0 +1,68 @@
+import axios from 'axios'
+import type { InternalAxiosRequestConfig } from 'axios'
+import { toast } from 'sonner'
+
+declare module 'axios' {
+    interface AxiosRequestConfig {
+        silent?: boolean
+    }
+}
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL ?? '/api',
+})
+
+export const authApi = axios.create({
+    baseURL: import.meta.env.VITE_API_URL ?? '/api',
+})
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+})
+
+api.interceptors.response.use(
+    response => response,
+    async (error) => {
+        const originalRequest = error.config as InternalAxiosRequestConfig & { silent?: boolean; _retry?: boolean }
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true
+
+            try {
+                const res = await authApi.post('/auth/refresh', {}, { withCredentials: true })
+                const access = res.data.access_token
+
+                localStorage.setItem('access_token', access)
+                originalRequest.headers.Authorization = `Bearer ${access}`
+
+                return api(originalRequest)
+            } catch {
+                localStorage.removeItem('access_token')
+                return Promise.reject(error)
+            }
+        }
+
+        if (!originalRequest?.silent) {
+            const detail = error.response?.data?.detail
+            let message: string
+            if (Array.isArray(detail)) {
+                message = detail.map((d: any) => d.msg ?? JSON.stringify(d)).join('; ')
+            } else if (typeof detail === 'string') {
+                message = detail
+            } else if (error.response?.data?.message) {
+                message = error.response.data.message
+            } else {
+                message = `Ошибка запроса: ${error.message}`
+            }
+            toast.error('Что-то пошло не так', { description: message })
+        }
+
+        return Promise.reject(error)
+    }
+)
+
+export default api

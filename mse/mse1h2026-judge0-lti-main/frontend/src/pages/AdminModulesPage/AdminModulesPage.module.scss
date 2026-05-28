@@ -1,0 +1,169 @@
+.profileIcon {
+  display: block;
+  margin-bottom: 34px;
+  color: #1d1b20;
+  font-size: 22px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(221px, 221px));
+  gap: 22px 24px;
+  margin-top: 12px;
+}
+
+.card {
+  position: relative;
+}
+
+.cardLink {
+  display: block;
+  color: #1d1b20;
+  text-decoration: none;
+}
+
+.artwork {
+  position: relative;
+  width: 221px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.72), transparent 26%),
+    linear-gradient(135deg, var(--art-bg), color-mix(in srgb, var(--art-bg) 72%, #ffffff));
+}
+
+.triangle {
+  position: absolute;
+  left: var(--art-x-a);
+  top: var(--art-y-a);
+  aspect-ratio: 1;
+  width: var(--art-size-a);
+  background: color-mix(in srgb, var(--art-primary) 34%, #ffffff);
+  border-radius: var(--art-radius-a);
+  opacity: var(--art-opacity-a);
+  transform: rotate(var(--art-rotate-a)) skewX(-8deg) scale(var(--art-scale-a));
+}
+
+.starburst {
+  position: absolute;
+  left: var(--art-x-b);
+  top: var(--art-y-b);
+  aspect-ratio: 1;
+  width: var(--art-size-b);
+  background: color-mix(in srgb, var(--art-secondary) 62%, #ffffff);
+  opacity: var(--art-opacity-b);
+  transform: rotate(var(--art-rotate-b)) scale(var(--art-scale-b));
+  clip-path: polygon(50% 0%, 62% 19%, 84% 12%, 81% 36%, 100% 50%, 81% 64%, 84% 88%, 62% 81%, 50% 100%, 38% 81%, 16% 88%, 19% 64%, 0 50%, 19% 36%, 16% 12%, 38% 19%);
+}
+
+.square {
+  position: absolute;
+  left: var(--art-x-c);
+  top: var(--art-y-c);
+  aspect-ratio: 1;
+  width: var(--art-size-c);
+  border-radius: var(--art-radius-b);
+  background: color-mix(in srgb, var(--art-muted) 78%, #ffffff);
+  transform: rotate(var(--art-rotate-b)) scale(var(--art-scale-c));
+}
+
+.orbit {
+  position: absolute;
+  right: var(--art-orbit-x);
+  bottom: var(--art-orbit-y);
+  aspect-ratio: 1;
+  width: var(--art-orbit-size);
+  border: 16px solid color-mix(in srgb, var(--art-primary) 18%, transparent);
+  border-radius: 50%;
+}
+
+.bar {
+  position: absolute;
+  left: calc(var(--art-x-c) - 44px);
+  top: calc(var(--art-y-a) + 58px);
+  width: calc(var(--art-size-a) + 20%);
+  height: 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--art-secondary) 42%, transparent);
+  transform: rotate(calc(var(--art-rotate-a) * -1));
+}
+
+.artwork[style*="variant-1"] .triangle,
+.artwork[style*="variant-3"] .bar {
+  border-radius: 50%;
+}
+
+.artwork[style*="variant-2"] .starburst {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.artwork[style*="variant-3"] .square {
+  clip-path: polygon(50% 0, 95% 32%, 78% 100%, 22% 100%, 5% 32%);
+}
+
+.card h2 {
+  margin: 5px 0 0;
+  color: #1d1b20;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 800;
+}
+
+.card p {
+  margin: 0;
+  color: #49454f;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.deleteButton {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 251, 254, 0.88);
+  color: #49454f;
+  cursor: pointer;
+  opacity: 0;
+  box-shadow: 0 2px 8px rgba(29, 27, 32, 0.12);
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.card:hover .deleteButton,
+.deleteButton:focus-visible {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background: #fceeee;
+  color: #d32f2f;
+}
+
+.deleteButton:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.deleteButton md-icon {
+  font-size: 20px;
+}
+
+.description {
+  margin-top: 4px !important;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.state {
+  margin-top: 24px;
+  color: #49454f;
+  font-size: 16px;
+}

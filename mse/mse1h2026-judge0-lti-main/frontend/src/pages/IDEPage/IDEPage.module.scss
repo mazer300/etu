@@ -1,0 +1,65 @@
+@use "../../styles/variables" as *;
+
+.ideContainer {
+  height: calc(100vh - 68px);
+  display: flex;
+  flex-direction: column;
+}
+
+.rightTop,
+.rightBottom {
+  padding: 10px;
+  background-color: $background-color;
+  color: #fff;
+  height: 100%;
+  overflow: auto;
+}
+
+.gutterHorizontal {
+  background-color: $background-secondary-color;
+  cursor: col-resize;
+  width: 6px;
+}
+
+.gutterVertical {
+  background-color: $background-secondary-color;
+  cursor: row-resize;
+  height: 6px;
+}
+
+.expiredSession {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background-color: $background-color;
+  color: #fff;
+  
+  h2 {
+    color: #f44336;
+    margin-bottom: 16px;
+    font-size: 24px;
+  }
+  
+  p {
+    margin-bottom: 24px;
+    color: #ccc;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    
+    &:hover {
+      background-color: #1976d2;
+    }
+  }
+}

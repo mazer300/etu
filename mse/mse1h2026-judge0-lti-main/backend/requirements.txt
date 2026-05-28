@@ -1,0 +1,53 @@
+annotated-doc==0.0.4
+annotated-types==0.7.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+requests==2.32.5
+httpx==0.28.1
+
+# linter
+black==26.3.1
+
+# fastapi
+anyio==4.12.1
+click==8.3.1
+colorama==0.4.6
+fastapi==0.129.0
+h11==0.16.0
+starlette==0.52.1
+uvicorn==0.41.0
+
+
+# pydantic
+idna==3.11
+pydantic==2.12.5
+pydantic_core==2.41.5
+pydantic-settings==2.13.1
+
+# database
+sqlalchemy==2.0.47
+psycopg2-binary==2.9.11
+alembic==1.15.2
+asyncpg==0.31.0
+
+# env
+python-dotenv==1.2.2
+
+# testing
+pytest==8.3.5
+pytest-cov==6.1.1
+pytest-asyncio==0.24.0
+pytest-mock==3.15.1
+httpx==0.28.1
+python-multipart==0.0.21
+testcontainers==4.14.2
+greenlet==3.5.1
+
+PyJWT==2.3.0
+
+# passwords
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+
+pylti1p3==1.6.0
+cryptography==41.0.7
