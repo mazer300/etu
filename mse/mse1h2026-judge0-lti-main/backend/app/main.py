@@ -1,0 +1,68 @@
+from contextlib import asynccontextmanager
+
+import httpx
+import uvicorn
+from fastapi import FastAPI, APIRouter
+from fastapi.responses import JSONResponse
+from app.routers import (
+    lti,
+    tasks,
+    modules,
+    check,
+    languages,
+    users,
+    run,
+    auth,
+    analytics,
+    solutions,
+)
+from app.database.database import create_tables, seed_database
+from app.core.exception_handler import app_exception_handler
+from app.core.exceptions.base import AppException
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await create_tables()
+    await seed_database()
+    app.state.http_client = httpx.AsyncClient(timeout=30.0)
+    yield
+    await app.state.http_client.aclose()
+
+
+app = FastAPI(
+    openapi_version="3.0.2",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+    lifespan=lifespan
+)
+app.add_exception_handler(AppException, app_exception_handler)
+api_router = APIRouter(prefix="/api")
+
+api_router.include_router(auth.router)
+api_router.include_router(lti.router)
+api_router.include_router(tasks.router)
+api_router.include_router(check.router)
+api_router.include_router(modules.router)
+api_router.include_router(languages.router)
+api_router.include_router(users.router)
+api_router.include_router(run.router)
+api_router.include_router(analytics.router)
+api_router.include_router(solutions.router)
+
+app.include_router(api_router)
+
+
+@app.get("/", tags=["root"], summary="Главная страница")
+async def root():
+    return {"message": "каркас"}
+
+
+@app.get("/health", summary="Health Check", tags=["health"])
+async def health_check():
+    return JSONResponse(content={"status": "healthy"}, status_code=200)
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000)

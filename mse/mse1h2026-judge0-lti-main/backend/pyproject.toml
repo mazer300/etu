@@ -1,0 +1,29 @@
+[tool.pytest.ini_options]
+testpaths = [
+    "tests/functional",
+    "tests/integration",
+]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*", "*Test"]
+python_functions = ["test_*", "*_test"]
+pythonpath = [
+    "."
+]
+addopts = """
+    -v
+    --strict-markers
+    --disable-warnings
+    --maxfail=5
+"""
+
+markers = [
+    "unit: Модульные тесты",
+    "functional: Функциональные тесты",
+    "integration: Интеграционные тесты",
+]
+
+asyncio_mode = "auto"
+
+asyncio_default_fixture_loop_scope = "session"
+
+norecursedirs = [".git", "__pycache__", "venv", ".venv", ".env", ".pytest_cache"]

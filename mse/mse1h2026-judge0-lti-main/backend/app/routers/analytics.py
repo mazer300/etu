@@ -1,0 +1,82 @@
+from typing import List
+
+from app.core.dependencies import get_current_user_payload
+from app.mappers.analytics import AnalyticsMapper
+from app.schemas.analytics import (
+    AttemptResponse,
+    AttemptsFilter,
+    UserModuleResponse,
+    UserModulesFilter,
+    UserTaskResponse,
+    UserTasksFilter,
+)
+from app.schemas.auth import TokenUser
+
+from app.services.analytics import (
+    AnalyticsService,
+    get_analytics_service,
+)
+from fastapi import APIRouter, Depends
+
+router = APIRouter(tags=["analytics"])
+
+
+@router.get("/users/{user_id}/modules", response_model=List[UserModuleResponse])
+async def get_user_modules(
+    user_id: int,
+    filters: UserModulesFilter = Depends(),
+    current_user: TokenUser = Depends(get_current_user_payload),
+    service: AnalyticsService = Depends(get_analytics_service),
+):
+    # if current_user.role == "student" and current_user.id != user_id:
+    #     raise HTTPException(status_code=403, detail="Доступ запрещён")
+
+    # if current_user.role == "teacher":
+    #     if not service.is_my_student(current_user.id, user_id):
+    #         raise HTTPException(status_code=403, detail="Доступ запрещён")
+    rows = await service.get_user_modules(user_id, filters)
+    return [
+        AnalyticsMapper.to_module_response(module, task_count)
+        for module, task_count in rows
+    ]
+
+
+@router.get(
+    "/users/{user_id}/modules/{module_id}/tasks", response_model=list[UserTaskResponse]
+)
+async def get_user_tasks_in_module(
+    user_id: int,
+    module_id: int,
+    filters: UserTasksFilter = Depends(),
+    current_user: TokenUser = Depends(get_current_user_payload),
+    service: AnalyticsService = Depends(get_analytics_service),
+):
+    rows = await service.get_user_tasks_in_module(user_id, module_id, filters)
+    return [
+        AnalyticsMapper.to_task_response(
+            task, solution, score, attempt_count, last_attempt_at, test_count
+        )
+        for task, solution, score, attempt_count, last_attempt_at, test_count in rows
+    ]
+
+
+@router.get("/tasks/{task_id}/attempts", response_model=list[AttemptResponse])
+async def get_task_attempts(
+    task_id: int,
+    user_id: int,
+    filters: AttemptsFilter = Depends(),
+    current_user: TokenUser = Depends(get_current_user_payload),
+    service: AnalyticsService = Depends(get_analytics_service),
+):
+    attempts = await service.get_task_attempts(task_id, user_id, filters)
+    return [AnalyticsMapper.to_attempt_response(a) for a in attempts]
+
+
+@router.get("/attempts/{attempt_id}", response_model=AttemptResponse)
+async def get_attempt(
+    attempt_id: int,
+    current_user: TokenUser = Depends(get_current_user_payload),
+    service: AnalyticsService = Depends(get_analytics_service),
+):
+    attempt = await service.get_attempt_by_id(attempt_id)
+    return AnalyticsMapper.to_attempt_response(attempt)
