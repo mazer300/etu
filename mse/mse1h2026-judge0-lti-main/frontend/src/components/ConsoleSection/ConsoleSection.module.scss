@@ -1,0 +1,213 @@
+@use "../../styles/variables" as *;
+
+.consoleTitle {
+  font-size: 18px;
+  font-weight: normal;
+  color: $secondary-color;
+}
+
+.consoleSection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.consoleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabs {
+  position: relative;
+  display: flex;
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  opacity: 0.6;
+  color: white;
+  transition: all 0.25s;
+}
+
+.tab:hover {
+  opacity: 1;
+  color: white;
+}
+
+.indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 2px;
+  background: $secondary-color;
+  transition: all 0.25s ease;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: $secondary-color;
+  border-radius: 6px;
+  transition: transform 0.25s ease;
+  z-index: 1;
+}
+.active {
+  opacity: 1;
+  color: white;
+}
+
+.consoleBody {
+  margin-top: 10px;
+  font-family: monospace;
+  flex: 1;
+}
+
+.consoleInput {
+  width: 100%;
+  height: 100%;
+  background: $background-secondary-color;
+  outline: none;
+  border: none;
+  color: $text-color;
+  resize: none;
+}
+
+.consoleOutput {
+  min-height: 100%;
+  padding: 12px;
+  color: $text-color;
+  background: $background-secondary-color;
+}
+
+.outputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.statusMessage {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statusSuccess {
+  color: $success-color;
+  background: rgba($success-color, 0.12);
+}
+
+.statusError {
+  color: $time-label-color;
+  background: rgba($time-label-color, 0.12);
+}
+
+.messageError {
+  padding: 8px 10px;
+  border-left: 2px solid rgba($time-label-color, 0.64);
+  border-radius: 4px;
+  background: rgba($time-label-color, 0.08);
+  color: rgba($text-color, 0.9);
+  line-height: 1.45;
+
+  strong {
+    color: $time-label-color;
+  }
+
+  pre {
+    max-height: 220px;
+    margin: 6px 0 0;
+    overflow: auto;
+    color: rgba($text-color, 0.86);
+    font-size: 12px;
+    white-space: pre-wrap;
+  }
+}
+
+.messageComment {
+  padding: 8px 10px;
+  border-left: 2px solid rgba($attempt-label-color, 0.54);
+  border-radius: 4px;
+  background: rgba($attempt-label-color, 0.08);
+  color: rgba($text-color, 0.86);
+  line-height: 1.45;
+
+  strong {
+    color: $attempt-label-color;
+  }
+
+  div {
+    margin-top: 6px;
+  }
+}
+
+.messageInfo {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 12px;
+  color: rgba($text-color, 0.72);
+}
+
+.resultMetrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resultMetric {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.045);
+  color: $text-color;
+  font-size: 12px;
+  font-weight: 600;
+
+  span {
+    color: rgba($text-color, 0.72);
+    font-weight: 500;
+  }
+
+  strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.13);
+    color: $text-color;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    line-height: 1;
+  }
+}
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: 20px;
+}
