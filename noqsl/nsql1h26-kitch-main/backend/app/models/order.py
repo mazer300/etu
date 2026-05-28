@@ -1,0 +1,174 @@
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from .base import MongoBase
+from datetime import datetime, timezone
+from enum import Enum
+from app.models.design import TypeDesign
+
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class Client(BaseModel):
+    client_id: str
+    username: str
+    phone: str
+
+
+class Delivery(BaseModel):
+    address: str
+    floor: int
+    has_lift: bool
+
+
+class Pricing(BaseModel):
+    total_price: int
+    type_price: int
+    material_price: int
+    delivery_price: int
+    comment_price: int
+
+
+class Times(BaseModel):
+    deadline: Optional[datetime] = None
+    start: Optional[datetime] = None
+    end: Optional[datetime] = None
+    est_time: int  # оценочное время выполнения в минутах
+    spent: int  # фактически затраченное время в минутах
+    expired_time: int  # время просрочки в минутах
+
+
+class TypeStage(str, Enum):
+    Cutting = "Раскрой"
+    Production = "Производство"
+    Delivery = "Доставка"
+    Montage = "Монтаж"
+    Completed = "Завершён"
+    Canceled = "Отменён"
+
+
+class TypeTask(str, Enum):
+    Available = "Доступна"
+    Closed = "Закрыта"
+    In_progress = "В процессе"
+    Completed = "Выполнена"
+    Overdue = "Просрочена"
+    Canceled = "Отменена"
+
+
+class TypeStatus(str, Enum):
+    Available = "Доступна"
+    In_progress = "В процессе"
+    Completed = "Завершён"
+    Canceled = "Отменён"
+
+
+class Stages(BaseModel):
+    name_stage: TypeStage
+    worker_id: str
+    status: TypeStatus
+    task_status: TypeTask
+    times: Times
+
+
+class Sizes(BaseModel):
+    height: int
+    width: int
+    length: int
+
+
+class Color(BaseModel):
+    red: int
+    green: int
+    blue: int
+    name: str
+
+
+class Order(BaseModel):
+    id: str
+    material_id: str
+    design_id: str
+    client: Client
+    item: str
+    delivery: Delivery
+    pricing: Pricing
+    stages: List[Stages]
+    comment: str
+    name_design: str
+    type: TypeDesign
+    material: str
+    size: Sizes
+    color: Color
+    need_material: int
+    blueprint: int
+    created_at: datetime
+
+
+class OrderInDB(MongoBase):
+    material_id: str
+    design_id: str
+    client: Client
+    item: str
+    delivery: Delivery
+    pricing: Pricing
+    stages: List[Stages]
+    comment: str
+    name_design: str
+    type: TypeDesign
+    material: str
+    size: Sizes
+    color: Color
+    need_material: int
+    blueprint: Optional[int] = None
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
+class OrderUpdate(BaseModel):
+    material_id: Optional[str] = None
+    design_id: Optional[str] = None
+    client: Optional[Client] = None
+    item: Optional[str] = None
+    delivery: Optional[Delivery] = None
+    pricing: Optional[Pricing] = None
+    stages: Optional[List[Stages]] = None
+    comment: Optional[str] = None
+    name_design: Optional[str] = None
+    type: Optional[TypeDesign] = None
+    material: Optional[str] = None
+    size: Optional[Sizes] = None
+    color: Optional[Color] = None
+    need_material: Optional[int] = None
+    blueprint: Optional[int] = None
+
+
+class OrderCreate(BaseModel):
+    phone: str
+    address: str
+    kitchen_type: TypeDesign
+    design_id: str
+    color: Color
+    material: str
+    floor: int
+    has_lift: bool
+    comment: Optional[str] = None
+    type_price: int
+    material_price: int
+    delivery_price: int
+    comment_price: int
+
+
+class Task(BaseModel):
+    order_id: str
+    stage_index: int
+    stage_name: TypeStage
+    status: TypeTask
+    name_design: str
+    type: TypeDesign
+    color: Color
+    material: str
+    times: Times
+    worker_id: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
