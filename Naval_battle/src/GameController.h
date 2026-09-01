@@ -16,50 +16,39 @@ enum Command{
 template <typename InputHandler>
 class GameController{
 public:
-    GameController(Game& _game, InputHandler& _inputHandler) : game(_game), inputHandler(_inputHandler) {
-        /*commands['S'] = std::bind
-        commands['A'] = std::bind
-        commands['s'] = std::bind(&Game::saveGame, &game, "save.json");
-        commands['l'] = std::bind(&Game::loadGame, &game, "save.json");*/
-    }
+    GameController(Game& _game, InputHandler& _inputHandler) : game(_game), inputHandler(_inputHandler) { }
 
     Interaction processInput(){
         Command key = inputHandler.getKey();
         std::tuple<int, int> coords;
         Interaction flag;
-        switch (key)
-        {
-        case Command::attack:
-            coords = inputHandler.getCoords();
-            std::get<0>(coords)=check(std::get<0>(coords));
-            std::get<1>(coords)=check(std::get<1>(coords));
-            flag=game.playerTurn(std::get<0>(coords), std::get<1>(coords), 0);
-            return flag;
-            break;
-        case Command::ability:
-            coords = inputHandler.getCoords();
-            std::get<0>(coords)=check(std::get<0>(coords));
-            std::get<1>(coords)=check(std::get<1>(coords));
-            flag=game.playerTurn(std::get<0>(coords), std::get<1>(coords), 1);
-            if(flag == -1)  return Interaction::no_ability;
-            break;
-        case Command::save:
-            game.saveGame("save.json");
-            return Interaction::save_game;
-            break;
-        case Command::load:
-            game.loadGame("save.json");
-            return Interaction::load_game;
-            break;
-        default:
-            break;
+        switch (key){
+            case Command::attack:
+                coords = inputHandler.getCoords();
+                std::get<0>(coords)=check(std::get<0>(coords));
+                std::get<1>(coords)=check(std::get<1>(coords));
+                flag=game.playerTurn(std::get<0>(coords), std::get<1>(coords), 0);
+                return flag;
+                break;
+            case Command::ability:
+                coords = inputHandler.getCoords();
+                std::get<0>(coords)=check(std::get<0>(coords));
+                std::get<1>(coords)=check(std::get<1>(coords));
+                flag=game.playerTurn(std::get<0>(coords), std::get<1>(coords), 1);
+                if(flag == -1)  return Interaction::no_ability;
+                break;
+            case Command::save:
+                game.saveGame("save.json");
+                return Interaction::save_game;
+                break;
+            case Command::load:
+                game.loadGame("save.json");
+                return Interaction::load_game;
+                break;
+            default:
+                break;
         }
         return Interaction::empty;
-    /*
-    char key = inputHandler.getKey();
-    if (commands.find(key) != commands.end()) {
-        commands[key]();
-    }*/
     }
 
     bool placeShip(int indexShip){
@@ -72,6 +61,10 @@ public:
         return flag;
     }
 
+    int getCommand(){
+        return inputHandler.getCommand();
+    }
+
     int check(int x){
         if(x>=0 && x<10) return x;
         return 0;
@@ -80,7 +73,6 @@ public:
 private:
     Game& game;
     InputHandler& inputHandler;
-    //std::unordered_map<char, std::function<void()>> commands;
 };
 
 #endif // GAMECONTROLLER_H

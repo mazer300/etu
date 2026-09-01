@@ -11,20 +11,62 @@ Command TerminalInputHandler::getKey(){
     return commands[key];
 }
 
-std::tuple<int, int> TerminalInputHandler::getCoords(){
-    int x,y;
-    std::cout << "\nВведите координаты (x y): ";
-    std::cin >> x >> y;
-    std::tuple<int,int> coords(x,y);
-    return coords;
+int TerminalInputHandler::getCommand(){
+    int a;
+    std::cin >> a;
+    if (std::cin.fail() || !(a==1 || a==2 || a==3)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Некорректный ввод. Пожалуйста, введите число 1-3.\n";
+        getCommand();
+    }
+    return a;
 }
 
-std::tuple<int, int, int> TerminalInputHandler::getCoordsShip(){
-    int x,y,orientation;
+
+std::tuple<int, int> TerminalInputHandler::getCoords() {
+    int x, y;
+    std::cout << "\nВведите координаты (x y): ";
+    std::cin >> x >> y;
+
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Некорректный ввод. Пожалуйста, введите числа.\n";
+        return getCoords();
+    }
+
+    if (x < 0 || x >= 10 || y < 0 || y >= 10) {
+        std::cout << "Координаты должны быть в пределах от 0 до 9. Попробуйте снова.\n";
+        return getCoords();
+    }
+
+    return std::make_tuple(x, y);
+}
+
+std::tuple<int, int, int> TerminalInputHandler::getCoordsShip() {
+    int x, y, orientation;
     std::cout << "\nВведите координаты (x y горизонтальность): ";
     std::cin >> x >> y >> orientation;
-    std::tuple<int,int,int> coords(x,y,orientation);
-    return coords;
+
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Некорректный ввод. Пожалуйста, введите числа.\n";
+        return getCoordsShip();
+    }
+
+    if (x < 0 || x >= 10 || y < 0 || y >= 10) {
+        std::cout << "Координаты должны быть в пределах от 0 до 9. Попробуйте снова.\n";
+        return getCoordsShip();
+    }
+
+    if (orientation != 0 && orientation != 1) {
+        std::cout << "Ориентация должна быть 0 (вертикально) или 1 (горизонтально). Попробуйте снова.\n";
+        return getCoordsShip();
+    }
+
+    return std::make_tuple(x, y, orientation);
 }
 
 void TerminalInputHandler::loadCommands(const std::string& filename){

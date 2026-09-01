@@ -20,7 +20,6 @@ private:
     int height;                                        //Высота поля
     int width;                                         //Ширина поля
     std::vector<std::vector<std::pair<bool, FieldState>>> Battleground; //Поле
-    //std::vector<Ship> ships;                         //Корабли
     std::vector<std::pair<std::pair<int,int>, Ship>> ships;
 public:
 
@@ -33,7 +32,6 @@ public:
     int attack(int x, int y, int damage);
     bool placeShip(Ship& ship, int x, int y, OrientationShip orientationShip, int flagBot);
     bool OpenCell(int x, int y);
-    void printField(bool flagOpen);
     std::vector<std::pair<std::pair<int,int>, Ship>> getShips();
     int getHeight();
     int getWidth();

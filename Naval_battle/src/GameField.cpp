@@ -90,6 +90,11 @@ int GameField::attack(int x, int y, int damage){
         return -1;
     }
 
+    if (Battleground[y][x].second == FieldState::Unknown) {
+        Battleground[y][x].second = FieldState::Empty;
+        return 0;
+    }
+
     Battleground[y][x].first = true;
     for (int i = 0; i < ships.size(); i++) {
         int len = ships[i].second.getLength();
@@ -146,8 +151,28 @@ int GameField::attack(int x, int y, int damage){
             return 1;
         }
     }
+    if(damage == 1){
+        switch (Battleground[y][x].second)
+        {
+        case FieldState::Boat:
+            Battleground[y][x].second=LowBoat;
+            return 1;
+        case FieldState::LowBoat:
+            Battleground[y][x].second=DeadBoat;
+            return 1;
+        default:
+            break;
+        }
+    }
+    if(damage==2){
+        if(Battleground[y][x].second == FieldState::Boat || FieldState::LowBoat){
+            Battleground[y][x].second == FieldState::DeadBoat;
+            return 1;
+        }
+    }
 
     if (Battleground[y][x].second == FieldState::Unknown) {
+        std::cout<<"GHJVF{!!!!!!!!!!!!}";
         Battleground[y][x].second = FieldState::Empty;
     }
 
@@ -176,37 +201,6 @@ bool GameField::OpenCell(int x, int y){
     return false;
 }
 
-void GameField::printField(bool flagOpen){
-    for(int i = 0; i < height; i++){
-        for(int j = 0; j < width; j++){
-            if(Battleground[i][j].first || !flagOpen){
-                switch(Battleground[i][j].second){
-                case Unknown:
-                    std::cout << "⬜";
-                    break;
-                case Empty:
-                    std::cout << "⬛";
-                    break;
-                case Boat:
-                    std::cout << "🟥";
-                    break;
-                case LowBoat:
-                    std::cout << "🔥";
-                    break;
-                case DeadBoat:
-                    std::cout << "❌";
-                    break;
-                default:
-                    break;
-                }
-            }else{
-                std::cout << "⬜";
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
 std::vector<std::pair<std::pair<int,int>, Ship>> GameField::getShips(){
     return ships;
 }
@@ -214,6 +208,7 @@ std::vector<std::pair<std::pair<int,int>, Ship>> GameField::getShips(){
 int GameField::getHeight(){ return height; }
 int GameField::getWidth(){ return width; }
 FieldState GameField::getState(int x, int y){ return Battleground[y][x].second; }
+
 void GameField::setState(int x, int y, FieldState state){
     Battleground[y][x].second = state;
 }

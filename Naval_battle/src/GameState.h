@@ -21,7 +21,7 @@ public:
     ShipManager& getEnemyShipManager();
 
     void operator <<(const std::string& filename);
-    void operator >>(const std::string& filename);
+    bool operator >>(const std::string& filename);
 
 private:
     GameField& playerField;

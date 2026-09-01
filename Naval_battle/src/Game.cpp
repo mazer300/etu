@@ -11,7 +11,7 @@ Game::Game()
       player(playerField, playerShipManager, playerAbilityManager),
       enemy(enemyField, enemyShipManager, enemyAbilityManager),
       gameState(playerField, enemyField, playerShipManager, enemyShipManager, playerAbilityManager, enemyAbilityManager),
-      isPlayerTurn(true), isGameOver(false), numberRound(1), flagShooting(0) {}
+      numberRound(1), flagShooting(0) {}
 
 void Game::startGame() {
     playerField = GameField(10, 10);
@@ -23,15 +23,7 @@ void Game::startGame() {
 
     player.reinitialize(playerField, playerShipManager, playerAbilityManager);
     enemy.reinitialize(enemyField, enemyShipManager, enemyAbilityManager);
-
-
-    //playerField.placeShip(playerShipManager.getShip(0),0,0,OrientationShip::Horizontal,0);
-
     autoplaceShips(enemyField,enemyShipManager);
-
-    isPlayerTurn = true;
-    isGameOver = false;
-    
 }
 
 bool Game::placeShips(int indexShip, int x, int y, int orientation){
@@ -50,13 +42,14 @@ void Game::saveGame(const std::string& filename) {
     gameState << filename;
 }
 
-void Game::loadGame(const std::string& filename) {
-    gameState >> filename;
+bool Game::loadGame(const std::string& filename) {
+    return gameState >> filename;
 }
 
 Interaction Game::playerTurn(int x, int y, int optionAttack){
     if (optionAttack==0){
         int result = player.attack(enemyField, x, y, playerInfo.flagDoubleDamage);
+        playerInfo.flagDoubleDamage=1;
         return static_cast<Interaction>(result);
     }else if(optionAttack==1){
         playerInfo.x = x;
@@ -65,9 +58,7 @@ Interaction Game::playerTurn(int x, int y, int optionAttack){
             playerAbilityManager.applyAbility(playerInfo);
         }catch(...){
             int result = player.attack(enemyField, x, y, playerInfo.flagDoubleDamage);
-            if (result == 2) {
-                playerAbilityManager.addRandomAbility();
-            }
+            playerInfo.flagDoubleDamage=1;
             return Interaction::no_ability;
             }
         }

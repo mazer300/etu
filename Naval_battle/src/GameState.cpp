@@ -32,28 +32,24 @@ void GameState::operator <<(const std::string& filename) {
     ofs.close();
 }
 
-void GameState::operator >>(const std::string& filename) {
+bool GameState::operator >>(const std::string& filename) {
     std::ifstream ifs(filename);
-    if (!ifs.is_open()) throw std::runtime_error("Unable to open file for loading: " + filename);
+    if (!ifs.is_open()) return false;
 
     nlohmann::json game_state_json;
     ifs >> game_state_json;
     ifs.close();
 
-    // Создаем новые игровые поля
     playerField = GameField(10, 10);
     enemyField = GameField(10, 10);
 
-    // Десериализация кораблей игрока
     deserializeShipManager(game_state_json["player"]["ship_manager"], playerShipManager);
     deserializeField(game_state_json["player"]["field"], playerField, playerShipManager);
 
-    // Десериализация кораблей противника
     deserializeShipManager(game_state_json["enemy"]["ship_manager"], enemyShipManager);
     deserializeField(game_state_json["enemy"]["field"], enemyField, enemyShipManager);
-
-    // Восстановление способностей игрока
     playerAbilityManager.setAbilities(game_state_json["player"]["abilities_manager"]);
+    return true;
 }
 
 nlohmann::json GameState::serializeField(GameField& field) {

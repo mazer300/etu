@@ -11,7 +11,8 @@
 #include <string>
 
 enum Interaction{
-    no_ability=-1,
+    no_ability=-3,
+    attack_cell=-1,
     destroy_ship=2,
     shoot_ship=1,
     miss=0,
@@ -25,7 +26,7 @@ public:
     Game();
     void startGame();
     void saveGame(const std::string& filename);
-    void loadGame(const std::string& filename);
+    bool loadGame(const std::string& filename);
     Interaction playerTurn(int x, int y, int optionAttack);
     void enemyTurn();
     void startRound();
@@ -49,8 +50,6 @@ private:
     Player player;
     Player enemy;
     GameState gameState;
-    bool isPlayerTurn;
-    bool isGameOver;
     int numberRound;
     bool flagShooting;
 

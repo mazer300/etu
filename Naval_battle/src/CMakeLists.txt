@@ -25,7 +25,6 @@ add_executable(NavalBattle
     Player.cpp
     GameState.cpp
 
-    GameLoop.cpp
     TerminalInputHandler.cpp
     FieldRenderer.cpp
 )

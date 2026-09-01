@@ -9,6 +9,7 @@ public:
     void render(GameField& playerField, GameField& enemyField);
     void renderPlayer(GameField& playerField);
     void print(const std::string& str);
+    void printField(GameField& field, bool flag);
 };
 
 #endif // FIELDRENDERER_H

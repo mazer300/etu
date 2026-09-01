@@ -4,6 +4,7 @@
 #include <string>
 #include "GameField.h"
 #include "InfoHolder.h"
+#include <iostream>
 
 class IAbility{
 public:

@@ -1,7 +1,11 @@
 #include "GameLoop.h"
+#include "TerminalInputHandler.h"
+#include "FieldRenderer.h"
 
 int main() {
-    GameLoop game;
+    TerminalInputHandler inputHandler;
+    FieldRenderer renderer;
+    GameLoop<TerminalInputHandler, FieldRenderer> game(inputHandler, renderer);
     game.startGame();
     return 0;
 }

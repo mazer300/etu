@@ -13,11 +13,11 @@ public:
     Command getKey();
     std::tuple<int, int> getCoords();
     std::tuple<int, int, int> getCoordsShip();
+    int getCommand();
 
 private:
     void loadCommands(const std::string& filename);
     std::unordered_map<char, Command> commands;
-    //std::unordered_map<char, std::string> commands;
 };
 
 #endif // TERMINALINPUTHANDLER_H

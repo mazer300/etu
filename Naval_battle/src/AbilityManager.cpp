@@ -2,6 +2,7 @@
 #include "Exceptions/NoAbilityException.h"
 #include <random>
 #include <algorithm>
+#include <iostream>
 
 AbilityManager::AbilityManager(){
     abilityFactories = {
@@ -33,20 +34,18 @@ void AbilityManager::addRandomAbility(){
 }
 
 void AbilityManager::setAbilities(std::vector<int> abil){
+    abilities.clear();
     for(auto i : abil){
         abilities.push_back(abilityFactories[i]->createAbility());
     }
 }
 
 std::vector<int> AbilityManager::getAbilities(){
+    srand(time(0));
     std::vector<int> abil;
-    for (const auto& ability : abilities) {
-        for (int i = 0; i < abilityFactories.size(); ++i) {
-            if (abilityFactories[i]->createAbility() == ability) {
-                abil.push_back(i);
-                break;
-            }
-        }
+    for (int i=0;i<abilities.size();i++) {
+        int index = rand() % abilityFactories.size();
+        abil.push_back(index);
     }
     return abil;
 }
